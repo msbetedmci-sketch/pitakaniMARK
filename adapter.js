@@ -5,7 +5,7 @@
  */
 (function () {
   // 1) Paste your Apps Script Web app URL (must end in /exec)
-  const API_URL = 'https://script.google.com/macros/s/AKfycby73LImWUu18Lm7R6SxgMd2XK3pq-KmHBPBgCelqhn481pnwSAgA4S0OdvsCtFLKXGZ/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbxNJ-92Y4ks47cKzEU-G-35jVILqxinDMG8z_bm0JLAVthPEE4nNE_DWW-WjPI2RZE/exec';
 
   const PIN_KEY = 'pitakako_api_pin';
   const getPin = () => { try { return localStorage.getItem(PIN_KEY) || ''; } catch (e) { return ''; } };
