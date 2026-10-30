@@ -4129,7 +4129,8 @@ function handleReceiptImageSelected(event) {
         .contributeToGoal({ goalId, amount, deductFromWallet, wallet: APP_STATE.selectedWallet });
     }
 
-    function hydrateUI(data) {
+function hydrateUI(data) {
+      if (!data) return;
       APP_STATE.wallets = data.wallets || [];
       APP_STATE.categories = data.categories || [];
       APP_STATE.goals = data.goals || [];
@@ -4144,34 +4145,36 @@ function handleReceiptImageSelected(event) {
         APP_STATE.selectedWallet = APP_STATE.wallets[0].name;
       }
 
-      document.getElementById('todayBadge').textContent = data.today;
+      const todayBadgeEl = document.getElementById('todayBadge');
+      if (todayBadgeEl && data.today) todayBadgeEl.textContent = data.today;
+
       const dateInput = document.getElementById('dateInput');
-      if (!dateInput.value) dateInput.value = data.today;
+      if (dateInput && !dateInput.value && data.today) dateInput.value = data.today;
 
-      document.getElementById('totalBalance').textContent = formatPeso(data.totalBalance);
-      document.getElementById('safeToday').textContent = formatPeso(data.safeToSpendToday);
-      document.getElementById('spentToday').textContent = formatPeso(data.spentToday);
-      document.getElementById('incomeMonth').textContent = formatPeso(data.incomeThisMonth);
-      document.getElementById('heroTotalIpon').textContent = formatPeso(data.totalIponSaved);
+      const setTxt = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+      };
 
-      const soloWalletEl = document.getElementById('soloChatWallet');
-      const soloSafeEl = document.getElementById('soloChatSafe');
-      const soloSpentEl = document.getElementById('soloChatSpent');
-      if (soloWalletEl) soloWalletEl.textContent = APP_STATE.selectedWallet;
-      if (soloSafeEl) soloSafeEl.textContent = formatPeso(data.safeToSpendToday);
-      if (soloSpentEl) soloSpentEl.textContent = formatPeso(data.spentToday);
+      setTxt('totalBalance', formatPeso(data.totalBalance));
+      setTxt('safeToday', formatPeso(data.safeToSpendToday));
+      setTxt('spentToday', formatPeso(data.spentToday));
+      setTxt('incomeMonth', formatPeso(data.incomeThisMonth));
+      setTxt('heroTotalIpon', formatPeso(data.totalIponSaved));
+      setTxt('soloChatWallet', APP_STATE.selectedWallet);
+      setTxt('soloChatSafe', formatPeso(data.safeToSpendToday));
+      setTxt('soloChatSpent', formatPeso(data.spentToday));
+      setTxt('aiModeBadge', APP_STATE.hasGeminiKey ? 'Gemini Vision + NLP' : 'Genius NLP');
+      setTxt('iponSummaryText', `${formatPeso(data.totalIponSaved)} / ${formatPeso(data.totalIponTarget)}`);
 
-      const badgeEl = document.getElementById('aiModeBadge');
-      if (badgeEl) badgeEl.textContent = APP_STATE.hasGeminiKey ? 'Gemini Vision + NLP' : 'Genius NLP';
-
-      document.getElementById('iponSummaryText').textContent = `${formatPeso(data.totalIponSaved)} / ${formatPeso(data.totalIponTarget)}`;
-
-      const pct = Math.min(100, Math.round((data.spentThisMonth / data.monthlyBudget) * 100));
-      document.getElementById('budgetStatusText').textContent = `Monthly Gastos: ${formatPeso(data.spentThisMonth)} / ${formatPeso(data.monthlyBudget)} (${pct}%)`;
+      const pct = Math.min(100, Math.round(((data.spentThisMonth || 0) / APP_STATE.monthlyBudget) * 100));
+      setTxt('budgetStatusText', `Monthly Gastos: ${formatPeso(data.spentThisMonth)} / ${formatPeso(APP_STATE.monthlyBudget)} (${pct}%)`);
 
       const bar = document.getElementById('budgetBar');
-      bar.style.width = pct + '%';
-      bar.style.background = pct >= 90 ? '#EF4444' : (pct >= 75 ? '#F59E0B' : '#2ECC71');
+      if (bar) {
+        bar.style.width = pct + '%';
+        bar.style.background = pct >= 90 ? '#EF4444' : (pct >= 75 ? '#F59E0B' : '#2ECC71');
+      }
 
       renderWallets();
       renderActiveBankBar();
@@ -4280,17 +4283,55 @@ function submitTransaction() {
         .updateMonthlyBudget(val);
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
       initThemeMode();
       loadPlannedItems();
       loadScratchNotes();
-      renderPlannedItems();
+
+      // Seed instant UI defaults while waiting for Google Sheets
+      hydrateUI({
+        today: new Date().toISOString().substring(0, 10),
+        monthlyBudget: 15000,
+        totalBalance: 25000,
+        safeToSpendToday: 500,
+        spentToday: 0,
+        spentThisMonth: 0,
+        incomeThisMonth: 0,
+        totalIponSaved: 6700,
+        totalIponTarget: 45000,
+        wallets: [
+          { id: 'W-CASH', name: 'Cash', startingBalance: 2000, balance: 2000, color: '#10B981', bankName: 'Physical Pitaka', accountName: '', accountNumber: '' },
+          { id: 'W-GCASH', name: 'GCash', startingBalance: 5000, balance: 5000, color: '#2563EB', bankName: 'GCash E-Wallet', accountName: '', accountNumber: '09**-***-****' },
+          { id: 'W-MAYA', name: 'Maya', startingBalance: 3000, balance: 3000, color: '#059669', bankName: 'Maya Bank', accountName: '', accountNumber: '09**-***-****' },
+          { id: 'W-BANK', name: 'Bank', startingBalance: 15000, balance: 15000, color: '#6366F1', bankName: 'BPI / BDO Savings', accountName: '', accountNumber: '**** 0000' }
+        ],
+        categories: [
+          { id: 'CAT-01', name: 'Pagkain', type: 'EXPENSE', limit: 6000, icon: 'utensils', color: '#EF4444', spentThisMonth: 0 },
+          { id: 'CAT-02', name: 'Pamasahe', type: 'EXPENSE', limit: 2500, icon: 'bus', color: '#F59E0B', spentThisMonth: 0 },
+          { id: 'CAT-03', name: 'Tingi / Kape', type: 'EXPENSE', limit: 1500, icon: 'coffee', color: '#8B5CF6', spentThisMonth: 0 },
+          { id: 'CAT-04', name: 'Bills', type: 'EXPENSE', limit: 4000, icon: 'zap', color: '#3B82F6', spentThisMonth: 0 },
+          { id: 'CAT-05', name: 'Groceries', type: 'EXPENSE', limit: 4000, icon: 'cart', color: '#14B8A6', spentThisMonth: 0 },
+          { id: 'CAT-06', name: 'Luho / Shop', type: 'EXPENSE', limit: 2000, icon: 'bag', color: '#EC4899', spentThisMonth: 0 },
+          { id: 'CAT-07', name: 'GoalsIPON', type: 'EXPENSE', limit: 3000, icon: 'piggy', color: '#10B981', spentThisMonth: 0 },
+          { id: 'CAT-08', name: 'Sweldo', type: 'INCOME', limit: 0, icon: 'wallet', color: '#10B981', spentThisMonth: 0 },
+          { id: 'CAT-09', name: 'Raket / Sideline', type: 'INCOME', limit: 0, icon: 'rocket', color: '#06B6D4', spentThisMonth: 0 }
+        ],
+        goals: [
+          { id: 'G-01', name: 'Emergency Fund', targetAmount: 20000, savedAmount: 3500, remainingAmount: 16500, progressPct: 18, targetDate: '2026-12-31', daysLeft: 60, dailyNeeded: 275, icon: 'shield', color: '#10B981' },
+          { id: 'G-02', name: 'Motor / Upgrades', targetAmount: 15000, savedAmount: 2000, remainingAmount: 13000, progressPct: 13, targetDate: '2027-03-31', daysLeft: 150, dailyNeeded: 86.67, icon: 'bike', color: '#2563EB' },
+          { id: 'G-03', name: 'Travel / Bakasyon', targetAmount: 10000, savedAmount: 1200, remainingAmount: 8800, progressPct: 12, targetDate: '2027-05-15', daysLeft: 195, dailyNeeded: 45.13, icon: 'plane', color: '#F59E0B' }
+        ],
+        transactions: []
+      });
+
       renderScratchNotes();
-      renderCashflowTimeline();
-      google.script.run
-        .withSuccessHandler(hydrateUI)
-        .withFailureHandler(err => showToast('Load error: ' + err.message))
-        .getAppData();
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(hydrateUI)
+          .withFailureHandler(err => showToast('Backend error: ' + (err && err.message ? err.message : err)))
+          .getAppData();
+      }
     });
   </script>
 </body>
