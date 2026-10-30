@@ -6,13 +6,17 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>PitakaKO</title>
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-title" content="PitakaKO">
+  <meta name="theme-color" content="#F4F6F8">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --ios-bg: #F4F6F8;
-      --nav-bottom-space: 0px;
+      --nav-bottom-space: env(safe-area-inset-bottom, 0px);
       --ios-card: #FFFFFF;
       --ios-card-alt: #F8FAFC;
       --ios-border: #E2E8F0;
@@ -2419,7 +2423,7 @@
   </div>
 
   <div class="toast" id="toast"></div>
-
+  <script src="adapter.js"></script>
   <script>
     const FLAT_LINE_SVGS = {
       utensils: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>',
