@@ -1,34 +1,3616 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>PitakaKO</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="PitakaKO">
-  <link rel="apple-touch-icon" href="icon-180.png">
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #F4F6F8;
-  }
-  iframe {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;   /* fallback */
-    height: 100dvh;  /* real screen height on iPhone */
-    border: 0;
-  }
-</style>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>PitakaKO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ios-bg: #F4F6F8;
+      --nav-bottom-space: 0px;
+      --ios-card: #FFFFFF;
+      --ios-card-alt: #F8FAFC;
+      --ios-border: #E2E8F0;
+      --ios-border-strong: #CBD5E1;
+      --ios-label: #0F172A;
+      --ios-label-muted: #64748B;
+      --ios-green: #2ECC71;
+      --ios-green-dark: #10B981;
+      --ios-green-soft: #EAFAF1;
+      --ios-red: #EF4444;
+      --ios-red-soft: #FEF2F2;
+      --ios-orange: #F59E0B;
+      --ios-orange-soft: #FFFBEB;
+      --ios-blue: #2563EB;
+      --ios-blue-soft: #EFF6FF;
+      --ios-radius-lg: 20px;
+      --ios-radius-md: 14px;
+      --ios-radius-sm: 10px;
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 10px 24px rgba(15, 23, 42, 0.09);
+      --header-bg: rgba(255, 255, 255, 0.92);
+      --nav-bg: rgba(255, 255, 255, 0.96);
+    }
+
+    /* Tarsi-Style Dark Mode Support */
+    body.dark-mode {
+      --ios-bg: #0B0F19;
+      --ios-card: #111827;
+      --ios-card-alt: #1E293B;
+      --ios-border: #334155;
+      --ios-border-strong: #475569;
+      --ios-label: #F8FAFC;
+      --ios-label-muted: #94A3B8;
+      --ios-green-soft: rgba(46, 204, 113, 0.14);
+      --ios-red-soft: rgba(239, 68, 68, 0.15);
+      --ios-orange-soft: rgba(245, 158, 11, 0.15);
+      --ios-blue-soft: rgba(37, 99, 235, 0.2);
+      --header-bg: rgba(17, 24, 39, 0.92);
+      --nav-bg: rgba(17, 24, 39, 0.96);
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.35);
+      --shadow-md: 0 12px 28px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      width: 100%;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background-color: var(--ios-bg);
+      color: var(--ios-label);
+      line-height: 1.4;
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: clip;
+      min-height: 100dvh;
+      padding-top: calc(54px + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(92px + var(--nav-bottom-space));
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .num {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Flat Line SVG Icon Utility */
+    .line-icon {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      flex-shrink: 0;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .line-icon-sm {
+      width: 15px;
+      height: 15px;
+    }
+
+    /* Fixed Top Header That Stays Stacked on Scroll */
+    .top-bar-wrap {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--header-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--ios-border);
+      padding-top: env(safe-area-inset-top, 0px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--ios-label);
+      user-select: none;
+    }
+
+    /* Uploaded PitakaKO Green Wallet Logo Container */
+    .brand-logo {
+      width: 34px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-logo svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      filter: drop-shadow(0 1px 2px rgba(46, 204, 113, 0.2));
+    }
+
+    .brand-text-accent {
+      color: var(--ios-green);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-pill-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid var(--ios-border);
+      background: var(--ios-card-alt);
+      color: var(--ios-label);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .date-pill {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ios-label-muted);
+      background: var(--ios-card-alt);
+      border: 1px solid var(--ios-border);
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    /* Main Container Tuned for iPhone 14 (390px width) */
+    .app-shell {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 12px 12px;
+    }
+
+    .workspace-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .primary-col,
+    .secondary-col {
+      min-width: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Hero Summary Pass Card + Tarsi Net Worth Pill */
+    .hero-card {
+      background: linear-gradient(145deg, #0F172A 0%, #1E293B 100%);
+      color: #FFFFFF;
+      border-radius: var(--ios-radius-lg);
+      padding: 16px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .hero-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #94A3B8;
+      font-weight: 700;
+    }
+
+    .hero-balance {
+      font-size: clamp(24px, 6.5vw, 30px);
+      font-weight: 800;
+      margin-top: 2px;
+      letter-spacing: -0.8px;
+      line-height: 1.15;
+    }
+
+    .networth-sub {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10.5px;
+      color: #CBD5E1;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 3px 8px;
+      border-radius: 999px;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    .safe-badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 7px 11px;
+      border-radius: 12px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .safe-badge-val {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ios-green);
+      margin-top: 1px;
+    }
+
+    .budget-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #E2E8F0;
+      margin-bottom: 6px;
+      font-weight: 600;
+      gap: 6px;
+    }
+
+    .budget-edit {
+      color: var(--ios-green);
+      cursor: pointer;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(46, 204, 113, 0.14);
+      flex-shrink: 0;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--ios-green);
+      width: 0%;
+      transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      border-radius: 999px;
+    }
+
+    .hero-kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .kpi-box {
+      font-size: 10px;
+      color: #94A3B8;
+      font-weight: 600;
+      min-width: 0;
+    }
+
+    .kpi-box strong {
+      display: block;
+      font-size: 13px;
+      color: #FFFFFF;
+      margin-top: 2px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Clean Surface Card */
+    .panel {
+      background: var(--ios-card);
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-lg);
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      min-width: 0;
+    }
+
+    /* Flattened Hub Container */
+    .hub-surface {
+      background: transparent;
+      border: none;
+      padding: 0;
+      box-shadow: none;
+    }
+
+    .section-head-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .section-caption {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--ios-label-muted);
+      min-width: 0;
+    }
+
+    .flat-link-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border: 1px solid var(--ios-border);
+      background: var(--ios-card-alt);
+      color: var(--ios-label);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 9px;
+      cursor: pointer;
+      min-height: 32px;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .flat-link-btn:active {
+      border-color: var(--ios-blue);
+      color: var(--ios-blue);
+      background: var(--ios-blue-soft);
+    }
+
+    /* 2x2 Compact Wallet Grid for iPhone 14 */
+    .wallet-strip {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      width: 100%;
+    }
+
+    .wallet-card {
+      background: var(--ios-card-alt);
+      border: 1.5px solid var(--ios-border);
+      border-radius: var(--ios-radius-sm);
+      padding: 9px 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.18s ease;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      position: relative;
+    }
+
+    .wallet-card.active {
+      border-color: var(--ios-blue);
+      background: var(--ios-blue-soft);
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+    }
+
+    .wallet-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .wallet-name {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ios-label-muted);
+      min-width: 0;
+    }
+
+    .wallet-card.active .wallet-name {
+      color: var(--ios-blue);
+    }
+
+    .wallet-name-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+
+    .wallet-bal {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ios-label);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .wallet-sub {
+      font-size: 10px;
+      color: var(--ios-label-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bank-info-bar {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--ios-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--ios-label-muted);
+    }
+
+    .bank-info-meta {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bank-info-meta strong {
+      color: var(--ios-label);
+      font-weight: 700;
+    }
+
+    .inline-edit-link {
+      border: none;
+      background: none;
+      color: var(--ios-blue);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 2px 4px;
+      flex-shrink: 0;
+    }
+
+    /* Tarsi 1-Tap Quick Templates Bar */
+    .tarsi-templates-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+      scrollbar-width: none;
+    }
+
+    .tarsi-templates-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tarsi-tpl-chip {
+      white-space: nowrap;
+      border: 1px solid var(--ios-border);
+      background: var(--ios-card-alt);
+      color: var(--ios-label);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .tarsi-tpl-chip:active {
+      border-color: var(--ios-green);
+      background: var(--ios-green-soft);
+    }
+
+    /* Quick Entry Form */
+    .quick-entry-body.collapsed {
+      display: none;
+    }
+
+    .type-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--ios-card-alt);
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-sm);
+      padding: 3px;
+      margin-bottom: 10px;
+    }
+
+    .type-btn {
+      border: none;
+      background: transparent;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--ios-label-muted);
+      border-radius: 7px;
+      cursor: pointer;
+      min-height: 36px;
+      transition: all 0.18s ease;
+    }
+
+    .type-btn.active-expense {
+      background: var(--ios-red);
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
+    }
+
+    .type-btn.active-income {
+      background: var(--ios-green-dark);
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+    }
+
+    .amount-wrap {
+      display: flex;
+      align-items: center;
+      background: var(--ios-card-alt);
+      border: 1.5px solid var(--ios-border);
+      border-radius: var(--ios-radius-md);
+      padding: 8px 12px;
+      margin-bottom: 10px;
+      transition: all 0.18s ease;
+    }
+
+    .amount-wrap:focus-within {
+      border-color: var(--ios-blue);
+      background: var(--ios-card);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .currency-prefix {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--ios-label-muted);
+      margin-right: 6px;
+    }
+
+    .amount-input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--ios-label);
+      outline: none;
+    }
+
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 345px) {
+      .cat-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .cat-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 8px;
+      background: var(--ios-card-alt);
+      border: 1.5px solid var(--ios-border);
+      border-radius: var(--ios-radius-sm);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ios-label);
+      cursor: pointer;
+      min-height: 40px;
+      min-width: 0;
+      transition: all 0.15s ease;
+    }
+
+    .cat-chip span:last-child {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cat-chip.selected {
+      border-color: var(--ios-blue);
+      background: var(--ios-blue-soft);
+      color: var(--ios-blue);
+      font-weight: 700;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .flat-input {
+      width: 100%;
+      padding: 9px 11px;
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-sm);
+      background: var(--ios-card-alt);
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ios-label);
+      outline: none;
+      min-height: 42px;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .flat-input:focus {
+      border-color: var(--ios-blue);
+      background: var(--ios-card);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: var(--ios-radius-sm);
+      background: var(--ios-label);
+      color: var(--ios-bg);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 46px;
+      transition: opacity 0.15s ease;
+    }
+
+    .submit-btn:active {
+      opacity: 0.85;
+    }
+
+    /* Hub Tabs Bar: Shown on Desktop, Hidden on Mobile */
+    .hub-tabs-bar {
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: var(--ios-card);
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-md);
+      padding: 5px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    @media (min-width: 860px) {
+      .hub-tabs-bar {
+        display: grid;
+        position: sticky;
+        top: calc(58px + env(safe-area-inset-top, 0px));
+        z-index: 75;
+      }
+    }
+
+    .hub-tab-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 8px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--ios-label-muted);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .hub-tab-btn.active {
+      background: var(--ios-label);
+      color: var(--ios-bg);
+    }
+
+    .hub-count-pill {
+      background: var(--ios-border);
+      color: var(--ios-label);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 999px;
+    }
+
+    .hub-tab-btn.active .hub-count-pill {
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--ios-bg);
+    }
+
+    /* Standalone Card Styling for Each Hub Pane */
+    .hub-pane {
+      display: none;
+      background: var(--ios-card);
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-lg);
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hub-pane.active {
+      display: block;
+    }
+
+    #tabPaneChat.hub-pane {
+      padding: 0;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    /* Graphs Styling */
+    .period-switch {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      background: var(--ios-card-alt);
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-sm);
+      padding: 3px;
+      margin-bottom: 12px;
+    }
+
+    .period-btn {
+      border: none;
+      background: transparent;
+      padding: 7px 4px;
+      border-radius: 7px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ios-label-muted);
+      cursor: pointer;
+    }
+
+    .period-btn.active {
+      background: var(--ios-card);
+      color: var(--ios-label);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .graph-kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .graph-kpi-card {
+      background: var(--ios-card-alt);
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-sm);
+      padding: 8px 10px;
+      min-width: 0;
+    }
+
+    .graph-kpi-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--ios-label-muted);
+    }
+
+    .graph-kpi-val {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--ios-label);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chart-box {
+      background: var(--ios-card-alt);
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-md);
+      padding: 12px 10px;
+      margin-bottom: 14px;
+    }
+
+    .bar-chart-grid {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 4px;
+      height: 140px;
+      padding-top: 18px;
+      border-bottom: 1px solid var(--ios-border);
+    }
+
+    .bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      height: 100%;
+      min-width: 0;
+    }
+
+    .bar-val {
+      font-size: 8px;
+      font-weight: 700;
+      color: var(--ios-label-muted);
+      margin-bottom: 3px;
+      white-space: nowrap;
+    }
+
+    .bar-fill {
+      width: 100%;
+      max-width: 22px;
+      background: var(--ios-blue);
+      border-radius: 5px 5px 0 0;
+      min-height: 4px;
+    }
+
+    .bar-fill.peak {
+      background: var(--ios-red);
+    }
+
+    .bar-fill.zero {
+      background: var(--ios-border);
+    }
+
+    .bar-labels-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 2px;
+      margin-top: 6px;
+    }
+
+    .bar-label-cell {
+      flex: 1;
+      text-align: center;
+      min-width: 0;
+    }
+
+    .bar-lbl-main {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--ios-label);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bar-lbl-sub {
+      font-size: 8px;
+      color: var(--ios-label-muted);
+    }
+
+    .cat-stacked-bar {
+      display: flex;
+      width: 100%;
+      height: 10px;
+      background: var(--ios-card-alt);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .cat-stack-seg {
+      height: 100%;
+    }
+
+    .cat-graph-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cat-graph-item {
+      background: var(--ios-card-alt);
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-sm);
+      padding: 9px 11px;
+    }
+
+    .cat-graph-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .cat-graph-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .cat-graph-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: var(--ios-card);
+      border: 1px solid var(--ios-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cat-graph-track {
+      width: 100%;
+      height: 5px;
+      background: var(--ios-border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .cat-graph-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    /* Floating Chat Button & AI Panel */
+    .chat-fab-btn {
+      position: fixed;
+      bottom: calc(74px + var(--nav-bottom-space));
+      right: 12px;
+      z-index: 85;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #0F172A;
+      color: #FFFFFF;
+      border: 1.5px solid var(--ios-green);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+    }
+
+    @media (min-width: 860px) {
+      .chat-fab-btn {
+        bottom: 24px;
+        right: 24px;
+      }
+    }
+
+    .chat-fab-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--ios-green);
+      display: inline-block;
+    }
+
+    .chat-fab-btn.hidden {
+      display: none;
+    }
+
+    .floating-chat-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.35);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 88;
+      display: none;
+    }
+
+    .floating-chat-backdrop.open {
+      display: block;
+    }
+
+    .ai-panel {
+      background: var(--ios-card);
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-lg);
+      padding: 14px;
+      display: none;
+      flex-direction: column;
+      box-shadow: var(--shadow-md);
+    }
+
+    .ai-panel.floating-mode.floating-open {
+      display: flex;
+      position: fixed;
+      bottom: calc(122px + env(safe-area-inset-bottom, 16px));
+      left: 12px;
+      right: 12px;
+      width: auto;
+      max-width: 456px;
+      margin: 0 auto;
+      z-index: 90;
+    }
+
+    @media (min-width: 860px) {
+      .ai-panel.floating-mode.floating-open {
+        left: auto;
+        right: 24px;
+        bottom: 80px;
+        width: 420px;
+      }
+    }
+
+    .ai-panel.solo-tab-mode {
+      display: flex;
+      position: static;
+      width: 100%;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      background: var(--ios-green-soft);
+      color: var(--ios-green-dark);
+      border: 1px solid rgba(46, 204, 113, 0.35);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+
+    .solo-chat-status-strip {
+      display: none;
+    }
+
+    .ai-chat-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      height: 250px;
+      overflow-y: auto;
+      background: var(--ios-card-alt);
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-md);
+      padding: 11px;
+      margin-bottom: 10px;
+    }
+
+    .ai-panel.solo-tab-mode .ai-chat-feed {
+      height: 320px;
+    }
+
+    .ai-panel.solo-tab-mode .floating-only-btn {
+      display: none;
+    }
+
+    .ai-msg {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-size: 12px;
+      line-height: 1.48;
+    }
+
+    .ai-msg.user {
+      justify-content: flex-end;
+    }
+
+    .ai-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: var(--ios-label);
+      color: var(--ios-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .ai-bubble {
+      padding: 9px 11px;
+      border-radius: 13px;
+      max-width: 88%;
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .ai-action-pill {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: var(--ios-blue-soft);
+      color: var(--ios-blue);
+      margin-bottom: 4px;
+    }
+
+    .ai-msg.bot .ai-bubble {
+      background: var(--ios-card);
+      border: 1px solid var(--ios-border);
+      color: var(--ios-label);
+    }
+
+    .ai-msg.user .ai-bubble {
+      background: var(--ios-blue);
+      color: #FFFFFF;
+    }
+
+    .ai-quick-chips {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 8px;
+      scrollbar-width: none;
+    }
+
+    .ai-quick-chips::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ai-chip {
+      white-space: nowrap;
+      border: 1px solid var(--ios-border);
+      background: var(--ios-card-alt);
+      color: var(--ios-label);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .ai-input-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 6px;
+    }
+
+    .ai-icon-btn {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-sm);
+      background: var(--ios-card-alt);
+      color: var(--ios-label);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .ai-icon-btn.listening {
+      background: var(--ios-red-soft);
+      border-color: var(--ios-red);
+      color: var(--ios-red);
+    }
+
+    .ai-send-btn {
+      padding: 0 13px;
+      height: 42px;
+      border: none;
+      border-radius: var(--ios-radius-sm);
+      background: var(--ios-blue);
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    /* goalsIPON, Tarsi Planned Payments/Utang & Non-Overlapping History */
+    .ipon-summary-pill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--ios-green-soft);
+      border: 1px solid rgba(46, 204, 113, 0.35);
+      color: var(--ios-green-dark);
+      padding: 9px 12px;
+      border-radius: var(--ios-radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .goals-list, .tx-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .goal-card, .tx-item {
+      background: var(--ios-card-alt);
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-md);
+      padding: 11px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .goal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+
+    .goal-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    /* History Filter Bar & Tarsi Daily Total Group Headers */
+    .history-filter-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .history-search-input {
+      width: 100%;
+      padding: 7px 11px;
+      border: 1px solid var(--ios-border);
+      border-radius: 10px;
+      background: var(--ios-card-alt);
+      color: var(--ios-label);
+      font-family: inherit;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .tx-date-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 4px 2px;
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--ios-label-muted);
+    }
+
+    /* Fixed History Item Layout to Prevent Overlapping */
+    .tx-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 11px;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .tx-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .tx-info {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .goal-icon, .tx-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--ios-card);
+      border: 1px solid var(--ios-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ios-label);
+      flex-shrink: 0;
+    }
+
+    .goal-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ios-label);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tx-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ios-label);
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+    }
+
+    .goal-meta, .tx-meta {
+      font-size: 10px;
+      color: var(--ios-label-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+
+    .goal-actions {
+      display: flex;
+      gap: 5px;
+      flex-shrink: 0;
+      align-items: center;
+    }
+
+    .tx-right {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: flex-end;
+      margin-left: 4px;
+    }
+
+    .hulog-btn {
+      border: none;
+      background: var(--ios-green-dark);
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 9px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .goal-edit-btn, .del-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--ios-border);
+      background: var(--ios-card);
+      color: var(--ios-label-muted);
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .goal-numbers {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: var(--ios-label-muted);
+    }
+
+    .goal-bar-track {
+      width: 100%;
+      height: 6px;
+      background: var(--ios-border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .goal-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    .tx-amount {
+      font-size: 12.5px;
+      font-weight: 800;
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .tx-amount.EXPENSE {
+      color: var(--ios-red);
+    }
+
+    .tx-amount.INCOME {
+      color: var(--ios-green-dark);
+    }
+
+    /* Tarsi Planned Bills & Utang Badges */
+    .plan-type-badge {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 5px;
+      margin-left: 4px;
+    }
+    /* Tarsi Planned Bills & Utang Badges + Dark Mode Contrast Fix */
+    .plan-type-badge {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 5px;
+      margin-left: 4px;
+    }
+    .plan-type-badge.BILL { background: var(--ios-orange-soft); color: var(--ios-orange); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .plan-type-badge.DEBT { background: var(--ios-red-soft); color: var(--ios-red); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .plan-type-badge.COLLECT { background: var(--ios-blue-soft); color: var(--ios-blue); border: 1px solid rgba(37, 99, 235, 0.3); }
+
+    body.dark-mode .plan-type-badge.BILL { color: #FBBF24; }
+    body.dark-mode .plan-type-badge.DEBT { color: #F87171; }
+    body.dark-mode .plan-type-badge.COLLECT { color: #60A5FA; }
+
+    .plan-action-btn {
+      border: none;
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .plan-action-btn.BILL { background: var(--ios-orange); color: #FFFFFF; }
+    .plan-action-btn.DEBT { background: var(--ios-red); color: #FFFFFF; }
+    .plan-action-btn.COLLECT { background: var(--ios-blue); color: #FFFFFF; }
+    .plan-type-badge.BILL { background: var(--ios-orange-soft); color: var(--ios-orange); }
+    .plan-type-badge.DEBT { background: var(--ios-red-soft); color: var(--ios-red); }
+    .plan-type-badge.COLLECT { background: var(--ios-blue-soft); color: var(--ios-blue); }
+
+    /* Icon Picker & Presets */
+    .icon-picker-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .icon-pick-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 7px 3px;
+      background: var(--ios-card-alt);
+      border: 1.5px solid var(--ios-border);
+      border-radius: var(--ios-radius-sm);
+      color: var(--ios-label-muted);
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .icon-pick-btn.selected {
+      border-color: var(--ios-blue);
+      background: var(--ios-blue-soft);
+      color: var(--ios-blue);
+      font-weight: 700;
+    }
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .preset-chip {
+      border: 1px solid var(--ios-border);
+      background: var(--ios-card-alt);
+      color: var(--ios-label);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 8px 4px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--ios-card-alt);
+      border: 1px solid var(--ios-border);
+      padding: 10px 12px;
+      border-radius: var(--ios-radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    /* iPhone 14 Bottom Tab Bar with Centered + Log Action Button */
+    .mobile-bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--nav-bg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-top: 1px solid var(--ios-border);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      padding: 6px 6px calc(6px + var(--nav-bottom-space));
+      z-index: 90;
+    }
+
+    @media (min-width: 860px) {
+      .mobile-bottom-nav {
+        display: none;
+      }
+    }
+
+    .mob-nav-btn {
+      border: none;
+      background: transparent;
+      color: var(--ios-label-muted);
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 2px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      cursor: pointer;
+      min-height: 46px;
+    }
+
+    .mob-nav-btn.active {
+      color: var(--ios-blue);
+      font-weight: 800;
+    }
+
+    .mob-nav-btn.center-log-btn {
+      color: var(--ios-label);
+      font-weight: 800;
+    }
+
+    .center-log-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--ios-label);
+      color: var(--ios-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.22);
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+
+    .mob-nav-btn.center-log-btn.active .center-log-circle {
+      background: var(--ios-green);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.35);
+    }
+
+    .mob-nav-btn.center-log-btn.active {
+      color: var(--ios-green-dark);
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+      z-index: 105;
+    }
+
+    @media (min-width: 600px) {
+      .modal-backdrop {
+        align-items: center;
+        padding: 20px;
+      }
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 440px;
+      max-height: 88dvh;
+      overflow-y: auto;
+      background: var(--ios-card);
+      border-radius: 22px 22px 0 0;
+      padding: 18px 16px calc(18px + env(safe-area-inset-bottom, 14px));
+      box-shadow: var(--shadow-md);
+    }
+
+    @media (min-width: 600px) {
+      .modal-card {
+        border-radius: var(--ios-radius-lg);
+        border: 1px solid var(--ios-border);
+        padding: 20px;
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--ios-border);
+    }
+
+    .modal-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .field-group {
+      margin-bottom: 10px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--ios-label-muted);
+      margin-bottom: 4px;
+    }
+
+    .field-hint {
+      display: block;
+      font-size: 10px;
+      color: var(--ios-label-muted);
+      margin-top: 3px;
+    }
+
+    .field-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .cancel-btn {
+      padding: 11px;
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-sm);
+      background: var(--ios-card-alt);
+      color: var(--ios-label);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 44px;
+    }
+
+    .danger-link {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ios-red);
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: calc(82px + env(safe-area-inset-bottom, 14px));
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.94);
+      color: #FFFFFF;
+      padding: 9px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      display: none;
+      z-index: 120;
+      box-shadow: var(--shadow-md);
+      white-space: nowrap;
+      max-width: 92vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (min-width: 860px) {
+      body {
+        padding-bottom: 32px;
+      }
+      .header {
+        max-width: 1040px;
+        padding: 12px 24px;
+      }
+      .toast {
+        bottom: 28px;
+      }
+      .app-shell {
+        max-width: 1040px;
+        padding: 24px;
+      }
+      .workspace-grid {
+        display: grid;
+        grid-template-columns: 390px minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+      }
+      .primary-col {
+        position: sticky;
+        top: 74px;
+      }
+      .flat-input, .history-search-input {
+        font-size: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <iframe src="https://script.google.com/macros/s/AKfycbzvsZ2cINZRjQaaED8IPBraCJjZxeo31FvkYpSvD5gjC-zctiADxxK66LyWZFbwsab4/exec"></iframe>
+  <!-- Fixed Stacked Top Header with Uploaded PitakaKO Green Wallet Logo & Tarsi Dark Mode Toggle -->
+  <div class="top-bar-wrap">
+    <div class="header">
+      <div class="brand">
+        <span class="brand-logo" aria-hidden="true">
+          <svg viewBox="0 0 100 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 25.5C18.5 21.8 22 20 27 18.8L72.5 5.5C78.5 3.8 83.5 7.5 83.5 13.8V25.5H79.5V16.2L26 25.5H16Z" fill="#2ECC71" stroke="#1E9E52" stroke-width="1"/>
+            <path d="M22 29.5H78C83.5 29.5 88 34 88 39.5V44.5H68C60.8 44.5 55 50.3 55 57.5C55 64.7 60.8 70.5 68 70.5H88V71.5C88 77 83.5 81.5 78 81.5H22C16.5 81.5 12 77 12 71.5V39.5C12 34 16.5 29.5 22 29.5Z" fill="#2ECC71" stroke="#1E9E52" stroke-width="1"/>
+            <circle cx="68.5" cy="57.5" r="5.5" fill="#2ECC71" stroke="#1E9E52" stroke-width="1"/>
+          </svg>
+        </span>
+        <span>Pitaka<span class="brand-text-accent">KO</span></span>
+      </div>
+      <div class="header-right">
+        <button type="button" class="icon-pill-btn" id="themeToggleBtn" onclick="toggleThemeMode()" title="Toggle Light / Dark Mode">
+          <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <div class="date-pill num" id="todayBadge">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App Shell -->
+  <div class="app-shell">
+    <div id="dashboardView" class="workspace-grid">
+      <!-- LEFT COLUMN: Summary Card + Wallets + Quick Entry -->
+      <div class="primary-col" id="quickLogSection">
+        <!-- Hero Wallet Card with Tarsi Net Worth Snapshot -->
+        <div class="hero-card">
+          <div class="hero-top">
+            <div>
+              <div class="hero-label">Total Liquid Balance</div>
+              <div class="hero-balance num" id="totalBalance">₱0.00</div>
+              <div class="networth-sub num" id="netWorthPill">Net Worth (w/ Ipon &amp; Utang): ₱0.00</div>
+            </div>
+            <div class="safe-badge">
+              <div class="hero-label">Safe Today</div>
+              <div class="safe-badge-val num" id="safeToday">₱0.00</div>
+            </div>
+          </div>
+
+          <div class="budget-row">
+            <span id="budgetStatusText">Monthly Gastos: ₱0 / ₱15,000</span>
+            <span class="budget-edit" onclick="promptNewBudget()">Edit Budget</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="budgetBar"></div>
+          </div>
+
+          <div class="hero-kpis">
+            <div class="kpi-box">
+              Spent Today
+              <strong class="num" id="spentToday">₱0.00</strong>
+            </div>
+            <div class="kpi-box">
+              Income Month
+              <strong class="num" id="incomeMonth">₱0.00</strong>
+            </div>
+            <div class="kpi-box">
+              Total Ipon
+              <strong class="num" id="heroTotalIpon" style="color:var(--ios-green);">₱0.00</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Unified Active Pitaka Strip -->
+        <div class="panel">
+          <div class="section-head-row">
+            <div class="section-caption">
+              <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+              Active Pitaka
+            </div>
+            <button type="button" class="flat-link-btn" onclick="openBankModal()">
+              <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              Edit Balance
+            </button>
+          </div>
+
+          <div class="wallet-strip" id="walletStrip"></div>
+
+          <div class="bank-info-bar" id="bankInfoBar">
+            <div class="bank-info-meta" id="bankInfoText">
+              Active: <strong>Cash</strong>
+            </div>
+            <button type="button" class="inline-edit-link" onclick="openBankModal()">Edit Money</button>
+          </div>
+        </div>
+
+        <!-- Quick Entry Logger + Tarsi 1-Tap Expense Templates -->
+        <div class="panel">
+          <div class="section-head-row">
+            <div class="section-caption">
+              <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Quick Entry
+            </div>
+            <button type="button" class="flat-link-btn" id="toggleEntryBtn" onclick="toggleQuickEntryCard()">
+              Minimize
+            </button>
+          </div>
+
+          <div class="quick-entry-body" id="quickEntryBody">
+<!-- Tarsi 1-Tap Quick Templates (Flat Line Icons) -->
+            <div class="tarsi-templates-row">
+              <button type="button" class="tarsi-tpl-chip num" onclick="applyQuickTemplate('EXPENSE','Pagkain',180,'Jollibee / Meal')">
+                <svg class="line-icon line-icon-sm" style="color:var(--ios-red);" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+                <span>Meal ₱180</span>
+              </button>
+              <button type="button" class="tarsi-tpl-chip num" onclick="applyQuickTemplate('EXPENSE','Tingi / Kape',120,'Kape')">
+                <svg class="line-icon line-icon-sm" style="color:var(--ios-orange);" viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
+                <span>Kape ₱120</span>
+              </button>
+              <button type="button" class="tarsi-tpl-chip num" onclick="applyQuickTemplate('EXPENSE','Pamasahe',40,'Pamasahe')">
+                <svg class="line-icon line-icon-sm" style="color:var(--ios-blue);" viewBox="0 0 24 24"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></svg>
+                <span>Fare ₱40</span>
+              </button>
+              <button type="button" class="tarsi-tpl-chip num" onclick="applyQuickTemplate('EXPENSE','Tingi / Kape',99,'Data Load')">
+                <svg class="line-icon line-icon-sm" style="color:#8B5CF6;" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+                <span>Load ₱99</span>
+              </button>
+              <button type="button" class="tarsi-tpl-chip num" onclick="applyQuickTemplate('INCOME','Sweldo',15000,'Sahod')">
+                <svg class="line-icon line-icon-sm" style="color:var(--ios-green);" viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+                <span>Sahod ₱15k</span>
+              </button>
+            </div>
+
+            <div class="type-switch">
+              <button type="button" id="btnExpense" class="type-btn active-expense" onclick="setTxType('EXPENSE')">
+                − GASTOS
+              </button>
+              <button type="button" id="btnIncome" class="type-btn" onclick="setTxType('INCOME')">
+                + KITA
+              </button>
+            </div>
+
+            <div class="amount-wrap">
+              <span class="currency-prefix">₱</span>
+              <input type="number" id="amountInput" class="amount-input num" placeholder="0.00" step="0.01" min="0" inputmode="decimal">
+            </div>
+
+            <div class="section-caption" style="margin-bottom:6px;">Category</div>
+            <div class="cat-grid" id="categoryGrid"></div>
+
+            <div class="form-row">
+              <input type="text" id="noteInput" class="flat-input" placeholder="Note (e.g., Jollibee)">
+              <input type="date" id="dateInput" class="flat-input num">
+            </div>
+
+            <button type="button" id="submitBtn" class="submit-btn" onclick="submitTransaction()">
+              Save Entry
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Flattened Workspace Hub -->
+      <div class="secondary-col" id="workspaceHubSection">
+        <div class="hub-surface" id="hubTabsPanel">
+          <!-- Desktop Segmented Bar -->
+          <div class="hub-tabs-bar">
+            <button type="button" id="tabBtnDashboard" class="hub-tab-btn active" onclick="switchHubTab('goals')">
+              <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z"/><path d="M2 9v1c0 1.1.9 2 2 2h1"/><path d="M16 11h.01"/></svg>
+              Goals &amp; Bills
+              <span class="hub-count-pill num" id="goalsCountPill">0</span>
+            </button>
+
+            <button type="button" id="tabBtnGraphs" class="hub-tab-btn" onclick="switchHubTab('graphs')">
+              <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Graphs
+            </button>
+
+            <button type="button" id="tabBtnLogs" class="hub-tab-btn" onclick="switchHubTab('logs')">
+              <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              History
+              <span class="hub-count-pill num" id="logsCountPill">0</span>
+            </button>
+
+            <button type="button" id="tabBtnChat" class="hub-tab-btn" onclick="switchHubTab('chat')">
+              <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              AI Chat
+            </button>
+          </div>
+
+          <!-- PANE 1: goalsIPON + Tarsi Planned Bills & Utang Tracker -->
+          <div class="hub-pane active" id="tabPaneGoals">
+            <div class="section-head-row">
+              <div class="section-caption">
+                <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z"/><path d="M2 9v1c0 1.1.9 2 2 2h1"/><path d="M16 11h.01"/></svg>
+                goalsIPON Targets
+              </div>
+              <button type="button" class="flat-link-btn" onclick="openGoalModal('NEW')">
+                + New Goal
+              </button>
+            </div>
+
+            <div class="ipon-summary-pill num" id="iponSummaryPill">
+              <span>Total Ipon Progress</span>
+              <span id="iponSummaryText">₱0.00 / ₱0.00</span>
+            </div>
+
+            <div class="goals-list" id="goalsList"></div>
+
+            <!-- Tarsi Feature: Planned Bills, Subscriptions & Utang / Receivables -->
+            <div class="section-head-row" style="margin-top:18px;padding-top:14px;border-top:1px dashed var(--ios-border);">
+              <div class="section-caption">
+                <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Planned Bills &amp; Utang Tracker
+              </div>
+              <button type="button" class="flat-link-btn" onclick="openPlannedModal()">
+                + Add Bill / Utang
+              </button>
+            </div>
+            <div class="goals-list" id="plannedList"></div>
+          </div>
+
+          <!-- PANE 2: Graphs -->
+          <div class="hub-pane" id="tabPaneGraphs">
+            <div class="section-head-row">
+              <div class="section-caption" id="graphTrendTitle">Gastos Analytics</div>
+            </div>
+
+            <div class="period-switch" id="graphPeriodSwitch">
+              <button type="button" id="btnPeriodWeekly" class="period-btn" onclick="setGraphPeriod('weekly')">
+                Weekly
+              </button>
+              <button type="button" id="btnPeriodMonthly" class="period-btn active" onclick="setGraphPeriod('monthly')">
+                Monthly
+              </button>
+              <button type="button" id="btnPeriodYearly" class="period-btn" onclick="setGraphPeriod('yearly')">
+                Yearly
+              </button>
+            </div>
+
+            <div class="graph-kpi-strip num">
+              <div class="graph-kpi-card">
+                <div class="graph-kpi-label">Total</div>
+                <div class="graph-kpi-val" id="graphTotalVal">₱0.00</div>
+              </div>
+              <div class="graph-kpi-card">
+                <div class="graph-kpi-label">Average</div>
+                <div class="graph-kpi-val" id="graphAvgVal">₱0.00</div>
+              </div>
+              <div class="graph-kpi-card">
+                <div class="graph-kpi-label">Peak</div>
+                <div class="graph-kpi-val" id="graphPeakVal" style="color:var(--ios-red);">₱0.00</div>
+              </div>
+            </div>
+
+            <div class="chart-box">
+              <div class="bar-chart-grid num" id="gastosBarChart"></div>
+              <div class="bar-labels-row num" id="gastosBarLabels"></div>
+            </div>
+
+            <div class="section-caption" style="margin-bottom:8px;">Category Breakdown</div>
+            <div class="cat-stacked-bar" id="categoryStackedBar"></div>
+            <div class="cat-graph-list" id="categoryGraphList"></div>
+          </div>
+
+          <!-- PANE 3: History with Tarsi Search, Filter, Daily Totals & CSV Export -->
+          <div class="hub-pane" id="tabPaneLogs">
+            <div class="section-head-row">
+              <div class="section-caption">
+                <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                Transaction History
+              </div>
+              <button type="button" class="flat-link-btn" onclick="exportTransactionsCsv()" title="Export Backup CSV">
+                Export CSV
+              </button>
+            </div>
+
+            <div class="history-filter-row">
+              <input
+                type="text"
+                id="historySearchInput"
+                class="history-search-input"
+                placeholder="Search category, note, or wallet..."
+                oninput="renderTransactions()"
+              >
+              <select id="historyTypeFilter" class="flat-input" style="width:auto;min-height:38px;padding:6px 10px;" onchange="renderTransactions()">
+                <option value="ALL">All</option>
+                <option value="EXPENSE">Gastos</option>
+                <option value="INCOME">Kita</option>
+              </select>
+            </div>
+
+            <div class="tx-list" id="txList"></div>
+          </div>
+
+          <!-- PANE 4: Docked AI Chat -->
+          <div class="hub-pane" id="tabPaneChat"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Chat Panel -->
+    <div class="floating-chat-backdrop" id="floatingChatBackdrop" onclick="closeFloatingChat()"></div>
+
+    <div class="ai-panel floating-mode" id="aiPanel">
+      <div class="section-head-row" style="margin-bottom:8px;">
+        <div class="section-caption" style="color:var(--ios-label);">
+          <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+          PitakaKO AI
+          <span class="ai-badge" id="aiModeBadge">Genius NLP</span>
+        </div>
+        <div class="ai-header-actions" style="display:flex;gap:6px;">
+          <button type="button" class="flat-link-btn" onclick="promptAiApiKey()" title="Configure Gemini API Key">
+            <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>
+            API Key
+          </button>
+          <button type="button" class="del-btn floating-only-btn" onclick="closeFloatingChat()" title="Close">×</button>
+        </div>
+      </div>
+
+      <div class="solo-chat-status-strip num">
+        <div class="solo-stat-item"><strong id="soloChatWallet">Cash</strong></div>
+        <div class="solo-stat-item"><strong id="soloChatSafe">₱0.00</strong></div>
+        <div class="solo-stat-item"><strong id="soloChatSpent">₱0.00</strong></div>
+      </div>
+
+      <div class="ai-chat-feed" id="aiChatFeed">
+        <div class="ai-msg bot">
+          <div class="ai-avatar">
+            <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          </div>
+          <div class="ai-bubble">
+            <span class="ai-action-pill">Genius Assistant Ready</span><br>
+            Subukan ang natural Tagalog templates:<br>
+            • <strong>Gastos:</strong> "Gumastos ako para sa pagkain ng 250 gastos gamit ang GCash"<br>
+            • <strong>Sahod:</strong> "May sahod ako na 15000 ilagay mo sa Bank"<br>
+            • <strong>Goal:</strong> "Idagdag mo ito sa goal ko Emergency Fund 1000 halaga ng goal 20000 at date ng goal 2026-12-31"
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-quick-chips">
+        <button type="button" class="ai-chip" onclick="fillAiInput('Gumastos ako para sa pagkain ng 250 gastos gamit ang GCash')">Gastos Template</button>
+        <button type="button" class="ai-chip" onclick="fillAiInput('May sahod ako na 15000 ilagay mo sa Bank')">Sahod Template</button>
+        <button type="button" class="ai-chip" onclick="fillAiInput('Idagdag mo ito sa goal ko Emergency Fund 500 halaga ng goal 20000 at date ng goal 2026-12-31')">Goal + Date Template</button>
+        <button type="button" class="ai-chip" onclick="runQuickAiPrompt('Forecast & burn rate')">Forecast</button>
+        <button type="button" class="ai-chip" onclick="runQuickAiPrompt('Kaya ba 500 today?')">Kaya ba ₱500?</button>
+        <button type="button" class="ai-chip" onclick="runQuickAiPrompt('Undo last transaction')">Undo Last</button>
+      </div>
+
+      <div class="ai-input-row">
+        <input
+          type="text"
+          id="aiPromptInput"
+          class="flat-input"
+          placeholder="e.g. Gumastos ako para sa pagkain ng 250 gamit ang GCash..."
+          onkeydown="if(event.key==='Enter') sendAiMessage()"
+        >
+        <button type="button" id="aiMicBtn" class="ai-icon-btn" title="Voice input" onclick="toggleVoiceInput()">
+          <svg class="line-icon" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+        </button>
+        <button type="button" id="aiSendBtn" class="ai-send-btn" onclick="sendAiMessage()">
+          Send
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating AI Button -->
+  <button type="button" id="chatFabBtn" class="chat-fab-btn" onclick="toggleFloatingChat()">
+    <span class="chat-fab-dot"></span>
+    <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span id="chatFabLabel">Ask AI</span>
+  </button>
+
+  <!-- Unified iPhone 14 Bottom Navigation (Log Centered at Position 3 of 5) -->
+  <nav class="mobile-bottom-nav" aria-label="Mobile Navigation">
+    <button type="button" class="mob-nav-btn" id="mobNavGoals" onclick="jumpToMobileSection('goals')">
+      <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z"/><path d="M2 9v1c0 1.1.9 2 2 2h1"/><path d="M16 11h.01"/></svg>
+      <span>Goals</span>
+    </button>
+    <button type="button" class="mob-nav-btn" id="mobNavGraphs" onclick="jumpToMobileSection('graphs')">
+      <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Graphs</span>
+    </button>
+    <button type="button" class="mob-nav-btn center-log-btn active" id="mobNavLog" onclick="jumpToMobileSection('log')">
+      <span class="center-log-circle">
+        <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </span>
+      <span>Log</span>
+    </button>
+    <button type="button" class="mob-nav-btn" id="mobNavLogs" onclick="jumpToMobileSection('logs')">
+      <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <span>History</span>
+    </button>
+    <button type="button" class="mob-nav-btn" id="mobNavChat" onclick="jumpToMobileSection('chat')">
+      <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>AI Chat</span>
+    </button>
+  </nav>
+
+  <!-- Bank & Wallet Modal with Tarsi 1-Tap PH Bank & E-Wallet Templates -->
+  <div class="modal-backdrop" id="bankModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">Edit Pitaka / Wallet</div>
+        <button type="button" class="del-btn" onclick="closeBankModal()">×</button>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="modalWalletSelect">Select Pitaka to Edit</label>
+        <select id="modalWalletSelect" class="flat-input" onchange="populateBankModalFields()"></select>
+      </div>
+
+      <!-- Tarsi Feature: 1-Tap PH Bank & E-Wallet Templates -->
+      <div class="field-group">
+        <label class="field-label">Quick PH Bank / E-Wallet Templates</label>
+        <div class="tarsi-templates-row" style="margin-bottom:2px;">
+          <button type="button" class="tarsi-tpl-chip" onclick="applyPhBankTemplate('GCash','GCash E-Wallet','#2563EB')">GCash</button>
+          <button type="button" class="tarsi-tpl-chip" onclick="applyPhBankTemplate('Maya','Maya Bank','#059669')">Maya</button>
+          <button type="button" class="tarsi-tpl-chip" onclick="applyPhBankTemplate('BPI','Bank of the Philippine Islands','#DC2626')">BPI</button>
+          <button type="button" class="tarsi-tpl-chip" onclick="applyPhBankTemplate('BDO','BDO Unibank','#1D4ED8')">BDO</button>
+          <button type="button" class="tarsi-tpl-chip" onclick="applyPhBankTemplate('GoTyme','GoTyme Bank','#06B6D4')">GoTyme</button>
+          <button type="button" class="tarsi-tpl-chip" onclick="applyPhBankTemplate('SeaBank','SeaBank PH','#F97316')">SeaBank</button>
+          <button type="button" class="tarsi-tpl-chip" onclick="applyPhBankTemplate('UnionBank','UnionBank PH','#EA580C')">UnionBank</button>
+        </div>
+      </div>
+
+      <div class="field-row-2">
+        <div>
+          <label class="field-label" for="modalWalletName">Short Label</label>
+          <input type="text" id="modalWalletName" class="flat-input" placeholder="Cash / GCash / BPI">
+        </div>
+        <div>
+          <label class="field-label" for="modalBankName">Bank / Provider</label>
+          <input type="text" id="modalBankName" class="flat-input" placeholder="BPI, GCash, Maya">
+        </div>
+      </div>
+      <div class="field-row-2">
+        <div>
+          <label class="field-label" for="modalAccountName">Account Holder</label>
+          <input type="text" id="modalAccountName" class="flat-input" placeholder="Optional">
+        </div>
+        <div>
+          <label class="field-label" for="modalAccountNumber">Account / Card No.</label>
+          <input type="text" id="modalAccountNumber" class="flat-input num" placeholder="**** 4821">
+        </div>
+      </div>
+      <div class="field-row-2">
+        <div>
+          <label class="field-label" for="modalStartingBalance">Current Money / Balance (₱)</label>
+          <input type="number" id="modalStartingBalance" class="flat-input num" step="0.01" inputmode="decimal" style="font-weight:800;">
+          <span class="field-hint" id="modalBalanceDeltaHint">Updates active wallet balance directly</span>
+        </div>
+        <div>
+          <label class="field-label" for="modalWalletColor">Badge Color</label>
+          <input type="color" id="modalWalletColor" class="flat-input" style="height:42px;padding:4px;" value="#2563EB">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" onclick="closeBankModal()">Cancel</button>
+        <button type="button" id="saveBankBtn" class="submit-btn" style="background:var(--ios-blue);color:#FFF;" onclick="submitBankDetails()">Save Balance</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Goal Modal -->
+  <div class="modal-backdrop" id="goalModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="goalModalTitle">Manage goalsIPON</div>
+        <button type="button" class="del-btn" onclick="closeGoalModal()">×</button>
+      </div>
+      <input type="hidden" id="modalGoalId" value="NEW">
+      <input type="hidden" id="modalGoalIcon" value="shield">
+      <div class="field-group">
+        <label class="field-label" for="modalGoalName">Goal Name</label>
+        <input type="text" id="modalGoalName" class="flat-input" placeholder="e.g. Emergency Fund">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Select Icon</label>
+        <div class="icon-picker-grid" id="goalIconPickerGrid"></div>
+      </div>
+      <div class="field-row-2">
+        <div>
+          <label class="field-label" for="modalGoalTarget">Target (₱)</label>
+          <input type="number" id="modalGoalTarget" class="flat-input num" step="0.01" min="1" placeholder="20000" inputmode="decimal">
+        </div>
+        <div>
+          <label class="field-label" for="modalGoalSaved">Initial Saved (₱)</label>
+          <input type="number" id="modalGoalSaved" class="flat-input num" step="0.01" min="0" placeholder="0" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field-row-2">
+        <div>
+          <label class="field-label" for="modalGoalDate">Target Date</label>
+          <input type="date" id="modalGoalDate" class="flat-input num">
+        </div>
+        <div>
+          <label class="field-label" for="modalGoalColor">Color</label>
+          <input type="color" id="modalGoalColor" class="flat-input" style="height:42px;padding:4px;" value="#10B981">
+        </div>
+      </div>
+      <button type="button" id="deleteGoalBtn" class="danger-link" onclick="removeCurrentGoal()" style="display:none;">
+        Delete this Goal
+      </button>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" onclick="closeGoalModal()">Cancel</button>
+        <button type="button" id="saveGoalBtn" class="submit-btn" onclick="submitGoalForm()">Save Goal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hulog Modal -->
+  <div class="modal-backdrop" id="hulogModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="hulogModalTitle">+ Hulog to Goal</div>
+        <button type="button" class="del-btn" onclick="closeHulogModal()">×</button>
+      </div>
+      <input type="hidden" id="hulogGoalId" value="">
+      <div class="field-group">
+        <label class="field-label" for="hulogAmountInput">Hulog Amount (₱)</label>
+        <input type="number" id="hulogAmountInput" class="flat-input num" placeholder="0.00" step="0.01" min="1" inputmode="decimal" style="font-size:22px;font-weight:800;">
+      </div>
+      <div class="section-caption" style="margin-bottom:6px;">Quick Add</div>
+      <div class="preset-grid">
+        <button type="button" class="preset-chip num" onclick="setHulogPreset(50)">+₱50</button>
+        <button type="button" class="preset-chip num" onclick="setHulogPreset(100)">+₱100</button>
+        <button type="button" class="preset-chip num" onclick="setHulogPreset(500)">+₱500</button>
+        <button type="button" class="preset-chip num" onclick="setHulogPreset(1000)">+₱1,000</button>
+      </div>
+      <label class="checkbox-row">
+        <input type="checkbox" id="hulogDeductCheckbox" checked>
+        <span id="hulogDeductLabel">Deduct from active Pitaka</span>
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" onclick="closeHulogModal()">Cancel</button>
+        <button type="button" id="confirmHulogBtn" class="submit-btn" style="background:var(--ios-green-dark);color:#FFF;" onclick="submitHulog()">
+          Confirm Hulog
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarsi Planned Bill / Utang / Receivable Modal -->
+  <div class="modal-backdrop" id="plannedModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">Add Planned Bill / Utang</div>
+        <button type="button" class="del-btn" onclick="closePlannedModal()">×</button>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="planTypeSelect">Item Type</label>
+        <select id="planTypeSelect" class="flat-input">
+          <option value="BILL">Recurring Bill / Subscription (Expense)</option>
+          <option value="DEBT">Utang / Loan to Pay Off (Liability)</option>
+          <option value="COLLECT">Pautang / Receivable to Collect (Asset)</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="planNameInput">Title / Person / Biller</label>
+        <input type="text" id="planNameInput" class="flat-input" placeholder="e.g. Meralco, SPayLater, Juan">
+      </div>
+      <div class="field-row-2">
+        <div>
+          <label class="field-label" for="planAmountInput">Amount (₱)</label>
+          <input type="number" id="planAmountInput" class="flat-input num" step="0.01" min="1" placeholder="1500" inputmode="decimal">
+        </div>
+        <div>
+          <label class="field-label" for="planDueInput">Due Date</label>
+          <input type="date" id="planDueInput" class="flat-input num">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" onclick="closePlannedModal()">Cancel</button>
+        <button type="button" class="submit-btn" onclick="savePlannedItem()">Save Item</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const FLAT_LINE_SVGS = {
+      utensils: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>',
+      bus: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></svg>',
+      coffee: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>',
+      zap: '<svg class="line-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+      cart: '<svg class="line-icon" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>',
+      bag: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+      piggy: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z"/><path d="M2 9v1c0 1.1.9 2 2 2h1"/><path d="M16 11h.01"/></svg>',
+      wallet: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>',
+      rocket: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>',
+      shield: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>',
+      bike: '<svg class="line-icon" viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/></svg>',
+      plane: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>',
+      home: '<svg class="line-icon" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+      laptop: '<svg class="line-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2" ry="2"/><line x1="2" y1="20" x2="22" y2="20"/></svg>',
+      heart: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>',
+      edit: '<svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
+      sparkle: '<svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>'
+    };
+
+    const LEGACY_ICON_MAP = {
+      '🍚': 'utensils', '🚌': 'bus', '☕': 'coffee', '⚡': 'zap',
+      '🛒': 'cart', '🛍️': 'bag', '🐷': 'piggy', '💰': 'wallet',
+      '🚀': 'rocket', '🛡️': 'shield', '🏍️': 'bike', '✈️': 'plane',
+      '🎯': 'shield', '💸': 'wallet'
+    };
+
+    const GOAL_PICKER_OPTIONS = [
+      { key: 'shield', label: 'Fund' },
+      { key: 'bike', label: 'Motor' },
+      { key: 'plane', label: 'Travel' },
+      { key: 'piggy', label: 'Ipon' },
+      { key: 'home', label: 'Home' },
+      { key: 'laptop', label: 'Tech' },
+      { key: 'heart', label: 'Family' },
+      { key: 'bag', label: 'Shop' },
+      { key: 'wallet', label: 'Cash' },
+      { key: 'rocket', label: 'Biz' }
+    ];
+
+    const PLANNED_STORAGE_KEY = 'pitakako_tarsi_planned_v1';
+    const THEME_STORAGE_KEY = 'pitakako_tarsi_theme_v1';
+
+    function getFlatSvg(rawKey) {
+      const clean = String(rawKey || '').trim();
+      const mapped = LEGACY_ICON_MAP[clean] || clean;
+      return FLAT_LINE_SVGS[mapped] || FLAT_LINE_SVGS.wallet;
+    }
+
+    let APP_STATE = {
+      activeTab: 'goals',
+      graphPeriod: 'monthly',
+      floatingChatOpen: false,
+      quickEntryCollapsed: false,
+      type: 'EXPENSE',
+      selectedWallet: 'Cash',
+      selectedCategory: 'Pagkain',
+      wallets: [],
+      categories: [],
+      goals: [],
+      transactions: [],
+      plannedItems: [],
+      analytics: null,
+      monthlyBudget: 15000,
+      totalBalance: 0,
+      totalIponSaved: 0,
+      hasGeminiKey: false
+    };
+
+    let speechRecognition = null;
+    let isListeningVoice = false;
+
+    function formatPeso(num) {
+      const val = Number(num) || 0;
+      return '₱' + val.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function formatCompactPeso(num) {
+      const val = Number(num) || 0;
+      if (val === 0) return '';
+      if (val >= 1000) return '₱' + (val / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+      return '₱' + Math.round(val);
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 2600);
+    }
+
+    /* Tarsi Feature: Light / Dark Mode Toggle */
+    function initThemeMode() {
+      try {
+        const saved = localStorage.getItem(THEME_STORAGE_KEY);
+        if (saved === 'dark') {
+          document.body.classList.add('dark-mode');
+        }
+      } catch (e) {}
+    }
+
+    function toggleThemeMode() {
+      const isDark = document.body.classList.toggle('dark-mode');
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, isDark ? 'dark' : 'light');
+      } catch (e) {}
+      showToast(isDark ? 'Dark mode enabled' : 'Light mode enabled');
+    }
+
+    /* Tarsi Feature: 1-Tap Quick Entry Templates */
+    function applyQuickTemplate(txType, categoryName, amountVal, noteVal) {
+      setTxType(txType);
+      selectCategory(categoryName);
+      document.getElementById('amountInput').value = amountVal;
+      document.getElementById('noteInput').value = noteVal;
+      showToast(`Template ready: ${noteVal} (${formatPeso(amountVal)})`);
+    }
+
+    /* Tarsi Feature: 1-Tap PH Bank & E-Wallet Templates */
+    function applyPhBankTemplate(shortLabel, providerName, hexColor) {
+      document.getElementById('modalWalletSelect').value = 'NEW';
+      populateBankModalFields();
+      document.getElementById('modalWalletName').value = shortLabel;
+      document.getElementById('modalBankName').value = providerName;
+      document.getElementById('modalWalletColor').value = hexColor;
+      document.getElementById('modalStartingBalance').focus();
+    }
+
+    /* Tarsi Feature: Planned Bills, Subscriptions & Utang / Receivables Tracker */
+    function loadPlannedItems() {
+      try {
+        const raw = localStorage.getItem(PLANNED_STORAGE_KEY);
+        if (raw) {
+          APP_STATE.plannedItems = JSON.parse(raw);
+          return;
+        }
+      } catch (e) {}
+      APP_STATE.plannedItems = [
+        { id: 'P-1', type: 'BILL', name: 'Meralco / Electric', amount: 1800, dueDate: '2026-11-15' },
+        { id: 'P-2', type: 'DEBT', name: 'SPayLater / Installment', amount: 1200, dueDate: '2026-11-05' },
+        { id: 'P-3', type: 'COLLECT', name: 'Pautang (Receivable)', amount: 500, dueDate: '2026-11-10' }
+      ];
+    }
+
+    function persistPlannedItems() {
+      try {
+        localStorage.setItem(PLANNED_STORAGE_KEY, JSON.stringify(APP_STATE.plannedItems));
+      } catch (e) {}
+    }
+
+    function openPlannedModal() {
+      document.getElementById('planNameInput').value = '';
+      document.getElementById('planAmountInput').value = '';
+      document.getElementById('planDueInput').value = document.getElementById('dateInput').value || '2026-11-15';
+      document.getElementById('plannedModal').classList.add('open');
+    }
+
+    function closePlannedModal() {
+      document.getElementById('plannedModal').classList.remove('open');
+    }
+
+    function savePlannedItem() {
+      const type = document.getElementById('planTypeSelect').value;
+      const name = document.getElementById('planNameInput').value.trim();
+      const amount = parseFloat(document.getElementById('planAmountInput').value);
+      const dueDate = document.getElementById('planDueInput').value || '';
+
+      if (!name || isNaN(amount) || amount <= 0) {
+        showToast('Enter valid title and amount.');
+        return;
+      }
+
+      APP_STATE.plannedItems.push({
+        id: 'P-' + Date.now(),
+        type: type,
+        name: name,
+        amount: Math.round(amount * 100) / 100,
+        dueDate: dueDate
+      });
+      persistPlannedItems();
+      renderPlannedItems();
+      updateNetWorthBadge();
+      closePlannedModal();
+      showToast('Added to Planned Bills & Utang!');
+    }
+
+    function removePlannedItem(planId) {
+      APP_STATE.plannedItems = APP_STATE.plannedItems.filter(p => p.id !== planId);
+      persistPlannedItems();
+      renderPlannedItems();
+      updateNetWorthBadge();
+      showToast('Item removed.');
+    }
+
+    function settlePlannedItem(planId) {
+      const item = APP_STATE.plannedItems.find(p => p.id === planId);
+      if (!item) return;
+
+      const isReceivable = item.type === 'COLLECT';
+      const txPayload = {
+        type: isReceivable ? 'INCOME' : 'EXPENSE',
+        category: isReceivable ? 'Raket / Sideline' : 'Bills',
+        wallet: APP_STATE.selectedWallet,
+        amount: item.amount,
+        note: (isReceivable ? 'Collected: ' : 'Paid: ') + item.name,
+        date: document.getElementById('dateInput').value || ''
+      };
+
+      showToast(isReceivable ? 'Recording collection...' : 'Recording payment...');
+      google.script.run
+        .withSuccessHandler(res => {
+          if (item.type !== 'BILL') {
+            APP_STATE.plannedItems = APP_STATE.plannedItems.filter(p => p.id !== planId);
+            persistPlannedItems();
+          }
+          hydrateUI(res.state);
+          showToast(`${isReceivable ? 'Collected' : 'Paid'} ${formatPeso(item.amount)} via ${APP_STATE.selectedWallet}!`);
+        })
+        .withFailureHandler(err => showToast('Error: ' + err.message))
+        .addTransaction(txPayload);
+    }
+
+  function renderPlannedItems() {
+        const list = document.getElementById('plannedList');
+        if (!list) return;
+
+        if (!APP_STATE.plannedItems.length) {
+          list.innerHTML = '<div style="font-size:12px;color:var(--ios-label-muted);padding:12px 0;text-align:center;">No planned bills, subscriptions, or utang tracked yet.</div>';
+          return;
+        }
+
+        list.innerHTML = APP_STATE.plannedItems.map(item => {
+          const badgeLabel = item.type === 'BILL' ? 'Bill' : (item.type === 'DEBT' ? 'Utang' : 'Pautang');
+          const actionLabel = item.type === 'COLLECT' ? 'Collect' : 'Pay Now';
+          const iconKey = item.type === 'COLLECT' ? 'wallet' : (item.type === 'DEBT' ? 'shield' : 'zap');
+          const iconColor = item.type === 'COLLECT' ? 'var(--ios-blue)' : (item.type === 'DEBT' ? 'var(--ios-red)' : 'var(--ios-orange)');
+          return `
+            <div class="tx-item">
+              <div class="tx-left">
+                <div class="tx-icon" style="color:${iconColor};">${getFlatSvg(iconKey)}</div>
+                <div class="tx-info">
+                  <div class="tx-title">
+                    ${item.name}
+                    <span class="plan-type-badge ${item.type}">${badgeLabel}</span>
+                  </div>
+                  <div class="tx-meta num">Due: ${item.dueDate || 'Anytime'} • ${formatPeso(item.amount)}</div>
+                </div>
+              </div>
+              <div class="tx-right">
+                <button type="button" class="plan-action-btn ${item.type}" onclick="settlePlannedItem('${item.id}')">${actionLabel}</button>
+                <button type="button" class="del-btn" onclick="removePlannedItem('${item.id}')">×</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+    function updateNetWorthBadge() {
+      const pill = document.getElementById('netWorthPill');
+      if (!pill) return;
+      let totalDebt = 0;
+      let totalReceivable = 0;
+      APP_STATE.plannedItems.forEach(p => {
+        if (p.type === 'DEBT') totalDebt += (Number(p.amount) || 0);
+        if (p.type === 'COLLECT') totalReceivable += (Number(p.amount) || 0);
+      });
+      const netWorth = (Number(APP_STATE.totalBalance) || 0) + (Number(APP_STATE.totalIponSaved) || 0) + totalReceivable - totalDebt;
+      pill.textContent = `Net Worth (Liquid + Ipon − Utang): ${formatPeso(netWorth)}`;
+    }
+
+    /* Tarsi Feature: CSV Backup Export */
+    function exportTransactionsCsv() {
+      if (!APP_STATE.transactions.length) {
+        showToast('No transactions to export yet.');
+        return;
+      }
+      const headers = ['ID', 'Date', 'Type', 'Category', 'Wallet', 'Amount', 'Note'];
+      const rows = APP_STATE.transactions.map(t => [
+        t.id,
+        t.date,
+        t.type,
+        `"${String(t.category || '').replace(/"/g, '""')}"`,
+        `"${String(t.wallet || '').replace(/"/g, '""')}"`,
+        t.amount,
+        `"${String(t.note || '').replace(/"/g, '""')}"`
+      ]);
+      const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `PitakaKO_Backup_${document.getElementById('todayBadge').textContent || 'Export'}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('CSV backup downloaded!');
+    }
+
+    function toggleQuickEntryCard(forceOpen) {
+      const body = document.getElementById('quickEntryBody');
+      const btn = document.getElementById('toggleEntryBtn');
+      if (typeof forceOpen === 'boolean') {
+        APP_STATE.quickEntryCollapsed = !forceOpen;
+      } else {
+        APP_STATE.quickEntryCollapsed = !APP_STATE.quickEntryCollapsed;
+      }
+      body.classList.toggle('collapsed', APP_STATE.quickEntryCollapsed);
+      if (btn) btn.textContent = APP_STATE.quickEntryCollapsed ? 'Expand' : 'Minimize';
+    }
+
+    function syncMobileNavHighlight(targetKey) {
+      const mobIds = { log: 'mobNavLog', goals: 'mobNavGoals', graphs: 'mobNavGraphs', logs: 'mobNavLogs', chat: 'mobNavChat' };
+      Object.keys(mobIds).forEach(k => {
+        const el = document.getElementById(mobIds[k]);
+        if (el) el.classList.toggle('active', k === targetKey);
+      });
+    }
+
+    function jumpToMobileSection(target) {
+      syncMobileNavHighlight(target);
+
+      if (target === 'log') {
+        toggleQuickEntryCard(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => document.getElementById('amountInput').focus(), 250);
+        return;
+      }
+
+      switchHubTab(target);
+      const hubSection = document.getElementById('workspaceHubSection');
+      if (hubSection && window.innerWidth < 860) {
+        hubSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function switchHubTab(tabKey) {
+      const validTabs = ['goals', 'graphs', 'logs', 'chat'];
+      const normalized = validTabs.indexOf(tabKey) !== -1 ? tabKey : 'goals';
+      APP_STATE.activeTab = normalized;
+
+      syncMobileNavHighlight(normalized);
+
+      const btnGoals = document.getElementById('tabBtnDashboard');
+      const btnGraphs = document.getElementById('tabBtnGraphs');
+      const btnLogs = document.getElementById('tabBtnLogs');
+      const btnChat = document.getElementById('tabBtnChat');
+
+      const paneGoals = document.getElementById('tabPaneGoals');
+      const paneGraphs = document.getElementById('tabPaneGraphs');
+      const paneLogs = document.getElementById('tabPaneLogs');
+      const paneChat = document.getElementById('tabPaneChat');
+
+      const aiPanel = document.getElementById('aiPanel');
+      const fabBtn = document.getElementById('chatFabBtn');
+      const backdrop = document.getElementById('floatingChatBackdrop');
+
+      btnGoals.classList.toggle('active', normalized === 'goals');
+      if (btnGraphs) btnGraphs.classList.toggle('active', normalized === 'graphs');
+      btnLogs.classList.toggle('active', normalized === 'logs');
+      btnChat.classList.toggle('active', normalized === 'chat');
+
+      paneGoals.classList.toggle('active', normalized === 'goals');
+      if (paneGraphs) paneGraphs.classList.toggle('active', normalized === 'graphs');
+      paneLogs.classList.toggle('active', normalized === 'logs');
+      paneChat.classList.toggle('active', normalized === 'chat');
+
+      if (normalized === 'graphs') renderGraphs();
+
+      if (normalized === 'chat') {
+        APP_STATE.floatingChatOpen = false;
+        backdrop.classList.remove('open');
+        fabBtn.classList.add('hidden');
+        if (aiPanel.parentElement !== paneChat) paneChat.appendChild(aiPanel);
+        aiPanel.className = 'ai-panel solo-tab-mode';
+        setTimeout(() => {
+          const feed = document.getElementById('aiChatFeed');
+          feed.scrollTop = feed.scrollHeight;
+          document.getElementById('aiPromptInput').focus();
+        }, 50);
+      } else {
+        fabBtn.classList.remove('hidden');
+        const shell = document.querySelector('.app-shell');
+        if (aiPanel.parentElement !== shell) shell.appendChild(aiPanel);
+        aiPanel.className = 'ai-panel floating-mode' + (APP_STATE.floatingChatOpen ? ' floating-open' : '');
+        backdrop.className = 'floating-chat-backdrop' + (APP_STATE.floatingChatOpen ? ' open' : '');
+      }
+      updateFloatingFabLabel();
+    }
+
+    function setGraphPeriod(periodKey) {
+      APP_STATE.graphPeriod = (periodKey === 'weekly' || periodKey === 'yearly') ? periodKey : 'monthly';
+      document.getElementById('btnPeriodWeekly').classList.toggle('active', APP_STATE.graphPeriod === 'weekly');
+      document.getElementById('btnPeriodMonthly').classList.toggle('active', APP_STATE.graphPeriod === 'monthly');
+      document.getElementById('btnPeriodYearly').classList.toggle('active', APP_STATE.graphPeriod === 'yearly');
+      renderGraphs();
+    }
+
+    function renderGraphs() {
+      const an = APP_STATE.analytics;
+      if (!an) return;
+
+      const currentData = an[APP_STATE.graphPeriod] || an.monthly;
+      const series = currentData.series || [];
+      const cats = currentData.categories || [];
+      const total = currentData.total || 0;
+
+      document.getElementById('graphTrendTitle').textContent = currentData.title || 'Gastos Analytics';
+      document.getElementById('graphTotalVal').textContent = formatPeso(total);
+
+      const maxVal = series.reduce((m, item) => Math.max(m, item.amount || 0), 0);
+      const avgVal = series.length > 0 ? total / series.length : 0;
+
+      document.getElementById('graphAvgVal').textContent = formatPeso(avgVal);
+      document.getElementById('graphPeakVal').textContent = formatPeso(maxVal);
+
+      const chartEl = document.getElementById('gastosBarChart');
+      const labelsEl = document.getElementById('gastosBarLabels');
+
+      chartEl.innerHTML = series.map(b => {
+        const amt = b.amount || 0;
+        const heightPct = maxVal > 0 ? Math.max(4, Math.round((amt / maxVal) * 100)) : 4;
+        const isPeak = maxVal > 0 && amt === maxVal;
+        const barClass = amt === 0 ? 'bar-fill zero' : (isPeak ? 'bar-fill peak' : 'bar-fill');
+        return `
+          <div class="bar-col" title="${b.label}: ${formatPeso(amt)}">
+            <div class="bar-val">${formatCompactPeso(amt)}</div>
+            <div class="${barClass}" style="height:${amt === 0 ? 3 : heightPct}%;"></div>
+          </div>
+        `;
+      }).join('');
+
+      labelsEl.innerHTML = series.map(b => `
+        <div class="bar-label-cell">
+          <div class="bar-lbl-main">${b.label}</div>
+          <div class="bar-lbl-sub">${b.sub || ''}</div>
+        </div>
+      `).join('');
+
+      const stackedBarEl = document.getElementById('categoryStackedBar');
+      const catListEl = document.getElementById('categoryGraphList');
+
+      if (!cats.length || total <= 0) {
+        stackedBarEl.innerHTML = '<div style="width:100%;background:var(--ios-border);"></div>';
+        catListEl.innerHTML = '<div style="font-size:12px;color:var(--ios-label-muted);padding:12px 0;text-align:center;">No gastos recorded for this period yet.</div>';
+        return;
+      }
+
+      stackedBarEl.innerHTML = cats.map(c => `
+        <div class="cat-stack-seg" style="width:${Math.max(2, c.pct)}%;background:${c.color};" title="${c.name}: ${c.pct}%"></div>
+      `).join('');
+
+      catListEl.innerHTML = cats.map(c => `
+        <div class="cat-graph-item">
+          <div class="cat-graph-top">
+            <div class="cat-graph-left">
+              <div class="cat-graph-badge" style="color:${c.color};">${getFlatSvg(c.icon)}</div>
+              <span>${c.name}</span>
+            </div>
+            <div class="num">${formatPeso(c.amount)} <span style="color:var(--ios-label-muted);font-size:11px;">(${c.pct}%)</span></div>
+          </div>
+          <div class="cat-graph-track">
+            <div class="cat-graph-fill" style="width:${c.pct}%;background:${c.color};"></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleFloatingChat() {
+      if (APP_STATE.activeTab === 'chat') return;
+      APP_STATE.floatingChatOpen = !APP_STATE.floatingChatOpen;
+      const aiPanel = document.getElementById('aiPanel');
+      const backdrop = document.getElementById('floatingChatBackdrop');
+
+      if (APP_STATE.floatingChatOpen) {
+        aiPanel.classList.add('floating-open');
+        backdrop.classList.add('open');
+        setTimeout(() => {
+          const feed = document.getElementById('aiChatFeed');
+          feed.scrollTop = feed.scrollHeight;
+          document.getElementById('aiPromptInput').focus();
+        }, 50);
+      } else {
+        aiPanel.classList.remove('floating-open');
+        backdrop.classList.remove('open');
+      }
+      updateFloatingFabLabel();
+    }
+
+    function closeFloatingChat() {
+      APP_STATE.floatingChatOpen = false;
+      document.getElementById('aiPanel').classList.remove('floating-open');
+      document.getElementById('floatingChatBackdrop').classList.remove('open');
+      updateFloatingFabLabel();
+    }
+
+    function updateFloatingFabLabel() {
+      const lbl = document.getElementById('chatFabLabel');
+      if (lbl) lbl.textContent = APP_STATE.floatingChatOpen ? 'Close' : 'Ask AI';
+    }
+
+    function setTxType(type) {
+      APP_STATE.type = type;
+      document.getElementById('btnExpense').className = 'type-btn' + (type === 'EXPENSE' ? ' active-expense' : '');
+      document.getElementById('btnIncome').className = 'type-btn' + (type === 'INCOME' ? ' active-income' : '');
+
+      const matchingCats = APP_STATE.categories.filter(c => c.type === type);
+      if (matchingCats.length > 0) APP_STATE.selectedCategory = matchingCats[0].name;
+      renderCategories();
+    }
+
+    function selectWallet(walletName) {
+      APP_STATE.selectedWallet = walletName;
+      renderWallets();
+      renderActiveBankBar();
+      const soloWalletEl = document.getElementById('soloChatWallet');
+      if (soloWalletEl) soloWalletEl.textContent = walletName;
+    }
+
+    function selectCategory(catName) {
+      APP_STATE.selectedCategory = catName;
+      renderCategories();
+    }
+
+    function renderWallets() {
+      const container = document.getElementById('walletStrip');
+      container.innerHTML = APP_STATE.wallets.map(w => {
+        const isActive = w.name === APP_STATE.selectedWallet ? 'active' : '';
+        const subLabel = w.bankName || w.accountNumber || 'Tap to select';
+        const safeWName = String(w.name).replace(/'/g, "\\'");
+        return `
+          <div class="wallet-card ${isActive}" onclick="selectWallet('${safeWName}')">
+            <div class="wallet-name">
+              <span class="wallet-dot" style="background:${w.color}"></span>
+              <span class="wallet-name-text">${w.name}</span>
+            </div>
+            <div class="wallet-bal num" title="${formatPeso(w.balance)}">${formatPeso(w.balance)}</div>
+            <div class="wallet-sub" title="${subLabel}">${subLabel}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderActiveBankBar() {
+      const infoEl = document.getElementById('bankInfoText');
+      const activeObj = APP_STATE.wallets.find(w => w.name === APP_STATE.selectedWallet);
+      if (!activeObj) {
+        infoEl.innerHTML = 'Select a wallet above';
+        return;
+      }
+      const parts = [formatPeso(activeObj.balance)];
+      if (activeObj.bankName) parts.push(activeObj.bankName);
+      if (activeObj.accountNumber) parts.push(activeObj.accountNumber);
+
+      const detailsStr = parts.length > 0 ? ' • ' + parts.join(' • ') : '';
+      infoEl.innerHTML = `Active: <strong>${activeObj.name}</strong>${detailsStr}`;
+    }
+
+    function renderCategories() {
+      const grid = document.getElementById('categoryGrid');
+      const filtered = APP_STATE.categories.filter(c => c.type === APP_STATE.type);
+      grid.innerHTML = filtered.map(c => {
+        const isSel = c.name === APP_STATE.selectedCategory ? 'selected' : '';
+        const safeCName = String(c.name).replace(/'/g, "\\'");
+        return `
+          <div class="cat-chip ${isSel}" onclick="selectCategory('${safeCName}')">
+            <span class="cat-chip-icon">${getFlatSvg(c.icon)}</span>
+            <span>${c.name}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderGoals() {
+      const list = document.getElementById('goalsList');
+      const countEl = document.getElementById('goalsCountPill');
+      if (countEl) countEl.textContent = APP_STATE.goals.length;
+
+      if (!APP_STATE.goals.length) {
+        list.innerHTML = '<div style="font-size:12px;color:var(--ios-label-muted);padding:18px 0;text-align:center;">No savings goals yet. Tap "+ New Goal" to start.</div>';
+        return;
+      }
+
+      list.innerHTML = APP_STATE.goals.map(g => {
+        const dailyHint = g.remainingAmount > 0
+          ? `${formatPeso(g.dailyNeeded)}/day • ${g.daysLeft}d left`
+          : 'Goal Completed!';
+        return `
+          <div class="goal-card">
+            <div class="goal-top">
+              <div class="goal-title-wrap">
+                <div class="goal-icon" style="color:${g.color};">${getFlatSvg(g.icon)}</div>
+                <div style="min-width:0;flex:1;">
+                  <div class="goal-name">${g.name}</div>
+                  <div class="goal-meta num">${dailyHint}</div>
+                </div>
+              </div>
+              <div class="goal-actions">
+                <button type="button" class="hulog-btn" onclick="openHulogModal('${g.id}')">+ Hulog</button>
+                <button type="button" class="goal-edit-btn" title="Edit" onclick="openGoalModal('${g.id}')">${FLAT_LINE_SVGS.edit}</button>
+              </div>
+            </div>
+            <div class="goal-numbers num">
+              <span>${formatPeso(g.savedAmount)} saved</span>
+              <span>${formatPeso(g.targetAmount)} (${g.progressPct}%)</span>
+            </div>
+            <div class="goal-bar-track">
+              <div class="goal-bar-fill" style="width:${g.progressPct}%;background:${g.color};"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /**
+     * Renders non-overlapping History items with Tarsi Search, Type Filter, and Labeled Daily Totals
+     */
+    function renderTransactions() {
+      const list = document.getElementById('txList');
+      const countEl = document.getElementById('logsCountPill');
+      if (countEl) countEl.textContent = APP_STATE.transactions.length;
+
+      const searchInput = document.getElementById('historySearchInput');
+      const filterSelect = document.getElementById('historyTypeFilter');
+      const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      const typeFilter = filterSelect ? filterSelect.value : 'ALL';
+
+      const filtered = APP_STATE.transactions.filter(tx => {
+        if (typeFilter !== 'ALL' && tx.type !== typeFilter) return false;
+        if (!query) return true;
+        const haystack = `${tx.category} ${tx.note} ${tx.wallet} ${tx.date}`.toLowerCase();
+        return haystack.indexOf(query) !== -1;
+      });
+
+      if (!filtered.length) {
+        list.innerHTML = '<div style="font-size:12px;color:var(--ios-label-muted);padding:18px 0;text-align:center;">No matching transactions found.</div>';
+        return;
+      }
+
+      // Group transactions by date and compute Tarsi Daily Totals
+      const groupedByDate = {};
+      const dateOrder = [];
+      filtered.forEach(tx => {
+        const dKey = tx.date || 'Unknown Date';
+        if (!groupedByDate[dKey]) {
+          groupedByDate[dKey] = { items: [], netSpent: 0 };
+          dateOrder.push(dKey);
+        }
+        groupedByDate[dKey].items.push(tx);
+        if (tx.type === 'EXPENSE') groupedByDate[dKey].netSpent += (Number(tx.amount) || 0);
+      });
+
+      list.innerHTML = dateOrder.map(dKey => {
+        const grp = groupedByDate[dKey];
+        const headerHtml = `
+          <div class="tx-date-header num">
+            <span>${dKey}</span>
+            <span>Daily Gastos: ${formatPeso(grp.netSpent)}</span>
+          </div>
+        `;
+        const rowsHtml = grp.items.map(tx => {
+          const sign = tx.type === 'EXPENSE' ? '-' : '+';
+          const safeCat = String(tx.category || '').replace(/</g, '&lt;');
+          const safeNote = String(tx.note || '').replace(/</g, '&lt;');
+          const notePart = safeNote ? ` • ${safeNote}` : '';
+          return `
+            <div class="tx-item">
+              <div class="tx-left">
+                <div class="tx-icon">${getFlatSvg(tx.icon)}</div>
+                <div class="tx-info">
+                  <div class="tx-title" title="${safeCat}${notePart}">${safeCat}${notePart}</div>
+                  <div class="tx-meta num">${tx.wallet}</div>
+                </div>
+              </div>
+              <div class="tx-right">
+                <div class="tx-amount num ${tx.type}">${sign}${formatPeso(tx.amount)}</div>
+                <button class="del-btn" title="Delete" onclick="removeTx('${tx.id}')">×</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+        return headerHtml + rowsHtml;
+      }).join('');
+    }
+
+    function formatSafeBotReply_(rawText, actionTag) {
+      let safe = String(rawText || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      safe = safe.replace(/\n/g, '<br>');
+
+      const actionLabels = {
+        LOGGED_TX: 'Expense / Income Logged',
+        LOGGED_MULTI_TX: 'Batch Transactions Logged',
+        LOGGED_TRANSFER: 'Wallet Transfer Complete',
+        LOGGED_HULOG: 'Goal Updated & Hulog Added',
+        CREATED_GOAL: 'New Goal Created',
+        UPDATED_BUDGET: 'Monthly Budget Updated',
+        UNDONE_TX: 'Last Transaction Undone'
+      };
+      const badgeHtml = actionLabels[actionTag]
+        ? `<span class="ai-action-pill">${actionLabels[actionTag]}</span><br>`
+        : '';
+      return badgeHtml + safe;
+    }
+
+    function appendAiChatBubble(role, text, actionTag) {
+      const feed = document.getElementById('aiChatFeed');
+      const div = document.createElement('div');
+      div.className = 'ai-msg ' + (role === 'user' ? 'user' : 'bot');
+      if (role === 'user') {
+        const safeUser = String(text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        div.innerHTML = `<div class="ai-bubble">${safeUser}</div>`;
+      } else {
+        div.innerHTML = `
+          <div class="ai-avatar">${FLAT_LINE_SVGS.sparkle}</div>
+          <div class="ai-bubble num">${formatSafeBotReply_(text, actionTag)}</div>
+        `;
+      }
+      feed.appendChild(div);
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    function fillAiInput(exampleText) {
+      const input = document.getElementById('aiPromptInput');
+      input.value = exampleText;
+      input.focus();
+    }
+
+    function runQuickAiPrompt(promptText) {
+      const input = document.getElementById('aiPromptInput');
+      input.value = promptText;
+      sendAiMessage();
+    }
+
+    function sendAiMessage() {
+      const input = document.getElementById('aiPromptInput');
+      const btn = document.getElementById('aiSendBtn');
+      const text = input.value.trim();
+      if (!text) {
+        showToast('Enter a command or question.');
+        return;
+      }
+
+      appendAiChatBubble('user', text);
+      input.value = '';
+      btn.disabled = true;
+
+      google.script.run
+        .withSuccessHandler(res => {
+          btn.disabled = false;
+          if (res && res.state) hydrateUI(res.state);
+          if (res && res.reply) appendAiChatBubble('bot', res.reply, res.action);
+          if (res && res.action && res.action !== 'ADVISOR_REPLY') {
+            showToast('AI action completed!');
+          }
+        })
+        .withFailureHandler(err => {
+          btn.disabled = false;
+          appendAiChatBubble('bot', 'Error: ' + err.message);
+        })
+        .processAiAssistantMessage({ text: text, activeWallet: APP_STATE.selectedWallet });
+    }
+
+    function toggleVoiceInput() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRec) {
+        showToast('Voice input not supported on this browser.');
+        return;
+      }
+      const micBtn = document.getElementById('aiMicBtn');
+      if (isListeningVoice && speechRecognition) {
+        speechRecognition.stop();
+        return;
+      }
+      speechRecognition = new SpeechRec();
+      speechRecognition.lang = 'en-PH';
+      speechRecognition.interimResults = false;
+      speechRecognition.maxAlternatives = 1;
+
+      speechRecognition.onstart = () => {
+        isListeningVoice = true;
+        micBtn.classList.add('listening');
+        showToast('Listening... Speak command');
+      };
+      speechRecognition.onresult = (event) => {
+        document.getElementById('aiPromptInput').value = event.results[0][0].transcript;
+        sendAiMessage();
+      };
+      speechRecognition.onerror = () => showToast('Voice error. Try again.');
+      speechRecognition.onend = () => {
+        isListeningVoice = false;
+        micBtn.classList.remove('listening');
+      };
+      speechRecognition.start();
+    }
+
+    function promptAiApiKey() {
+      const keyInput = prompt('Optional: Enter Gemini API Key (Leave blank for Genius Local NLP):', '');
+      if (keyInput === null) return;
+      google.script.run
+        .withSuccessHandler(state => {
+          hydrateUI(state);
+          showToast(state.hasGeminiKey ? 'Gemini AI enabled!' : 'Using Genius Local NLP.');
+        })
+        .withFailureHandler(err => showToast('Error: ' + err.message))
+        .saveAiApiKey(keyInput);
+    }
+
+    function renderGoalIconPicker(selectedKey) {
+      const normalized = LEGACY_ICON_MAP[selectedKey] || selectedKey || 'shield';
+      const hiddenEl = document.getElementById('modalGoalIcon');
+      hiddenEl.value = FLAT_LINE_SVGS[normalized] ? normalized : 'shield';
+
+      const grid = document.getElementById('goalIconPickerGrid');
+      grid.innerHTML = GOAL_PICKER_OPTIONS.map(opt => {
+        const isSel = opt.key === hiddenEl.value ? 'selected' : '';
+        return `
+          <button type="button" class="icon-pick-btn ${isSel}" onclick="selectGoalIcon('${opt.key}')">
+            ${getFlatSvg(opt.key)}
+            <span>${opt.label}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectGoalIcon(iconKey) {
+      document.getElementById('modalGoalIcon').value = iconKey;
+      renderGoalIconPicker(iconKey);
+    }
+
+    function openBankModal() {
+      const selectEl = document.getElementById('modalWalletSelect');
+      selectEl.innerHTML = APP_STATE.wallets.map(w =>
+        `<option value="${w.id}">${w.name} (${formatPeso(w.balance)})</option>`
+      ).join('') + '<option value="NEW">+ Add New Account</option>';
+
+      const current = APP_STATE.wallets.find(w => w.name === APP_STATE.selectedWallet);
+      if (current) selectEl.value = current.id;
+      populateBankModalFields();
+      document.getElementById('bankModal').classList.add('open');
+    }
+
+    function closeBankModal() {
+      document.getElementById('bankModal').classList.remove('open');
+    }
+
+    function populateBankModalFields() {
+      const id = document.getElementById('modalWalletSelect').value;
+      const nameEl = document.getElementById('modalWalletName');
+      const bankEl = document.getElementById('modalBankName');
+      const holderEl = document.getElementById('modalAccountName');
+      const numEl = document.getElementById('modalAccountNumber');
+      const balInputEl = document.getElementById('modalStartingBalance');
+      const colorEl = document.getElementById('modalWalletColor');
+      const hintEl = document.getElementById('modalBalanceDeltaHint');
+
+      if (id === 'NEW') {
+        nameEl.value = '';
+        bankEl.value = '';
+        holderEl.value = '';
+        numEl.value = '';
+        balInputEl.value = '0';
+        colorEl.value = '#2563EB';
+        if (hintEl) hintEl.textContent = 'Initial money for this new wallet';
+        return;
+      }
+      const w = APP_STATE.wallets.find(item => item.id === id);
+      if (!w) return;
+      nameEl.value = w.name || '';
+      bankEl.value = w.bankName || '';
+      holderEl.value = w.accountName || '';
+      numEl.value = w.accountNumber || '';
+      balInputEl.value = w.balance != null ? w.balance : (w.startingBalance || 0);
+      colorEl.value = w.color || '#2563EB';
+      if (hintEl) {
+        const netTx = Math.round(((w.balance || 0) - (w.startingBalance || 0)) * 100) / 100;
+        hintEl.textContent = netTx === 0
+          ? 'Matches starting balance'
+          : `Includes ${netTx >= 0 ? '+' : ''}${formatPeso(netTx)} net logged transactions`;
+      }
+    }
+
+    function submitBankDetails() {
+      const id = document.getElementById('modalWalletSelect').value;
+      const name = document.getElementById('modalWalletName').value.trim();
+      const bankName = document.getElementById('modalBankName').value.trim();
+      const accountName = document.getElementById('modalAccountName').value.trim();
+      const accountNumber = document.getElementById('modalAccountNumber').value.trim();
+      const enteredCurrentBalance = parseFloat(document.getElementById('modalStartingBalance').value);
+      const color = document.getElementById('modalWalletColor').value;
+      const saveBtn = document.getElementById('saveBankBtn');
+
+      if (!name) { showToast('Enter short wallet label.'); return; }
+      if (isNaN(enteredCurrentBalance)) { showToast('Enter valid balance amount.'); return; }
+
+      let computedStartingBalance = enteredCurrentBalance;
+      if (id !== 'NEW') {
+        const existingW = APP_STATE.wallets.find(item => item.id === id);
+        if (existingW) {
+          const netTxDelta = (Number(existingW.balance) || 0) - (Number(existingW.startingBalance) || 0);
+          computedStartingBalance = Math.round((enteredCurrentBalance - netTxDelta) * 100) / 100;
+        }
+      }
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving...';
+
+      google.script.run
+        .withSuccessHandler(res => {
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Save Balance';
+          APP_STATE.selectedWallet = res.walletName || name;
+          hydrateUI(res.state);
+          closeBankModal();
+          showToast('Pitaka balance updated!');
+        })
+        .withFailureHandler(err => {
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Save Balance';
+          showToast('Error: ' + err.message);
+        })
+        .saveWalletDetails({
+          id: id,
+          name: name,
+          bankName: bankName,
+          accountName: accountName,
+          accountNumber: accountNumber,
+          startingBalance: computedStartingBalance,
+          currentBalance: enteredCurrentBalance,
+          color: color
+        });
+    }
+
+    function openGoalModal(goalId) {
+      const idEl = document.getElementById('modalGoalId');
+      const nameEl = document.getElementById('modalGoalName');
+      const targetEl = document.getElementById('modalGoalTarget');
+      const savedEl = document.getElementById('modalGoalSaved');
+      const dateEl = document.getElementById('modalGoalDate');
+      const colorEl = document.getElementById('modalGoalColor');
+      const delBtn = document.getElementById('deleteGoalBtn');
+      const titleEl = document.getElementById('goalModalTitle');
+
+      idEl.value = goalId;
+      if (goalId === 'NEW') {
+        titleEl.textContent = 'New goalsIPON Target';
+        nameEl.value = ''; targetEl.value = ''; savedEl.value = '0'; dateEl.value = '2026-12-31'; colorEl.value = '#10B981';
+        delBtn.style.display = 'none';
+        renderGoalIconPicker('shield');
+      } else {
+        const g = APP_STATE.goals.find(item => item.id === goalId);
+        if (!g) return;
+        titleEl.textContent = 'Edit Goal: ' + g.name;
+        nameEl.value = g.name; targetEl.value = g.targetAmount; savedEl.value = g.savedAmount; dateEl.value = g.targetDate || ''; colorEl.value = g.color || '#10B981';
+        delBtn.style.display = 'inline-block';
+        renderGoalIconPicker(g.icon || 'shield');
+      }
+      document.getElementById('goalModal').classList.add('open');
+    }
+
+    function closeGoalModal() {
+      document.getElementById('goalModal').classList.remove('open');
+    }
+
+    function submitGoalForm() {
+      const id = document.getElementById('modalGoalId').value;
+      const name = document.getElementById('modalGoalName').value.trim();
+      const icon = document.getElementById('modalGoalIcon').value.trim() || 'shield';
+      const targetAmount = parseFloat(document.getElementById('modalGoalTarget').value);
+      const savedAmount = parseFloat(document.getElementById('modalGoalSaved').value) || 0;
+      const targetDate = document.getElementById('modalGoalDate').value;
+      const color = document.getElementById('modalGoalColor').value;
+      const btn = document.getElementById('saveGoalBtn');
+
+      if (!name) { showToast('Enter Goal Name.'); return; }
+      if (isNaN(targetAmount) || targetAmount <= 0) { showToast('Target must be greater than 0.'); return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      google.script.run
+        .withSuccessHandler(res => {
+          btn.disabled = false;
+          btn.textContent = 'Save Goal';
+          hydrateUI(res.state);
+          closeGoalModal();
+          showToast('Goal saved!');
+        })
+        .withFailureHandler(err => {
+          btn.disabled = false;
+          btn.textContent = 'Save Goal';
+          showToast('Error: ' + err.message);
+        })
+        .saveIponGoal({ id, name, icon, targetAmount, savedAmount, targetDate, color });
+    }
+
+    function removeCurrentGoal() {
+      const goalId = document.getElementById('modalGoalId').value;
+      if (!goalId || goalId === 'NEW') return;
+      closeGoalModal();
+      showToast('Deleting goal...');
+      google.script.run
+        .withSuccessHandler(res => {
+          hydrateUI(res.state);
+          showToast('Goal deleted.');
+        })
+        .withFailureHandler(err => showToast('Error: ' + err.message))
+        .deleteIponGoal(goalId);
+    }
+
+    function openHulogModal(goalId) {
+      const g = APP_STATE.goals.find(item => item.id === goalId);
+      if (!g) return;
+      document.getElementById('hulogGoalId').value = g.id;
+      document.getElementById('hulogModalTitle').innerHTML = `${getFlatSvg(g.icon)} <span>Hulog: ${g.name}</span>`;
+      document.getElementById('hulogAmountInput').value = '';
+      document.getElementById('hulogDeductLabel').textContent = `Deduct from active Pitaka (${APP_STATE.selectedWallet})`;
+      document.getElementById('hulogModal').classList.add('open');
+    }
+
+    function closeHulogModal() {
+      document.getElementById('hulogModal').classList.remove('open');
+    }
+
+    function setHulogPreset(val) {
+      const input = document.getElementById('hulogAmountInput');
+      input.value = (parseFloat(input.value) || 0) + val;
+    }
+
+    function submitHulog() {
+      const goalId = document.getElementById('hulogGoalId').value;
+      const amount = parseFloat(document.getElementById('hulogAmountInput').value);
+      const deductFromWallet = document.getElementById('hulogDeductCheckbox').checked;
+      const btn = document.getElementById('confirmHulogBtn');
+
+      if (isNaN(amount) || amount <= 0) { showToast('Enter valid amount.'); return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      google.script.run
+        .withSuccessHandler(res => {
+          btn.disabled = false;
+          btn.textContent = 'Confirm Hulog';
+          hydrateUI(res.state);
+          closeHulogModal();
+          showToast('Hulog added!');
+        })
+        .withFailureHandler(err => {
+          btn.disabled = false;
+          btn.textContent = 'Confirm Hulog';
+          showToast('Error: ' + err.message);
+        })
+        .contributeToGoal({ goalId, amount, deductFromWallet, wallet: APP_STATE.selectedWallet });
+    }
+
+    function hydrateUI(data) {
+      APP_STATE.wallets = data.wallets || [];
+      APP_STATE.categories = data.categories || [];
+      APP_STATE.goals = data.goals || [];
+      APP_STATE.transactions = data.transactions || [];
+      APP_STATE.analytics = data.analytics || null;
+      APP_STATE.monthlyBudget = data.monthlyBudget || 15000;
+      APP_STATE.totalBalance = data.totalBalance || 0;
+      APP_STATE.totalIponSaved = data.totalIponSaved || 0;
+      APP_STATE.hasGeminiKey = Boolean(data.hasGeminiKey);
+
+      if (!APP_STATE.wallets.some(w => w.name === APP_STATE.selectedWallet) && APP_STATE.wallets.length > 0) {
+        APP_STATE.selectedWallet = APP_STATE.wallets[0].name;
+      }
+
+      document.getElementById('todayBadge').textContent = data.today;
+      const dateInput = document.getElementById('dateInput');
+      if (!dateInput.value) dateInput.value = data.today;
+
+      document.getElementById('totalBalance').textContent = formatPeso(data.totalBalance);
+      document.getElementById('safeToday').textContent = formatPeso(data.safeToSpendToday);
+      document.getElementById('spentToday').textContent = formatPeso(data.spentToday);
+      document.getElementById('incomeMonth').textContent = formatPeso(data.incomeThisMonth);
+      document.getElementById('heroTotalIpon').textContent = formatPeso(data.totalIponSaved);
+
+      const soloWalletEl = document.getElementById('soloChatWallet');
+      const soloSafeEl = document.getElementById('soloChatSafe');
+      const soloSpentEl = document.getElementById('soloChatSpent');
+      if (soloWalletEl) soloWalletEl.textContent = APP_STATE.selectedWallet;
+      if (soloSafeEl) soloSafeEl.textContent = formatPeso(data.safeToSpendToday);
+      if (soloSpentEl) soloSpentEl.textContent = formatPeso(data.spentToday);
+
+      const badgeEl = document.getElementById('aiModeBadge');
+      if (badgeEl) badgeEl.textContent = APP_STATE.hasGeminiKey ? 'Gemini Agent' : 'Genius NLP';
+
+      document.getElementById('iponSummaryText').textContent = `${formatPeso(data.totalIponSaved)} / ${formatPeso(data.totalIponTarget)}`;
+
+      const pct = Math.min(100, Math.round((data.spentThisMonth / data.monthlyBudget) * 100));
+      document.getElementById('budgetStatusText').textContent = `Monthly Gastos: ${formatPeso(data.spentThisMonth)} / ${formatPeso(data.monthlyBudget)} (${pct}%)`;
+
+      const bar = document.getElementById('budgetBar');
+      bar.style.width = pct + '%';
+      bar.style.background = pct >= 90 ? '#EF4444' : (pct >= 75 ? '#F59E0B' : '#2ECC71');
+
+      renderWallets();
+      renderActiveBankBar();
+      renderCategories();
+      renderGoals();
+      renderPlannedItems();
+      updateNetWorthBadge();
+      renderTransactions();
+      renderGraphs();
+    }
+
+    function submitTransaction() {
+      const amountEl = document.getElementById('amountInput');
+      const noteEl = document.getElementById('noteInput');
+      const dateEl = document.getElementById('dateInput');
+      const btn = document.getElementById('submitBtn');
+
+      const amount = parseFloat(amountEl.value);
+      if (isNaN(amount) || amount <= 0) {
+        showToast('Enter amount greater than 0');
+        amountEl.focus();
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      google.script.run
+        .withSuccessHandler(res => {
+          btn.disabled = false;
+          btn.textContent = 'Save Entry';
+          amountEl.value = '';
+          noteEl.value = '';
+          hydrateUI(res.state);
+          // Tarsi-style Instant Financial Impact Feedback
+          const remSafe = Math.max(0, (res.state.safeToSpendToday || 0) - (res.state.spentToday || 0));
+          showToast(APP_STATE.type === 'EXPENSE'
+            ? `Saved! Safe Today left: ${formatPeso(remSafe)}`
+            : `Kita added to ${APP_STATE.selectedWallet}!`);
+        })
+        .withFailureHandler(err => {
+          btn.disabled = false;
+          btn.textContent = 'Save Entry';
+          showToast('Error: ' + err.message);
+        })
+        .addTransaction({
+          type: APP_STATE.type,
+          category: APP_STATE.selectedCategory,
+          wallet: APP_STATE.selectedWallet,
+          amount: amount,
+          note: noteEl.value,
+          date: dateEl.value
+        });
+    }
+
+    function removeTx(txId) {
+      showToast('Deleting entry...');
+      google.script.run
+        .withSuccessHandler(res => {
+          hydrateUI(res.state);
+          showToast('Entry removed.');
+        })
+        .withFailureHandler(err => showToast('Error: ' + err.message))
+        .deleteTransaction(txId);
+    }
+
+    function promptNewBudget() {
+      const input = prompt('Enter new Monthly Budget (₱):', APP_STATE.monthlyBudget);
+      if (!input) return;
+      const val = parseFloat(input);
+      if (isNaN(val) || val <= 0) { showToast('Invalid budget.'); return; }
+      google.script.run
+        .withSuccessHandler(state => {
+          hydrateUI(state);
+          showToast('Budget updated!');
+        })
+        .updateMonthlyBudget(val);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initThemeMode();
+      loadPlannedItems();
+      renderPlannedItems();
+      google.script.run
+        .withSuccessHandler(hydrateUI)
+        .withFailureHandler(err => showToast('Load error: ' + err.message))
+        .getAppData();
+    });
+  </script>
 </body>
 </html>
