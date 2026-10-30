@@ -6,17 +6,12 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>PitakaKO</title>
-  <link rel="apple-touch-icon" href="icon-180.png">
-  <link rel="manifest" href="manifest.webmanifest">
-  <meta name="apple-mobile-web-app-title" content="PitakaKO">
-  <meta name="theme-color" content="#F4F6F8">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --ios-bg: #F4F6F8;
-      --nav-bottom-space: env(safe-area-inset-bottom, 0px);
       --ios-card: #FFFFFF;
       --ios-card-alt: #F8FAFC;
       --ios-border: #E2E8F0;
@@ -32,6 +27,8 @@
       --ios-orange-soft: #FFFBEB;
       --ios-blue: #2563EB;
       --ios-blue-soft: #EFF6FF;
+      --ios-purple: #8B5CF6;
+      --ios-purple-soft: #F3E8FF;
       --ios-radius-lg: 20px;
       --ios-radius-md: 14px;
       --ios-radius-sm: 10px;
@@ -54,6 +51,7 @@
       --ios-red-soft: rgba(239, 68, 68, 0.15);
       --ios-orange-soft: rgba(245, 158, 11, 0.15);
       --ios-blue-soft: rgba(37, 99, 235, 0.2);
+      --ios-purple-soft: rgba(139, 92, 246, 0.2);
       --header-bg: rgba(17, 24, 39, 0.92);
       --nav-bg: rgba(17, 24, 39, 0.96);
       --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.35);
@@ -84,7 +82,7 @@
       overflow-x: clip;
       min-height: 100dvh;
       padding-top: calc(54px + env(safe-area-inset-top, 0px));
-      padding-bottom: calc(92px + var(--nav-bottom-space));
+      padding-bottom: calc(92px + env(safe-area-inset-bottom, 20px));
       -webkit-font-smoothing: antialiased;
       transition: background-color 0.2s ease, color 0.2s ease;
     }
@@ -148,7 +146,6 @@
       user-select: none;
     }
 
-    /* Uploaded PitakaKO Green Wallet Logo Container */
     .brand-logo {
       width: 34px;
       height: 28px;
@@ -176,15 +173,19 @@
     }
 
     .icon-pill-btn {
-      width: 30px;
       height: 30px;
+      padding: 0 9px;
       border-radius: 999px;
       border: 1px solid var(--ios-border);
       background: var(--ios-card-alt);
       color: var(--ios-label);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 4px;
       cursor: pointer;
     }
 
@@ -359,7 +360,6 @@
       min-width: 0;
     }
 
-    /* Flattened Hub Container */
     .hub-surface {
       background: transparent;
       border: none;
@@ -551,7 +551,7 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
     }
 
     .tarsi-tpl-chip:active {
@@ -726,6 +726,32 @@
       opacity: 0.85;
     }
 
+    /* Tarsi Quick Notes Scratchpad */
+    .scratchpad-input-row {
+      display: grid;
+      grid-template-columns: 1fr 90px auto;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .scratchpad-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .scratch-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: var(--ios-card-alt);
+      border: 1px dashed var(--ios-border-strong);
+      border-radius: 10px;
+      font-size: 12px;
+    }
+
     /* Hub Tabs Bar: Shown on Desktop, Hidden on Mobile */
     .hub-tabs-bar {
       display: none;
@@ -804,6 +830,35 @@
       border: none;
       background: transparent;
       box-shadow: none;
+    }
+
+    /* Tarsi Cashflow Forecast Timeline Box */
+    .cashflow-timeline-box {
+      background: var(--ios-card-alt);
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-md);
+      padding: 11px 12px;
+      margin-bottom: 12px;
+    }
+
+    .cashflow-proj-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+      border-bottom: 1px dashed var(--ios-border);
+    }
+
+    .timeline-step {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      padding: 4px 0;
+      gap: 8px;
     }
 
     /* Graphs Styling */
@@ -981,12 +1036,14 @@
       margin-bottom: 5px;
       font-size: 12px;
       font-weight: 700;
+      gap: 6px;
     }
 
     .cat-graph-left {
       display: flex;
       align-items: center;
       gap: 7px;
+      min-width: 0;
     }
 
     .cat-graph-badge {
@@ -998,11 +1055,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
 
     .cat-graph-track {
       width: 100%;
-      height: 5px;
+      height: 6px;
       background: var(--ios-border);
       border-radius: 999px;
       overflow: hidden;
@@ -1011,12 +1069,13 @@
     .cat-graph-fill {
       height: 100%;
       border-radius: 999px;
+      transition: width 0.25s ease;
     }
 
     /* Floating Chat Button & AI Panel */
     .chat-fab-btn {
       position: fixed;
-      bottom: calc(74px + var(--nav-bottom-space));
+      bottom: calc(74px + env(safe-area-inset-bottom, 16px));
       right: 12px;
       z-index: 85;
       display: inline-flex;
@@ -1227,12 +1286,12 @@
 
     .ai-input-row {
       display: grid;
-      grid-template-columns: 1fr auto auto;
-      gap: 6px;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 5px;
     }
 
     .ai-icon-btn {
-      width: 42px;
+      width: 40px;
       height: 42px;
       border: 1px solid var(--ios-border);
       border-radius: var(--ios-radius-sm);
@@ -1251,7 +1310,7 @@
     }
 
     .ai-send-btn {
-      padding: 0 13px;
+      padding: 0 12px;
       height: 42px;
       border: none;
       border-radius: var(--ios-radius-sm);
@@ -1313,7 +1372,6 @@
       flex: 1;
     }
 
-    /* History Filter Bar & Tarsi Daily Total Group Headers */
     .history-filter-row {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -1345,7 +1403,6 @@
       color: var(--ios-label-muted);
     }
 
-    /* Fixed History Item Layout to Prevent Overlapping */
     .tx-item {
       display: flex;
       justify-content: space-between;
@@ -1422,7 +1479,7 @@
 
     .tx-right {
       display: flex;
-      gap: 6px;
+      gap: 5px;
       flex-shrink: 0;
       align-items: center;
       justify-content: flex-end;
@@ -1492,16 +1549,6 @@
       color: var(--ios-green-dark);
     }
 
-    /* Tarsi Planned Bills & Utang Badges */
-    .plan-type-badge {
-      display: inline-block;
-      font-size: 9px;
-      font-weight: 800;
-      text-transform: uppercase;
-      padding: 2px 6px;
-      border-radius: 5px;
-      margin-left: 4px;
-    }
     /* Tarsi Planned Bills & Utang Badges + Dark Mode Contrast Fix */
     .plan-type-badge {
       display: inline-block;
@@ -1534,9 +1581,38 @@
     .plan-action-btn.BILL { background: var(--ios-orange); color: #FFFFFF; }
     .plan-action-btn.DEBT { background: var(--ios-red); color: #FFFFFF; }
     .plan-action-btn.COLLECT { background: var(--ios-blue); color: #FFFFFF; }
-    .plan-type-badge.BILL { background: var(--ios-orange-soft); color: var(--ios-orange); }
-    .plan-type-badge.DEBT { background: var(--ios-red-soft); color: var(--ios-red); }
-    .plan-type-badge.COLLECT { background: var(--ios-blue-soft); color: var(--ios-blue); }
+
+    /* PitakaID & PitakaReceipt ("Tarceipt") Card Styles */
+    .pitaka-id-card {
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: #FFFFFF;
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid rgba(46, 204, 113, 0.35);
+      box-shadow: var(--shadow-md);
+    }
+
+    .pitaka-id-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.14);
+      font-size: 12px;
+    }
+
+    .pitaka-id-row:last-child {
+      border-bottom: none;
+    }
+
+    .tarceipt-paper {
+      background: var(--ios-card-alt);
+      border: 1.5px dashed var(--ios-border-strong);
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+      position: relative;
+    }
 
     /* Icon Picker & Presets */
     .icon-picker-grid {
@@ -1617,7 +1693,7 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       align-items: center;
-      padding: 6px 6px calc(6px + var(--nav-bottom-space));
+      padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 12px));
       z-index: 90;
     }
 
@@ -1850,7 +1926,7 @@
   </style>
 </head>
 <body>
-  <!-- Fixed Stacked Top Header with Uploaded PitakaKO Green Wallet Logo & Tarsi Dark Mode Toggle -->
+  <!-- Fixed Stacked Top Header with Uploaded PitakaKO Green Wallet Logo, PitakaID & Dark Mode -->
   <div class="top-bar-wrap">
     <div class="header">
       <div class="brand">
@@ -1864,10 +1940,14 @@
         <span>Pitaka<span class="brand-text-accent">KO</span></span>
       </div>
       <div class="header-right">
+        <button type="button" class="icon-pill-btn" onclick="openPitakaIdModal()" title="Shareable PitakaID Payment Card">
+          <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          <span>PitakaID</span>
+        </button>
         <button type="button" class="icon-pill-btn" id="themeToggleBtn" onclick="toggleThemeMode()" title="Toggle Light / Dark Mode">
           <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
         </button>
-        <div class="date-pill num" id="todayBadge">Loading...</div>
+        <span id="todayBadge" style="display:none;"></span>
       </div>
     </div>
   </div>
@@ -1875,7 +1955,7 @@
   <!-- Main App Shell -->
   <div class="app-shell">
     <div id="dashboardView" class="workspace-grid">
-      <!-- LEFT COLUMN: Summary Card + Wallets + Quick Entry -->
+      <!-- LEFT COLUMN: Summary Card + Wallets + Quick Entry + Quick Notes Scratchpad -->
       <div class="primary-col" id="quickLogSection">
         <!-- Hero Wallet Card with Tarsi Net Worth Snapshot -->
         <div class="hero-card">
@@ -1938,41 +2018,37 @@
           </div>
         </div>
 
-        <!-- Quick Entry Logger + Tarsi 1-Tap Expense Templates -->
+        <!-- Quick Entry Logger + Flat Icon Templates + KKB Bill Splitter -->
         <div class="panel">
           <div class="section-head-row">
             <div class="section-caption">
               <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Quick Entry
             </div>
-            <button type="button" class="flat-link-btn" id="toggleEntryBtn" onclick="toggleQuickEntryCard()">
-              Minimize
-            </button>
+            <div style="display:flex;gap:6px;">
+              <button type="button" class="flat-link-btn" onclick="openKkbModal()" title="Split Bill (KKB)">
+                <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Split (KKB)
+              </button>
+              <button type="button" class="flat-link-btn" id="toggleEntryBtn" onclick="toggleQuickEntryCard()">
+                Minimize
+              </button>
+            </div>
           </div>
 
           <div class="quick-entry-body" id="quickEntryBody">
-<!-- Tarsi 1-Tap Quick Templates (Flat Line Icons) -->
-            <div class="tarsi-templates-row">
-              <button type="button" class="tarsi-tpl-chip num" onclick="applyQuickTemplate('EXPENSE','Pagkain',180,'Jollibee / Meal')">
-                <svg class="line-icon line-icon-sm" style="color:var(--ios-red);" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
-                <span>Meal ₱180</span>
-              </button>
-              <button type="button" class="tarsi-tpl-chip num" onclick="applyQuickTemplate('EXPENSE','Tingi / Kape',120,'Kape')">
-                <svg class="line-icon line-icon-sm" style="color:var(--ios-orange);" viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
-                <span>Kape ₱120</span>
-              </button>
-              <button type="button" class="tarsi-tpl-chip num" onclick="applyQuickTemplate('EXPENSE','Pamasahe',40,'Pamasahe')">
-                <svg class="line-icon line-icon-sm" style="color:var(--ios-blue);" viewBox="0 0 24 24"><path d="M8 6v6"/><path d="M15 6v6"/><path d="M2 12h19.6"/><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3"/><circle cx="7" cy="18" r="2"/><path d="M9 18h5"/><circle cx="16" cy="18" r="2"/></svg>
-                <span>Fare ₱40</span>
-              </button>
-              <button type="button" class="tarsi-tpl-chip num" onclick="applyQuickTemplate('EXPENSE','Tingi / Kape',99,'Data Load')">
-                <svg class="line-icon line-icon-sm" style="color:#8B5CF6;" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
-                <span>Load ₱99</span>
-              </button>
-              <button type="button" class="tarsi-tpl-chip num" onclick="applyQuickTemplate('INCOME','Sweldo',15000,'Sahod')">
-                <svg class="line-icon line-icon-sm" style="color:var(--ios-green);" viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
-                <span>Sahod ₱15k</span>
-              </button>
+            <!-- Tarsi 1-Tap Quick Templates (Flat Line Icons) -->
+            <!-- Tarsi Quick Templates Dropdown -->
+            <div style="margin-bottom: 10px;">
+              <select id="quickTemplateSelect" class="flat-input" onchange="handleQuickTemplateDropdown(this)" style="min-height: 38px; padding: 7px 11px; font-weight: 600;">
+                <option value="">⚡ Select Quick Entry Template...</option>
+                <option value="EXPENSE|Pagkain|180|Jollibee / Meal">Meal — ₱180.00 (Pagkain)</option>
+                <option value="EXPENSE|Tingi / Kape|120|Kape">Kape — ₱120.00 (Tingi / Kape)</option>
+                <option value="EXPENSE|Pamasahe|40|Pamasahe">Fare — ₱40.00 (Pamasahe)</option>
+                <option value="EXPENSE|Tingi / Kape|99|Data Load">Data Load — ₱99.00 (Tingi / Kape)</option>
+                <option value="EXPENSE|Bills|1500|Meralco / Internet Bill">Utility Bill — ₱1,500.00 (Bills)</option>
+                <option value="INCOME|Sweldo|15000|Sahod">Sahod — ₱15,000.00 (Sweldo)</option>
+              </select>
             </div>
 
             <div class="type-switch">
@@ -1993,7 +2069,7 @@
             <div class="cat-grid" id="categoryGrid"></div>
 
             <div class="form-row">
-              <input type="text" id="noteInput" class="flat-input" placeholder="Note (e.g., Jollibee)">
+              <input type="text" id="noteInput" class="flat-input" placeholder="Note (e.g., Jollibee #barkada)">
               <input type="date" id="dateInput" class="flat-input num">
             </div>
 
@@ -2001,6 +2077,22 @@
               Save Entry
             </button>
           </div>
+        </div>
+
+        <!-- Tarsi Feature: Quick Notes Scratchpad (Pre-Expense Jotter) -->
+        <div class="panel">
+          <div class="section-head-row">
+            <div class="section-caption">
+              <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Quick Notes Scratchpad
+            </div>
+          </div>
+          <div class="scratchpad-input-row">
+            <input type="text" id="scratchTitleInput" class="flat-input" placeholder="To buy (e.g. Change oil)" style="min-height:38px;padding:7px 10px;">
+            <input type="number" id="scratchAmtInput" class="flat-input num" placeholder="₱450" inputmode="decimal" style="min-height:38px;padding:7px 8px;">
+            <button type="button" class="flat-link-btn" style="min-height:38px;" onclick="addScratchNote()">+ Jot</button>
+          </div>
+          <div class="scratchpad-list" id="scratchpadList"></div>
         </div>
       </div>
 
@@ -2017,7 +2109,7 @@
 
             <button type="button" id="tabBtnGraphs" class="hub-tab-btn" onclick="switchHubTab('graphs')">
               <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-              Graphs
+              Graphs &amp; Limits
             </button>
 
             <button type="button" id="tabBtnLogs" class="hub-tab-btn" onclick="switchHubTab('logs')">
@@ -2032,7 +2124,7 @@
             </button>
           </div>
 
-          <!-- PANE 1: goalsIPON + Tarsi Planned Bills & Utang Tracker -->
+          <!-- PANE 1: goalsIPON + Cashflow Timeline + Planned Bills & Installments -->
           <div class="hub-pane active" id="tabPaneGoals">
             <div class="section-head-row">
               <div class="section-caption">
@@ -2051,20 +2143,24 @@
 
             <div class="goals-list" id="goalsList"></div>
 
-            <!-- Tarsi Feature: Planned Bills, Subscriptions & Utang / Receivables -->
+            <!-- Tarsi Feature: Planned Bills, Installment Counter (X/Y Paid) & Utang -->
             <div class="section-head-row" style="margin-top:18px;padding-top:14px;border-top:1px dashed var(--ios-border);">
               <div class="section-caption">
                 <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                Planned Bills &amp; Utang Tracker
+                Planned Bills, Installments &amp; Utang
               </div>
               <button type="button" class="flat-link-btn" onclick="openPlannedModal()">
                 + Add Bill / Utang
               </button>
             </div>
+
+            <!-- Tarsi Cashflow Forecast Timeline -->
+            <div class="cashflow-timeline-box num" id="cashflowTimelineBox"></div>
+
             <div class="goals-list" id="plannedList"></div>
           </div>
 
-          <!-- PANE 2: Graphs -->
+          <!-- PANE 2: Graphs + Per-Category Budget Progress Bars -->
           <div class="hub-pane" id="tabPaneGraphs">
             <div class="section-head-row">
               <div class="section-caption" id="graphTrendTitle">Gastos Analytics</div>
@@ -2102,12 +2198,15 @@
               <div class="bar-labels-row num" id="gastosBarLabels"></div>
             </div>
 
-            <div class="section-caption" style="margin-bottom:8px;">Category Breakdown</div>
+            <div class="section-head-row" style="margin-bottom:6px;">
+              <div class="section-caption">Per-Category Monthly Budget Limits</div>
+              <span style="font-size:10px;color:var(--ios-label-muted);">Tap Limit to Edit</span>
+            </div>
             <div class="cat-stacked-bar" id="categoryStackedBar"></div>
             <div class="cat-graph-list" id="categoryGraphList"></div>
           </div>
 
-          <!-- PANE 3: History with Tarsi Search, Filter, Daily Totals & CSV Export -->
+          <!-- PANE 3: History with Tarsi Search, Filter, Daily Totals, Tarceipts & CSV Export -->
           <div class="hub-pane" id="tabPaneLogs">
             <div class="section-head-row">
               <div class="section-caption">
@@ -2124,7 +2223,7 @@
                 type="text"
                 id="historySearchInput"
                 class="history-search-input"
-                placeholder="Search category, note, or wallet..."
+                placeholder="Search category, #tag, note, or wallet..."
                 oninput="renderTransactions()"
               >
               <select id="historyTypeFilter" class="flat-input" style="width:auto;min-height:38px;padding:6px 10px;" onchange="renderTransactions()">
@@ -2143,7 +2242,7 @@
       </div>
     </div>
 
-    <!-- AI Chat Panel -->
+    <!-- AI Chat Panel with Camera Receipt Scanner -->
     <div class="floating-chat-backdrop" id="floatingChatBackdrop" onclick="closeFloatingChat()"></div>
 
     <div class="ai-panel floating-mode" id="aiPanel">
@@ -2174,32 +2273,38 @@
             <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
           </div>
           <div class="ai-bubble">
-            <span class="ai-action-pill">Genius Assistant Ready</span><br>
-            Subukan ang natural Tagalog templates:<br>
+            <span class="ai-action-pill">Genius Assistant + Receipt OCR</span><br>
+            Subukan ang natural Tagalog templates o mag-scan ng resibo:<br>
             • <strong>Gastos:</strong> "Gumastos ako para sa pagkain ng 250 gastos gamit ang GCash"<br>
             • <strong>Sahod:</strong> "May sahod ako na 15000 ilagay mo sa Bank"<br>
-            • <strong>Goal:</strong> "Idagdag mo ito sa goal ko Emergency Fund 1000 halaga ng goal 20000 at date ng goal 2026-12-31"
+            • <strong>Camera:</strong> I-tap ang Camera icon para i-scan ang resibo o GCash screenshot!
           </div>
         </div>
       </div>
 
       <div class="ai-quick-chips">
+        <button type="button" class="ai-chip" onclick="triggerReceiptCamera()">Scan Receipt</button>
         <button type="button" class="ai-chip" onclick="fillAiInput('Gumastos ako para sa pagkain ng 250 gastos gamit ang GCash')">Gastos Template</button>
         <button type="button" class="ai-chip" onclick="fillAiInput('May sahod ako na 15000 ilagay mo sa Bank')">Sahod Template</button>
         <button type="button" class="ai-chip" onclick="fillAiInput('Idagdag mo ito sa goal ko Emergency Fund 500 halaga ng goal 20000 at date ng goal 2026-12-31')">Goal + Date Template</button>
         <button type="button" class="ai-chip" onclick="runQuickAiPrompt('Forecast & burn rate')">Forecast</button>
-        <button type="button" class="ai-chip" onclick="runQuickAiPrompt('Kaya ba 500 today?')">Kaya ba ₱500?</button>
         <button type="button" class="ai-chip" onclick="runQuickAiPrompt('Undo last transaction')">Undo Last</button>
       </div>
+
+      <!-- Hidden File Input for iPhone 14 Camera / Photo Library Receipt Scan -->
+      <input type="file" id="receiptFileInput" accept="image/*" style="display:none;" onchange="handleReceiptImageSelected(event)">
 
       <div class="ai-input-row">
         <input
           type="text"
           id="aiPromptInput"
           class="flat-input"
-          placeholder="e.g. Gumastos ako para sa pagkain ng 250 gamit ang GCash..."
+          placeholder="Type command or scan receipt..."
           onkeydown="if(event.key==='Enter') sendAiMessage()"
         >
+        <button type="button" id="aiCamBtn" class="ai-icon-btn" title="Scan Receipt or GCash Screenshot" onclick="triggerReceiptCamera()">
+          <svg class="line-icon" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+        </button>
         <button type="button" id="aiMicBtn" class="ai-icon-btn" title="Voice input" onclick="toggleVoiceInput()">
           <svg class="line-icon" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
         </button>
@@ -2243,7 +2348,7 @@
     </button>
   </nav>
 
-  <!-- Bank & Wallet Modal with Tarsi 1-Tap PH Bank & E-Wallet Templates -->
+  <!-- Bank & Wallet Modal -->
   <div class="modal-backdrop" id="bankModal">
     <div class="modal-card">
       <div class="modal-header">
@@ -2255,18 +2360,18 @@
         <select id="modalWalletSelect" class="flat-input" onchange="populateBankModalFields()"></select>
       </div>
 
-      <!-- Tarsi Feature: 1-Tap PH Bank & E-Wallet Templates -->
       <div class="field-group">
         <label class="field-label">Quick PH Bank / E-Wallet Templates</label>
-        <div class="tarsi-templates-row" style="margin-bottom:2px;">
-          <button type="button" class="tarsi-tpl-chip" onclick="applyPhBankTemplate('GCash','GCash E-Wallet','#2563EB')">GCash</button>
-          <button type="button" class="tarsi-tpl-chip" onclick="applyPhBankTemplate('Maya','Maya Bank','#059669')">Maya</button>
-          <button type="button" class="tarsi-tpl-chip" onclick="applyPhBankTemplate('BPI','Bank of the Philippine Islands','#DC2626')">BPI</button>
-          <button type="button" class="tarsi-tpl-chip" onclick="applyPhBankTemplate('BDO','BDO Unibank','#1D4ED8')">BDO</button>
-          <button type="button" class="tarsi-tpl-chip" onclick="applyPhBankTemplate('GoTyme','GoTyme Bank','#06B6D4')">GoTyme</button>
-          <button type="button" class="tarsi-tpl-chip" onclick="applyPhBankTemplate('SeaBank','SeaBank PH','#F97316')">SeaBank</button>
-          <button type="button" class="tarsi-tpl-chip" onclick="applyPhBankTemplate('UnionBank','UnionBank PH','#EA580C')">UnionBank</button>
-        </div>
+        <select id="phBankTemplateSelect" class="flat-input" onchange="handlePhBankDropdown(this)" style="min-height: 38px; padding: 7px 11px; font-weight: 600;">
+          <option value="">🏦 Auto-Fill PH Bank / E-Wallet...</option>
+          <option value="GCash|GCash E-Wallet|#2563EB">GCash (E-Wallet)</option>
+          <option value="Maya|Maya Bank|#059669">Maya (Maya Bank)</option>
+          <option value="BPI|Bank of the Philippine Islands|#DC2626">BPI (Bank of the Philippine Islands)</option>
+          <option value="BDO|BDO Unibank|#1D4ED8">BDO (BDO Unibank)</option>
+          <option value="GoTyme|GoTyme Bank|#06B6D4">GoTyme Bank</option>
+          <option value="SeaBank|SeaBank PH|#F97316">SeaBank PH</option>
+          <option value="UnionBank|UnionBank PH|#EA580C">UnionBank PH</option>
+        </select>
       </div>
 
       <div class="field-row-2">
@@ -2282,11 +2387,11 @@
       <div class="field-row-2">
         <div>
           <label class="field-label" for="modalAccountName">Account Holder</label>
-          <input type="text" id="modalAccountName" class="flat-input" placeholder="Optional">
+          <input type="text" id="modalAccountName" class="flat-input" placeholder="Juan Dela Cruz">
         </div>
         <div>
           <label class="field-label" for="modalAccountNumber">Account / Card No.</label>
-          <input type="text" id="modalAccountNumber" class="flat-input num" placeholder="**** 4821">
+          <input type="text" id="modalAccountNumber" class="flat-input num" placeholder="0917 123 4567">
         </div>
       </div>
       <div class="field-row-2">
@@ -2386,33 +2491,43 @@
     </div>
   </div>
 
-  <!-- Tarsi Planned Bill / Utang / Receivable Modal -->
+  <!-- Tarsi Planned Bill / Installment (X/Y Paid) / Utang Modal -->
   <div class="modal-backdrop" id="plannedModal">
     <div class="modal-card">
       <div class="modal-header">
-        <div class="modal-title">Add Planned Bill / Utang</div>
+        <div class="modal-title">Add Planned Bill / Installment / Utang</div>
         <button type="button" class="del-btn" onclick="closePlannedModal()">×</button>
       </div>
       <div class="field-group">
         <label class="field-label" for="planTypeSelect">Item Type</label>
         <select id="planTypeSelect" class="flat-input">
           <option value="BILL">Recurring Bill / Subscription (Expense)</option>
-          <option value="DEBT">Utang / Loan to Pay Off (Liability)</option>
+          <option value="DEBT">Utang / Installment Loan (Liability)</option>
           <option value="COLLECT">Pautang / Receivable to Collect (Asset)</option>
         </select>
       </div>
       <div class="field-group">
         <label class="field-label" for="planNameInput">Title / Person / Biller</label>
-        <input type="text" id="planNameInput" class="flat-input" placeholder="e.g. Meralco, SPayLater, Juan">
+        <input type="text" id="planNameInput" class="flat-input" placeholder="e.g. Meralco, SPayLater, Motor">
       </div>
       <div class="field-row-2">
         <div>
-          <label class="field-label" for="planAmountInput">Amount (₱)</label>
+          <label class="field-label" for="planAmountInput">Amount per Payment (₱)</label>
           <input type="number" id="planAmountInput" class="flat-input num" step="0.01" min="1" placeholder="1500" inputmode="decimal">
         </div>
         <div>
           <label class="field-label" for="planDueInput">Due Date</label>
           <input type="date" id="planDueInput" class="flat-input num">
+        </div>
+      </div>
+      <div class="field-row-2">
+        <div>
+          <label class="field-label" for="planTotalMonthsInput">Installment Total Mos (0 = One-time)</label>
+          <input type="number" id="planTotalMonthsInput" class="flat-input num" min="0" max="120" value="0" inputmode="numeric">
+        </div>
+        <div>
+          <label class="field-label" for="planPaidMonthsInput">Months Already Paid</label>
+          <input type="number" id="planPaidMonthsInput" class="flat-input num" min="0" max="120" value="0" inputmode="numeric">
         </div>
       </div>
       <div class="modal-actions">
@@ -2422,8 +2537,74 @@
     </div>
   </div>
 
+  <!-- Tarsi Bill Splitter (KKB) Modal -->
+  <div class="modal-backdrop" id="kkbModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">Split Bill (KKB Calculator)</div>
+        <button type="button" class="del-btn" onclick="closeKkbModal()">×</button>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="kkbTitleInput">Bill / Resto Title</label>
+        <input type="text" id="kkbTitleInput" class="flat-input" placeholder="e.g. Samgyupsal w/ Barkada">
+      </div>
+      <div class="field-row-2">
+        <div>
+          <label class="field-label" for="kkbTotalInput">Total Bill (₱)</label>
+          <input type="number" id="kkbTotalInput" class="flat-input num" step="0.01" min="1" placeholder="1600" inputmode="decimal" oninput="updateKkbPreview()">
+        </div>
+        <div>
+          <label class="field-label" for="kkbPaxInput">Total Pax (Including You)</label>
+          <input type="number" id="kkbPaxInput" class="flat-input num" min="2" max="50" value="4" inputmode="numeric" oninput="updateKkbPreview()">
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label" for="kkbNamesInput">Friends' Names (Optional, comma-separated)</label>
+        <input type="text" id="kkbNamesInput" class="flat-input" placeholder="e.g. Mark, Carlo, Bea">
+      </div>
+      <div class="ipon-summary-pill num" id="kkbPreviewPill">
+        <span>Each Share: ₱0.00</span>
+        <span>Collect from Friends: ₱0.00</span>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" onclick="closeKkbModal()">Cancel</button>
+        <button type="button" class="submit-btn" style="background:var(--ios-blue);color:#FFF;" onclick="submitKkbSplit()">Log Bill + Pautang</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarsi PitakaID Shareable Digital Payment Card Modal -->
+  <div class="modal-backdrop" id="pitakaIdModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">PitakaID Payment Card</div>
+        <button type="button" class="del-btn" onclick="closePitakaIdModal()">×</button>
+      </div>
+      <div class="pitaka-id-card" id="pitakaIdCardBody"></div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" onclick="closePitakaIdModal()">Close</button>
+        <button type="button" class="submit-btn" style="background:var(--ios-green-dark);color:#FFF;" onclick="copyPitakaIdText()">Copy Payment Details</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarsi Digital "PitakaReceipt" (Tarceipt) Modal -->
+  <div class="modal-backdrop" id="tarceiptModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">PitakaReceipt</div>
+        <button type="button" class="del-btn" onclick="closeTarceiptModal()">×</button>
+      </div>
+      <div class="tarceipt-paper num" id="tarceiptBody"></div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" onclick="closeTarceiptModal()">Close</button>
+        <button type="button" class="submit-btn" style="background:var(--ios-blue);color:#FFF;" onclick="copyTarceiptText()">Copy / Share Receipt</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
-  <script src="adapter.js"></script>
+
   <script>
     const FLAT_LINE_SVGS = {
       utensils: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>',
@@ -2442,6 +2623,7 @@
       laptop: '<svg class="line-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2" ry="2"/><line x1="2" y1="20" x2="22" y2="20"/></svg>',
       heart: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>',
       edit: '<svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
+      receipt: '<svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/></svg>',
       sparkle: '<svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>'
     };
 
@@ -2465,7 +2647,8 @@
       { key: 'rocket', label: 'Biz' }
     ];
 
-    const PLANNED_STORAGE_KEY = 'pitakako_tarsi_planned_v1';
+    const PLANNED_STORAGE_KEY = 'pitakako_tarsi_planned_v2';
+    const SCRATCH_STORAGE_KEY = 'pitakako_tarsi_scratch_v1';
     const THEME_STORAGE_KEY = 'pitakako_tarsi_theme_v1';
 
     function getFlatSvg(rawKey) {
@@ -2487,6 +2670,8 @@
       goals: [],
       transactions: [],
       plannedItems: [],
+      scratchNotes: [],
+      activeTarceipt: null,
       analytics: null,
       monthlyBudget: 15000,
       totalBalance: 0,
@@ -2516,7 +2701,6 @@
       setTimeout(() => { t.style.display = 'none'; }, 2600);
     }
 
-    /* Tarsi Feature: Light / Dark Mode Toggle */
     function initThemeMode() {
       try {
         const saved = localStorage.getItem(THEME_STORAGE_KEY);
@@ -2534,7 +2718,6 @@
       showToast(isDark ? 'Dark mode enabled' : 'Light mode enabled');
     }
 
-    /* Tarsi Feature: 1-Tap Quick Entry Templates */
     function applyQuickTemplate(txType, categoryName, amountVal, noteVal) {
       setTxType(txType);
       selectCategory(categoryName);
@@ -2543,7 +2726,6 @@
       showToast(`Template ready: ${noteVal} (${formatPeso(amountVal)})`);
     }
 
-    /* Tarsi Feature: 1-Tap PH Bank & E-Wallet Templates */
     function applyPhBankTemplate(shortLabel, providerName, hexColor) {
       document.getElementById('modalWalletSelect').value = 'NEW';
       populateBankModalFields();
@@ -2552,8 +2734,185 @@
       document.getElementById('modalWalletColor').value = hexColor;
       document.getElementById('modalStartingBalance').focus();
     }
+    function handleQuickTemplateDropdown(selectEl) {
+      const val = selectEl.value;
+      if (!val) return;
+      const parts = val.split('|');
+      applyQuickTemplate(parts[0], parts[1], parseFloat(parts[2]) || 0, parts[3] || '');
+      selectEl.value = '';
+    }
 
-    /* Tarsi Feature: Planned Bills, Subscriptions & Utang / Receivables Tracker */
+    function handlePhBankDropdown(selectEl) {
+      const val = selectEl.value;
+      if (!val) return;
+      const parts = val.split('|');
+      applyPhBankTemplate(parts[0], parts[1], parts[2]);
+      selectEl.value = '';
+    }
+
+    /* ============================================================================
+     * SUITE 2A: QUICK NOTES SCRATCHPAD (Jot Down Now, Convert to Expense Later)
+     * ============================================================================ */
+    function loadScratchNotes() {
+      try {
+        const raw = localStorage.getItem(SCRATCH_STORAGE_KEY);
+        if (raw) {
+          APP_STATE.scratchNotes = JSON.parse(raw);
+          return;
+        }
+      } catch (e) {}
+      APP_STATE.scratchNotes = [
+        { id: 'S-1', title: 'Change oil & tune-up #motor', amount: 450 }
+      ];
+    }
+
+    function persistScratchNotes() {
+      try {
+        localStorage.setItem(SCRATCH_STORAGE_KEY, JSON.stringify(APP_STATE.scratchNotes));
+      } catch (e) {}
+    }
+
+    function addScratchNote() {
+      const titleEl = document.getElementById('scratchTitleInput');
+      const amtEl = document.getElementById('scratchAmtInput');
+      const title = titleEl.value.trim();
+      const amount = parseFloat(amtEl.value) || 0;
+      if (!title) {
+        showToast('Enter a note to jot down.');
+        return;
+      }
+      APP_STATE.scratchNotes.unshift({
+        id: 'S-' + Date.now(),
+        title: title,
+        amount: Math.round(amount * 100) / 100
+      });
+      titleEl.value = '';
+      amtEl.value = '';
+      persistScratchNotes();
+      renderScratchNotes();
+      showToast('Saved to Scratchpad!');
+    }
+
+    function convertScratchToEntry(scratchId) {
+      const item = APP_STATE.scratchNotes.find(s => s.id === scratchId);
+      if (!item) return;
+      setTxType('EXPENSE');
+      if (item.amount > 0) document.getElementById('amountInput').value = item.amount;
+      document.getElementById('noteInput').value = item.title;
+      APP_STATE.scratchNotes = APP_STATE.scratchNotes.filter(s => s.id !== scratchId);
+      persistScratchNotes();
+      renderScratchNotes();
+      toggleQuickEntryCard(true);
+      document.getElementById('amountInput').focus();
+      showToast('Loaded into Quick Entry — tap Save Entry to log!');
+    }
+
+    function removeScratchNote(scratchId) {
+      APP_STATE.scratchNotes = APP_STATE.scratchNotes.filter(s => s.id !== scratchId);
+      persistScratchNotes();
+      renderScratchNotes();
+    }
+
+    function renderScratchNotes() {
+      const list = document.getElementById('scratchpadList');
+      if (!list) return;
+      if (!APP_STATE.scratchNotes.length) {
+        list.innerHTML = '<div style="font-size:11px;color:var(--ios-label-muted);text-align:center;padding:4px 0;">Jot down upcoming purchases before logging them.</div>';
+        return;
+      }
+      list.innerHTML = APP_STATE.scratchNotes.map(s => `
+        <div class="scratch-item">
+          <div style="min-width:0;flex:1;">
+            <strong style="color:var(--ios-label);">${s.title}</strong>
+            ${s.amount > 0 ? `<span class="num" style="color:var(--ios-label-muted);margin-left:6px;">${formatPeso(s.amount)}</span>` : ''}
+          </div>
+          <div style="display:flex;gap:4px;flex-shrink:0;">
+            <button type="button" class="flat-link-btn" style="padding:3px 8px;min-height:26px;font-size:10px;" onclick="convertScratchToEntry('${s.id}')">Log Now</button>
+            <button type="button" class="del-btn" style="width:26px;height:26px;" onclick="removeScratchNote('${s.id}')">×</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* ============================================================================
+     * SUITE 2B: BILL SPLITTER (KKB) MODAL
+     * ============================================================================ */
+    function openKkbModal() {
+      document.getElementById('kkbTitleInput').value = document.getElementById('noteInput').value || '';
+      document.getElementById('kkbTotalInput').value = document.getElementById('amountInput').value || '';
+      document.getElementById('kkbPaxInput').value = '4';
+      document.getElementById('kkbNamesInput').value = '';
+      updateKkbPreview();
+      document.getElementById('kkbModal').classList.add('open');
+    }
+
+    function closeKkbModal() {
+      document.getElementById('kkbModal').classList.remove('open');
+    }
+
+    function updateKkbPreview() {
+      const total = parseFloat(document.getElementById('kkbTotalInput').value) || 0;
+      const pax = Math.max(2, parseInt(document.getElementById('kkbPaxInput').value, 10) || 2);
+      const eachShare = Math.round((total / pax) * 100) / 100;
+      const friendsTotal = Math.max(0, Math.round((total - eachShare) * 100) / 100);
+      const pill = document.getElementById('kkbPreviewPill');
+      if (pill) {
+        pill.innerHTML = `<span>Each (${pax} pax): ${formatPeso(eachShare)}</span><span>Collect: ${formatPeso(friendsTotal)}</span>`;
+      }
+    }
+
+    function submitKkbSplit() {
+      const title = document.getElementById('kkbTitleInput').value.trim() || 'KKB Bill Split';
+      const total = parseFloat(document.getElementById('kkbTotalInput').value);
+      const pax = Math.max(2, parseInt(document.getElementById('kkbPaxInput').value, 10) || 2);
+      const rawNames = document.getElementById('kkbNamesInput').value.trim();
+
+      if (isNaN(total) || total <= 0) {
+        showToast('Enter a valid total bill amount.');
+        return;
+      }
+
+      const eachShare = Math.round((total / pax) * 100) / 100;
+      const friendNames = rawNames ? rawNames.split(',').map(s => s.trim()).filter(Boolean) : [];
+      const friendsCount = pax - 1;
+      const dueStr = document.getElementById('dateInput').value || '';
+
+      for (let i = 0; i < friendsCount; i++) {
+        const personLabel = friendNames[i] ? friendNames[i] : `Friend #${i + 1}`;
+        APP_STATE.plannedItems.push({
+          id: 'P-' + Date.now() + '-' + i,
+          type: 'COLLECT',
+          name: `KKB ${title} (${personLabel})`,
+          amount: eachShare,
+          dueDate: dueStr,
+          totalMonths: 0,
+          paidMonths: 0
+        });
+      }
+      persistPlannedItems();
+
+      closeKkbModal();
+      showToast('Logging KKB Bill & Pautang shares...');
+
+      google.script.run
+        .withSuccessHandler(res => {
+          hydrateUI(res.state);
+          showToast(`Logged ${formatPeso(total)} bill + ${friendsCount} Pautang shares (${formatPeso(eachShare)} each)!`);
+        })
+        .withFailureHandler(err => showToast('Error: ' + err.message))
+        .addTransaction({
+          type: 'EXPENSE',
+          category: 'Pagkain',
+          wallet: APP_STATE.selectedWallet,
+          amount: total,
+          note: `${title} (KKB ${pax} pax #kkb)`,
+          date: dueStr
+        });
+    }
+
+    /* ============================================================================
+     * SUITE 1B & 2C: PLANNED BILLS, INSTALLMENT COUNTER (X/Y PAID) & CASHFLOW TIMELINE
+     * ============================================================================ */
     function loadPlannedItems() {
       try {
         const raw = localStorage.getItem(PLANNED_STORAGE_KEY);
@@ -2563,9 +2922,9 @@
         }
       } catch (e) {}
       APP_STATE.plannedItems = [
-        { id: 'P-1', type: 'BILL', name: 'Meralco / Electric', amount: 1800, dueDate: '2026-11-15' },
-        { id: 'P-2', type: 'DEBT', name: 'SPayLater / Installment', amount: 1200, dueDate: '2026-11-05' },
-        { id: 'P-3', type: 'COLLECT', name: 'Pautang (Receivable)', amount: 500, dueDate: '2026-11-10' }
+        { id: 'P-1', type: 'BILL', name: 'Meralco / Electric', amount: 1800, dueDate: '2026-11-15', totalMonths: 0, paidMonths: 0 },
+        { id: 'P-2', type: 'DEBT', name: 'SPayLater / Motor Upgrade', amount: 1200, dueDate: '2026-11-05', totalMonths: 6, paidMonths: 2 },
+        { id: 'P-3', type: 'COLLECT', name: 'Pautang (Receivable)', amount: 500, dueDate: '2026-11-10', totalMonths: 0, paidMonths: 0 }
       ];
     }
 
@@ -2579,6 +2938,8 @@
       document.getElementById('planNameInput').value = '';
       document.getElementById('planAmountInput').value = '';
       document.getElementById('planDueInput').value = document.getElementById('dateInput').value || '2026-11-15';
+      document.getElementById('planTotalMonthsInput').value = '0';
+      document.getElementById('planPaidMonthsInput').value = '0';
       document.getElementById('plannedModal').classList.add('open');
     }
 
@@ -2591,6 +2952,8 @@
       const name = document.getElementById('planNameInput').value.trim();
       const amount = parseFloat(document.getElementById('planAmountInput').value);
       const dueDate = document.getElementById('planDueInput').value || '';
+      const totalMonths = Math.max(0, parseInt(document.getElementById('planTotalMonthsInput').value, 10) || 0);
+      const paidMonths = Math.max(0, parseInt(document.getElementById('planPaidMonthsInput').value, 10) || 0);
 
       if (!name || isNaN(amount) || amount <= 0) {
         showToast('Enter valid title and amount.');
@@ -2602,19 +2965,23 @@
         type: type,
         name: name,
         amount: Math.round(amount * 100) / 100,
-        dueDate: dueDate
+        dueDate: dueDate,
+        totalMonths: totalMonths,
+        paidMonths: Math.min(totalMonths, paidMonths)
       });
       persistPlannedItems();
       renderPlannedItems();
+      renderCashflowTimeline();
       updateNetWorthBadge();
       closePlannedModal();
-      showToast('Added to Planned Bills & Utang!');
+      showToast('Added to Planned Bills & Installments!');
     }
 
     function removePlannedItem(planId) {
       APP_STATE.plannedItems = APP_STATE.plannedItems.filter(p => p.id !== planId);
       persistPlannedItems();
       renderPlannedItems();
+      renderCashflowTimeline();
       updateNetWorthBadge();
       showToast('Item removed.');
     }
@@ -2624,63 +2991,112 @@
       if (!item) return;
 
       const isReceivable = item.type === 'COLLECT';
+      if (!hasEnoughWalletFunds(APP_STATE.selectedWallet, total)) return;
+      const hasInstallments = (Number(item.totalMonths) || 0) > 0;
+      const nextPaid = hasInstallments ? (Number(item.paidMonths) || 0) + 1 : 0;
+      const instSuffix = hasInstallments ? ` (${nextPaid}/${item.totalMonths} mos)` : '';
+
       const txPayload = {
         type: isReceivable ? 'INCOME' : 'EXPENSE',
         category: isReceivable ? 'Raket / Sideline' : 'Bills',
         wallet: APP_STATE.selectedWallet,
         amount: item.amount,
-        note: (isReceivable ? 'Collected: ' : 'Paid: ') + item.name,
+        note: (isReceivable ? 'Collected: ' : 'Paid: ') + item.name + instSuffix,
         date: document.getElementById('dateInput').value || ''
       };
 
       showToast(isReceivable ? 'Recording collection...' : 'Recording payment...');
       google.script.run
         .withSuccessHandler(res => {
-          if (item.type !== 'BILL') {
+          if (hasInstallments) {
+            item.paidMonths = nextPaid;
+            if (item.paidMonths >= item.totalMonths) {
+              APP_STATE.plannedItems = APP_STATE.plannedItems.filter(p => p.id !== planId);
+            }
+          } else if (item.type !== 'BILL') {
             APP_STATE.plannedItems = APP_STATE.plannedItems.filter(p => p.id !== planId);
-            persistPlannedItems();
           }
+          persistPlannedItems();
           hydrateUI(res.state);
-          showToast(`${isReceivable ? 'Collected' : 'Paid'} ${formatPeso(item.amount)} via ${APP_STATE.selectedWallet}!`);
+          showToast(`${isReceivable ? 'Collected' : 'Paid'} ${formatPeso(item.amount)}${instSuffix}!`);
         })
         .withFailureHandler(err => showToast('Error: ' + err.message))
         .addTransaction(txPayload);
     }
 
-  function renderPlannedItems() {
-        const list = document.getElementById('plannedList');
-        if (!list) return;
+    function renderPlannedItems() {
+      const list = document.getElementById('plannedList');
+      if (!list) return;
 
-        if (!APP_STATE.plannedItems.length) {
-          list.innerHTML = '<div style="font-size:12px;color:var(--ios-label-muted);padding:12px 0;text-align:center;">No planned bills, subscriptions, or utang tracked yet.</div>';
-          return;
-        }
+      if (!APP_STATE.plannedItems.length) {
+        list.innerHTML = '<div style="font-size:12px;color:var(--ios-label-muted);padding:12px 0;text-align:center;">No planned bills, installments, or utang tracked yet.</div>';
+        return;
+      }
 
-        list.innerHTML = APP_STATE.plannedItems.map(item => {
-          const badgeLabel = item.type === 'BILL' ? 'Bill' : (item.type === 'DEBT' ? 'Utang' : 'Pautang');
-          const actionLabel = item.type === 'COLLECT' ? 'Collect' : 'Pay Now';
-          const iconKey = item.type === 'COLLECT' ? 'wallet' : (item.type === 'DEBT' ? 'shield' : 'zap');
-          const iconColor = item.type === 'COLLECT' ? 'var(--ios-blue)' : (item.type === 'DEBT' ? 'var(--ios-red)' : 'var(--ios-orange)');
-          return `
-            <div class="tx-item">
-              <div class="tx-left">
-                <div class="tx-icon" style="color:${iconColor};">${getFlatSvg(iconKey)}</div>
-                <div class="tx-info">
-                  <div class="tx-title">
-                    ${item.name}
-                    <span class="plan-type-badge ${item.type}">${badgeLabel}</span>
-                  </div>
-                  <div class="tx-meta num">Due: ${item.dueDate || 'Anytime'} • ${formatPeso(item.amount)}</div>
+      list.innerHTML = APP_STATE.plannedItems.map(item => {
+        const badgeLabel = item.type === 'BILL' ? 'Bill' : (item.type === 'DEBT' ? 'Utang' : 'Pautang');
+        const actionLabel = item.type === 'COLLECT' ? 'Collect' : 'Pay Now';
+        const iconKey = item.type === 'COLLECT' ? 'wallet' : (item.type === 'DEBT' ? 'shield' : 'zap');
+        const iconColor = item.type === 'COLLECT' ? 'var(--ios-blue)' : (item.type === 'DEBT' ? 'var(--ios-red)' : 'var(--ios-orange)');
+        const hasInst = (Number(item.totalMonths) || 0) > 0;
+        const instBadge = hasInst
+          ? `<span class="plan-type-badge COLLECT">${item.paidMonths || 0}/${item.totalMonths} Mos Paid</span>`
+          : '';
+        return `
+          <div class="tx-item">
+            <div class="tx-left">
+              <div class="tx-icon" style="color:${iconColor};">${getFlatSvg(iconKey)}</div>
+              <div class="tx-info">
+                <div class="tx-title">
+                  ${item.name}
+                  <span class="plan-type-badge ${item.type}">${badgeLabel}</span>
+                  ${instBadge}
                 </div>
-              </div>
-              <div class="tx-right">
-                <button type="button" class="plan-action-btn ${item.type}" onclick="settlePlannedItem('${item.id}')">${actionLabel}</button>
-                <button type="button" class="del-btn" onclick="removePlannedItem('${item.id}')">×</button>
+                <div class="tx-meta num">Due: ${item.dueDate || 'Anytime'} • ${formatPeso(item.amount)}</div>
               </div>
             </div>
-          `;
-        }).join('');
-      }
+            <div class="tx-right">
+              <button type="button" class="plan-action-btn ${item.type}" onclick="settlePlannedItem('${item.id}')">${actionLabel}</button>
+              <button type="button" class="del-btn" onclick="removePlannedItem('${item.id}')">×</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderCashflowTimeline() {
+      const box = document.getElementById('cashflowTimelineBox');
+      if (!box) return;
+
+      let upcomingBills = 0;
+      let upcomingCollect = 0;
+      APP_STATE.plannedItems.forEach(p => {
+        if (p.type === 'COLLECT') upcomingCollect += (Number(p.amount) || 0);
+        else upcomingBills += (Number(p.amount) || 0);
+      });
+
+      const projectedFreeCash = (Number(APP_STATE.totalBalance) || 0) - upcomingBills + upcomingCollect;
+      const projColor = projectedFreeCash >= 0 ? 'var(--ios-green-dark)' : 'var(--ios-red)';
+
+      box.innerHTML = `
+        <div class="cashflow-proj-row">
+          <span>30-Day Cashflow Forecast (After Bills)</span>
+          <span style="color:${projColor};font-weight:800;">${formatPeso(projectedFreeCash)}</span>
+        </div>
+        <div class="timeline-step">
+          <span style="color:var(--ios-label-muted);">Current Liquid Pitaka</span>
+          <strong>${formatPeso(APP_STATE.totalBalance)}</strong>
+        </div>
+        <div class="timeline-step">
+          <span style="color:var(--ios-label-muted);">Upcoming Bills &amp; Installment Dues</span>
+          <strong style="color:var(--ios-red);">−${formatPeso(upcomingBills)}</strong>
+        </div>
+        <div class="timeline-step">
+          <span style="color:var(--ios-label-muted);">Expected Pautang Collections</span>
+          <strong style="color:var(--ios-green-dark);">+${formatPeso(upcomingCollect)}</strong>
+        </div>
+      `;
+    }
 
     function updateNetWorthBadge() {
       const pill = document.getElementById('netWorthPill');
@@ -2688,14 +3104,172 @@
       let totalDebt = 0;
       let totalReceivable = 0;
       APP_STATE.plannedItems.forEach(p => {
-        if (p.type === 'DEBT') totalDebt += (Number(p.amount) || 0);
-        if (p.type === 'COLLECT') totalReceivable += (Number(p.amount) || 0);
+        const remMos = (Number(p.totalMonths) || 0) > 0
+          ? Math.max(1, (Number(p.totalMonths) || 0) - (Number(p.paidMonths) || 0))
+          : 1;
+        if (p.type === 'DEBT') totalDebt += (Number(p.amount) || 0) * remMos;
+        if (p.type === 'COLLECT') totalReceivable += (Number(p.amount) || 0) * remMos;
       });
       const netWorth = (Number(APP_STATE.totalBalance) || 0) + (Number(APP_STATE.totalIponSaved) || 0) + totalReceivable - totalDebt;
       pill.textContent = `Net Worth (Liquid + Ipon − Utang): ${formatPeso(netWorth)}`;
     }
 
-    /* Tarsi Feature: CSV Backup Export */
+    /* ============================================================================
+     * SUITE 3: AI RECEIPT / GCASH SCREENSHOT CAMERA SCANNER (GEMINI VISION)
+     * ============================================================================ */
+    function triggerReceiptCamera() {
+      const fileInput = document.getElementById('receiptFileInput');
+      if (fileInput) fileInput.click();
+    }
+
+function handleReceiptImageSelected(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      appendAiChatBubble('user', `📷 Scanning receipt image: ${file.name}...`);
+      showToast('Compressing & scanning receipt...');
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 1024;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.78);
+
+          const runner = google.script.run
+            .withSuccessHandler(res => {
+              event.target.value = '';
+              if (res && res.state) hydrateUI(res.state);
+              if (res && res.reply) appendAiChatBubble('bot', res.reply, res.action);
+              if (res && res.action === 'LOGGED_TX') {
+                showToast('Receipt scanned & logged!');
+              }
+            })
+            .withFailureHandler(err => {
+              event.target.value = '';
+              appendAiChatBubble('bot', 'Receipt scan error: ' + err.message);
+            });
+
+          if (typeof runner.processAiReceiptScan === 'function') {
+            runner.processAiReceiptScan({
+              base64Data: compressedDataUrl,
+              mimeType: 'image/jpeg',
+              activeWallet: APP_STATE.selectedWallet,
+              manualHint: file.name
+            });
+          } else {
+            event.target.value = '';
+            appendAiChatBubble(
+              'bot',
+              'Hindi pa naka-save o naka-deploy ang **processAiReceiptScan** sa `Code.gs`. I-save ang `Code.gs` at i-refresh ang pahina (o gumawa ng **New Deployment**).'
+            );
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    /* ============================================================================
+     * SUITE 4: PITAKA-ID SHAREABLE PAYMENT CARD & DIGITAL "PITAKA-RECEIPTS"
+     * ============================================================================ */
+    function openPitakaIdModal() {
+      const body = document.getElementById('pitakaIdCardBody');
+      const rowsHtml = APP_STATE.wallets.map(w => `
+        <div class="pitaka-id-row">
+          <div>
+            <strong style="color:#34D399;">${w.name}</strong>
+            <div style="font-size:10px;color:#94A3B8;">${w.bankName || 'Payment Account'}</div>
+          </div>
+          <div style="text-align:right;" class="num">
+            <div style="font-weight:700;">${w.accountNumber || 'Tap Edit Balance to set No.'}</div>
+            <div style="font-size:10px;color:#CBD5E1;">${w.accountName || 'Account Holder'}</div>
+          </div>
+        </div>
+      `).join('');
+
+      body.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.6px;color:#34D399;font-weight:800;">Official PitakaID</div>
+            <div style="font-size:17px;font-weight:800;">Send Payment / KKB Here</div>
+          </div>
+          <span class="ai-badge" style="background:rgba(46,204,113,0.2);color:#34D399;">Verified</span>
+        </div>
+        ${rowsHtml}
+      `;
+      document.getElementById('pitakaIdModal').classList.add('open');
+    }
+
+    function closePitakaIdModal() {
+      document.getElementById('pitakaIdModal').classList.remove('open');
+    }
+
+    function copyPitakaIdText() {
+      const lines = ['💳 My PitakaID Payment Details:'];
+      APP_STATE.wallets.forEach(w => {
+        lines.push(`• ${w.name} (${w.bankName || 'Wallet'}): ${w.accountNumber || 'N/A'} ${w.accountName ? '- ' + w.accountName : ''}`);
+      });
+      navigator.clipboard.writeText(lines.join('\n')).then(() => {
+        showToast('PitakaID payment details copied!');
+      }).catch(() => showToast('Copied!'));
+    }
+
+    function openTarceiptModal(txId) {
+      const tx = APP_STATE.transactions.find(t => t.id === txId);
+      if (!tx) return;
+      APP_STATE.activeTarceipt = tx;
+      const sign = tx.type === 'EXPENSE' ? '−' : '+';
+      const body = document.getElementById('tarceiptBody');
+      body.innerHTML = `
+        <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:var(--ios-label-muted);letter-spacing:0.6px;">PitakaKO Official Digital Receipt</div>
+        <div style="font-size:26px;font-weight:800;margin:8px 0;color:${tx.type === 'EXPENSE' ? 'var(--ios-red)' : 'var(--ios-green-dark)'};">${sign}${formatPeso(tx.amount)}</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px;">${tx.category}${tx.note ? ' • ' + tx.note : ''}</div>
+        <div style="border-top:1px dashed var(--ios-border);padding-top:10px;font-size:11px;display:flex;justify-content:space-between;">
+          <span style="color:var(--ios-label-muted);">Date</span>
+          <strong>${tx.date}</strong>
+        </div>
+        <div style="padding-top:6px;font-size:11px;display:flex;justify-content:space-between;">
+          <span style="color:var(--ios-label-muted);">Pitaka / Wallet</span>
+          <strong>${tx.wallet}</strong>
+        </div>
+        <div style="padding-top:6px;font-size:11px;display:flex;justify-content:space-between;">
+          <span style="color:var(--ios-label-muted);">Ref ID</span>
+          <strong>${tx.id}</strong>
+        </div>
+      `;
+      document.getElementById('tarceiptModal').classList.add('open');
+    }
+
+    function closeTarceiptModal() {
+      document.getElementById('tarceiptModal').classList.remove('open');
+    }
+
+    function copyTarceiptText() {
+      const tx = APP_STATE.activeTarceipt;
+      if (!tx) return;
+      const txt = `🧾 PitakaReceipt\nAmount: ${formatPeso(tx.amount)} (${tx.type})\nDetails: ${tx.category}${tx.note ? ' - ' + tx.note : ''}\nWallet: ${tx.wallet}\nDate: ${tx.date}\nRef: ${tx.id}`;
+      navigator.clipboard.writeText(txt).then(() => {
+        showToast('PitakaReceipt copied to clipboard!');
+      }).catch(() => showToast('Receipt copied!'));
+    }
+
     function exportTransactionsCsv() {
       if (!APP_STATE.transactions.length) {
         showToast('No transactions to export yet.');
@@ -2823,6 +3397,27 @@
       renderGraphs();
     }
 
+    /* ============================================================================
+     * SUITE 1A: PER-CATEGORY BUDGET LIMITS & PROGRESS BARS (Editable Ceiling)
+     * ============================================================================ */
+    function promptCategoryLimitEdit(categoryName, currentLimit) {
+      const input = prompt(`Set Monthly Budget Limit (₱) for "${categoryName}":`, currentLimit || 3000);
+      if (input === null) return;
+      const val = parseFloat(input);
+      if (isNaN(val) || val < 0) {
+        showToast('Enter a valid budget limit.');
+        return;
+      }
+      showToast(`Updating ${categoryName} limit...`);
+      google.script.run
+        .withSuccessHandler(state => {
+          hydrateUI(state);
+          showToast(`${categoryName} limit updated to ${formatPeso(val)}!`);
+        })
+        .withFailureHandler(err => showToast('Error: ' + err.message))
+        .updateCategoryLimit({ categoryName: categoryName, limit: val });
+    }
+
     function renderGraphs() {
       const an = APP_STATE.analytics;
       if (!an) return;
@@ -2867,30 +3462,48 @@
       const stackedBarEl = document.getElementById('categoryStackedBar');
       const catListEl = document.getElementById('categoryGraphList');
 
-      if (!cats.length || total <= 0) {
+      if (cats.length && total > 0) {
+        stackedBarEl.innerHTML = cats.map(c => `
+          <div class="cat-stack-seg" style="width:${Math.max(2, c.pct)}%;background:${c.color};" title="${c.name}: ${c.pct}%"></div>
+        `).join('');
+      } else {
         stackedBarEl.innerHTML = '<div style="width:100%;background:var(--ios-border);"></div>';
-        catListEl.innerHTML = '<div style="font-size:12px;color:var(--ios-label-muted);padding:12px 0;text-align:center;">No gastos recorded for this period yet.</div>';
-        return;
       }
 
-      stackedBarEl.innerHTML = cats.map(c => `
-        <div class="cat-stack-seg" style="width:${Math.max(2, c.pct)}%;background:${c.color};" title="${c.name}: ${c.pct}%"></div>
-      `).join('');
+      // Render all Expense Categories with Tarsi Per-Category Monthly Limit Progress Bars
+      const expenseCategories = APP_STATE.categories.filter(c => c.type === 'EXPENSE');
+      catListEl.innerHTML = expenseCategories.map(catObj => {
+        const periodMatch = cats.find(c => c.name === catObj.name);
+        const spentVal = APP_STATE.graphPeriod === 'monthly'
+          ? (Number(catObj.spentThisMonth) || 0)
+          : (periodMatch ? periodMatch.amount : 0);
+        const limitVal = Number(catObj.limit) || 0;
+        const limitPct = limitVal > 0 ? Math.min(100, Math.round((spentVal / limitVal) * 100)) : (periodMatch ? periodMatch.pct : 0);
+        const statusColor = limitVal > 0
+          ? (limitPct >= 90 ? 'var(--ios-red)' : (limitPct >= 75 ? 'var(--ios-orange)' : catObj.color))
+          : catObj.color;
+        const safeCatName = String(catObj.name).replace(/'/g, "\\'");
 
-      catListEl.innerHTML = cats.map(c => `
-        <div class="cat-graph-item">
-          <div class="cat-graph-top">
-            <div class="cat-graph-left">
-              <div class="cat-graph-badge" style="color:${c.color};">${getFlatSvg(c.icon)}</div>
-              <span>${c.name}</span>
+        return `
+          <div class="cat-graph-item">
+            <div class="cat-graph-top">
+              <div class="cat-graph-left">
+                <div class="cat-graph-badge" style="color:${catObj.color};">${getFlatSvg(catObj.icon)}</div>
+                <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${catObj.name}</span>
+              </div>
+              <div class="num" style="cursor:pointer;" onclick="promptCategoryLimitEdit('${safeCatName}', ${limitVal})" title="Tap to edit category limit">
+                ${formatPeso(spentVal)}
+                <span style="color:var(--ios-label-muted);font-size:10.5px;">
+                  / ${limitVal > 0 ? formatPeso(limitVal) + ' (' + limitPct + '%)' : 'Set Limit'}
+                </span>
+              </div>
             </div>
-            <div class="num">${formatPeso(c.amount)} <span style="color:var(--ios-label-muted);font-size:11px;">(${c.pct}%)</span></div>
+            <div class="cat-graph-track">
+              <div class="cat-graph-fill" style="width:${limitPct}%;background:${statusColor};"></div>
+            </div>
           </div>
-          <div class="cat-graph-track">
-            <div class="cat-graph-fill" style="width:${c.pct}%;background:${c.color};"></div>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function toggleFloatingChat() {
@@ -3040,7 +3653,7 @@
     }
 
     /**
-     * Renders non-overlapping History items with Tarsi Search, Type Filter, and Labeled Daily Totals
+     * Renders non-overlapping History items with Tarsi Search, #Tag Filter, Daily Totals & PitakaReceipt button
      */
     function renderTransactions() {
       const list = document.getElementById('txList');
@@ -3064,7 +3677,6 @@
         return;
       }
 
-      // Group transactions by date and compute Tarsi Daily Totals
       const groupedByDate = {};
       const dateOrder = [];
       filtered.forEach(tx => {
@@ -3101,6 +3713,7 @@
               </div>
               <div class="tx-right">
                 <div class="tx-amount num ${tx.type}">${sign}${formatPeso(tx.amount)}</div>
+                <button class="goal-edit-btn" title="View PitakaReceipt" onclick="openTarceiptModal('${tx.id}')">${FLAT_LINE_SVGS.receipt}</button>
                 <button class="del-btn" title="Delete" onclick="removeTx('${tx.id}')">×</button>
               </div>
             </div>
@@ -3225,12 +3838,12 @@
     }
 
     function promptAiApiKey() {
-      const keyInput = prompt('Optional: Enter Gemini API Key (Leave blank for Genius Local NLP):', '');
+      const keyInput = prompt('Optional: Enter Gemini API Key (Enables Gemini Agent + Camera Receipt OCR):', '');
       if (keyInput === null) return;
       google.script.run
         .withSuccessHandler(state => {
           hydrateUI(state);
-          showToast(state.hasGeminiKey ? 'Gemini AI enabled!' : 'Using Genius Local NLP.');
+          showToast(state.hasGeminiKey ? 'Gemini AI + Receipt OCR enabled!' : 'Using Genius Local NLP.');
         })
         .withFailureHandler(err => showToast('Error: ' + err.message))
         .saveAiApiKey(keyInput);
@@ -3464,6 +4077,7 @@
       const btn = document.getElementById('confirmHulogBtn');
 
       if (isNaN(amount) || amount <= 0) { showToast('Enter valid amount.'); return; }
+      if (deductFromWallet && !hasEnoughWalletFunds(APP_STATE.selectedWallet, amount)) return;
 
       btn.disabled = true;
       btn.textContent = 'Saving...';
@@ -3517,7 +4131,7 @@
       if (soloSpentEl) soloSpentEl.textContent = formatPeso(data.spentToday);
 
       const badgeEl = document.getElementById('aiModeBadge');
-      if (badgeEl) badgeEl.textContent = APP_STATE.hasGeminiKey ? 'Gemini Agent' : 'Genius NLP';
+      if (badgeEl) badgeEl.textContent = APP_STATE.hasGeminiKey ? 'Gemini Vision + NLP' : 'Genius NLP';
 
       document.getElementById('iponSummaryText').textContent = `${formatPeso(data.totalIponSaved)} / ${formatPeso(data.totalIponTarget)}`;
 
@@ -3533,12 +4147,37 @@
       renderCategories();
       renderGoals();
       renderPlannedItems();
+      renderCashflowTimeline();
       updateNetWorthBadge();
       renderTransactions();
       renderGraphs();
     }
 
-    function submitTransaction() {
+     /**
+     * Checks if the specified wallet has enough balance for an EXPENSE.
+     * Shows a clear warning toast if the wallet has ₱0 or insufficient funds.
+     */
+    function hasEnoughWalletFunds(walletName, expenseAmount) {
+      const targetWallet = APP_STATE.wallets.find(
+        w => w.name.toLowerCase() === String(walletName || '').toLowerCase()
+      );
+      if (!targetWallet) return true;
+
+      const currentBal = Number(targetWallet.balance) || 0;
+      const needed = Number(expenseAmount) || 0;
+
+      if (currentBal <= 0) {
+        showToast(`You don't have money in your ${targetWallet.name} (₱0.00)!`);
+        return false;
+      }
+      if (needed > currentBal) {
+        showToast(`Not enough money in your ${targetWallet.name}! Balance is only ${formatPeso(currentBal)}.`);
+        return false;
+      }
+      return true;
+    }
+
+function submitTransaction() {
       const amountEl = document.getElementById('amountInput');
       const noteEl = document.getElementById('noteInput');
       const dateEl = document.getElementById('dateInput');
@@ -3548,6 +4187,11 @@
       if (isNaN(amount) || amount <= 0) {
         showToast('Enter amount greater than 0');
         amountEl.focus();
+        return;
+      }
+
+      // Block Gastos if selected wallet (Cash, GCash, Maya, Bank) has no money or insufficient balance
+      if (APP_STATE.type === 'EXPENSE' && !hasEnoughWalletFunds(APP_STATE.selectedWallet, amount)) {
         return;
       }
 
@@ -3561,7 +4205,6 @@
           amountEl.value = '';
           noteEl.value = '';
           hydrateUI(res.state);
-          // Tarsi-style Instant Financial Impact Feedback
           const remSafe = Math.max(0, (res.state.safeToSpendToday || 0) - (res.state.spentToday || 0));
           showToast(APP_STATE.type === 'EXPENSE'
             ? `Saved! Safe Today left: ${formatPeso(remSafe)}`
@@ -3570,7 +4213,7 @@
         .withFailureHandler(err => {
           btn.disabled = false;
           btn.textContent = 'Save Entry';
-          showToast('Error: ' + err.message);
+          showToast(err.message || 'Transaction failed.');
         })
         .addTransaction({
           type: APP_STATE.type,
@@ -3609,7 +4252,10 @@
     window.addEventListener('DOMContentLoaded', () => {
       initThemeMode();
       loadPlannedItems();
+      loadScratchNotes();
       renderPlannedItems();
+      renderScratchNotes();
+      renderCashflowTimeline();
       google.script.run
         .withSuccessHandler(hydrateUI)
         .withFailureHandler(err => showToast('Load error: ' + err.message))
