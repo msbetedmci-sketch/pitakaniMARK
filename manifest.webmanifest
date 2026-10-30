@@ -1,0 +1,11 @@
+{
+  "name": "PitakaKO",
+  "short_name": "PitakaKO",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4F6F8",
+  "theme_color": "#F4F6F8",
+  "icons": [
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
