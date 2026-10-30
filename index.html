@@ -9,6 +9,33 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    (function generateIphoneAppIcon() {
+      const svgStr = '<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">' +
+        '<rect width="180" height="180" rx="40" fill="#0F172A"/>' +
+        '<g transform="translate(22, 30) scale(1.36)">' +
+        '<path d="M16 25.5C18.5 21.8 22 20 27 18.8L72.5 5.5C78.5 3.8 83.5 7.5 83.5 13.8V25.5H79.5V16.2L26 25.5H16Z" fill="#2ECC71"/>' +
+        '<path d="M22 29.5H78C83.5 29.5 88 34 88 39.5V44.5H68C60.8 44.5 55 50.3 55 57.5C55 64.7 60.8 70.5 68 70.5H88V71.5C88 77 83.5 81.5 78 81.5H22C16.5 81.5 12 77 12 71.5V39.5C12 34 16.5 29.5 22 29.5Z" fill="#2ECC71"/>' +
+        '<circle cx="68.5" cy="57.5" r="5.5" fill="#2ECC71"/>' +
+        '</g></svg>';
+      const img = new Image();
+      img.onload = function() {
+        const c = document.createElement('canvas');
+        c.width = 180;
+        c.height = 180;
+        c.getContext('2d').drawImage(img, 0, 0);
+        const pngUrl = c.toDataURL('image/png');
+        let link = document.querySelector("link[rel='apple-touch-icon']");
+        if (!link) {
+          link = document.createElement('link');
+          link.rel = 'apple-touch-icon';
+          document.head.appendChild(link);
+        }
+        link.href = pngUrl;
+      };
+      img.src = 'data:image/svg+xml;base64,' + btoa(svgStr);
+    })();
+  </script>
   <style>
     :root {
       --ios-bg: #F4F6F8;
@@ -146,20 +173,23 @@
       user-select: none;
     }
 
+/* Uploaded PitakaKO Green Wallet Logo Container (iPhone Safari Safe) */
     .brand-logo {
       width: 34px;
       height: 28px;
+      min-width: 34px;
+      min-height: 28px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
 
-    .brand-logo svg {
-      width: 100%;
-      height: 100%;
+    .brand-logo svg,
+    .brand-logo img {
+      width: 34px;
+      height: 28px;
       display: block;
-      filter: drop-shadow(0 1px 2px rgba(46, 204, 113, 0.2));
     }
 
     .brand-text-accent {
@@ -1926,15 +1956,16 @@
   </style>
 </head>
 <body>
-  <!-- Fixed Stacked Top Header with Uploaded PitakaKO Green Wallet Logo, PitakaID & Dark Mode -->
+
+<!-- Fixed Stacked Top Header with Uploaded PitakaKO Green Wallet Logo -->
   <div class="top-bar-wrap">
     <div class="header">
       <div class="brand">
         <span class="brand-logo" aria-hidden="true">
-          <svg viewBox="0 0 100 84" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16 25.5C18.5 21.8 22 20 27 18.8L72.5 5.5C78.5 3.8 83.5 7.5 83.5 13.8V25.5H79.5V16.2L26 25.5H16Z" fill="#2ECC71" stroke="#1E9E52" stroke-width="1"/>
-            <path d="M22 29.5H78C83.5 29.5 88 34 88 39.5V44.5H68C60.8 44.5 55 50.3 55 57.5C55 64.7 60.8 70.5 68 70.5H88V71.5C88 77 83.5 81.5 78 81.5H22C16.5 81.5 12 77 12 71.5V39.5C12 34 16.5 29.5 22 29.5Z" fill="#2ECC71" stroke="#1E9E52" stroke-width="1"/>
-            <circle cx="68.5" cy="57.5" r="5.5" fill="#2ECC71" stroke="#1E9E52" stroke-width="1"/>
+          <svg width="34" height="28" viewBox="0 0 100 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 25.5C18.5 21.8 22 20 27 18.8L72.5 5.5C78.5 3.8 83.5 7.5 83.5 13.8V25.5H79.5V16.2L26 25.5H16Z" fill="#2ECC71" stroke="#1E9E52" stroke-width="1.5"/>
+            <path d="M22 29.5H78C83.5 29.5 88 34 88 39.5V44.5H68C60.8 44.5 55 50.3 55 57.5C55 64.7 60.8 70.5 68 70.5H88V71.5C88 77 83.5 81.5 78 81.5H22C16.5 81.5 12 77 12 71.5V39.5C12 34 16.5 29.5 22 29.5Z" fill="#2ECC71" stroke="#1E9E52" stroke-width="1.5"/>
+            <circle cx="68.5" cy="57.5" r="5.5" fill="#2ECC71" stroke="#1E9E52" stroke-width="1.5"/>
           </svg>
         </span>
         <span>Pitaka<span class="brand-text-accent">KO</span></span>
