@@ -96,6 +96,8 @@
     html {
       scroll-behavior: smooth;
       width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
       -webkit-text-size-adjust: 100%;
     }
 
@@ -105,11 +107,15 @@
       color: var(--ios-label);
       line-height: 1.4;
       width: 100%;
-      max-width: 100vw;
-      overflow-x: clip;
+      max-width: 100%;
+      position: relative;
+      overflow-x: hidden;
+      min-height: 100vh;
       min-height: 100dvh;
-      padding-top: calc(54px + env(safe-area-inset-top, 0px));
-      padding-bottom: calc(92px + env(safe-area-inset-bottom, 20px));
+      padding-top: calc(52px + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(88px + env(safe-area-inset-bottom, 16px));
+      padding-left: env(safe-area-inset-left, 0px);
+      padding-right: env(safe-area-inset-right, 0px);
       -webkit-font-smoothing: antialiased;
       transition: background-color 0.2s ease, color 0.2s ease;
     }
@@ -143,19 +149,23 @@
       top: 0;
       left: 0;
       right: 0;
+      width: 100%;
       z-index: 100;
       background: var(--header-bg);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
       border-bottom: 1px solid var(--ios-border);
       padding-top: env(safe-area-inset-top, 0px);
+      padding-left: env(safe-area-inset-left, 0px);
+      padding-right: env(safe-area-inset-right, 0px);
       box-shadow: var(--shadow-sm);
     }
 
     .header {
+      width: 100%;
       max-width: 480px;
       margin: 0 auto;
-      padding: 10px 14px;
+      padding: 9px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -165,20 +175,21 @@
     .brand {
       display: inline-flex;
       align-items: center;
-      gap: 9px;
-      font-size: 19px;
+      gap: 8px;
+      font-size: 18px;
       font-weight: 800;
       letter-spacing: -0.5px;
       color: var(--ios-label);
       user-select: none;
+      min-width: 0;
     }
 
-/* Uploaded PitakaKO Green Wallet Logo Container (iPhone Safari Safe) */
+    /* Uploaded PitakaKO Green Wallet Logo Container (iPhone Safari Safe) */
     .brand-logo {
-      width: 34px;
-      height: 28px;
-      min-width: 34px;
-      min-height: 28px;
+      width: 32px;
+      height: 26px;
+      min-width: 32px;
+      min-height: 26px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -187,8 +198,8 @@
 
     .brand-logo svg,
     .brand-logo img {
-      width: 34px;
-      height: 28px;
+      width: 32px;
+      height: 26px;
       display: block;
     }
 
@@ -200,6 +211,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      flex-shrink: 0;
     }
 
     .icon-pill-btn {
@@ -219,27 +231,21 @@
       cursor: pointer;
     }
 
-    .date-pill {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--ios-label-muted);
-      background: var(--ios-card-alt);
-      border: 1px solid var(--ios-border);
-      padding: 4px 10px;
-      border-radius: 999px;
-    }
-
     /* Main Container Tuned for iPhone 14 (390px width) */
     .app-shell {
+      width: 100%;
       max-width: 480px;
       margin: 0 auto;
-      padding: 12px 12px;
+      padding: 10px 10px;
+      overflow-x: hidden;
     }
 
     .workspace-grid {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
+      width: 100%;
+      min-width: 0;
     }
 
     .primary-col,
@@ -248,7 +254,7 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     /* Hero Summary Pass Card + Tarsi Net Worth Pill */
@@ -256,64 +262,79 @@
       background: linear-gradient(145deg, #0F172A 0%, #1E293B 100%);
       color: #FFFFFF;
       border-radius: var(--ios-radius-lg);
-      padding: 16px;
+      padding: 14px;
       box-shadow: var(--shadow-md);
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.08);
+      width: 100%;
     }
 
     .hero-top {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 12px;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .hero-top > div:first-child {
+      min-width: 0;
+      flex: 1;
     }
 
     .hero-label {
       font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
       color: #94A3B8;
       font-weight: 700;
     }
 
     .hero-balance {
-      font-size: clamp(24px, 6.5vw, 30px);
+      font-size: clamp(22px, 6vw, 28px);
       font-weight: 800;
       margin-top: 2px;
-      letter-spacing: -0.8px;
+      letter-spacing: -0.7px;
       line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .networth-sub {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 10.5px;
+      display: inline-block;
+      max-width: 100%;
+      font-size: 10px;
       color: #CBD5E1;
       background: rgba(255, 255, 255, 0.08);
       padding: 3px 8px;
       border-radius: 999px;
-      margin-top: 6px;
+      margin-top: 5px;
       font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .safe-badge {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.14);
-      padding: 7px 11px;
+      padding: 6px 10px;
       border-radius: 12px;
       text-align: right;
       flex-shrink: 0;
+      max-width: 42%;
     }
 
     .safe-badge-val {
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 800;
       color: var(--ios-green);
       margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .budget-row {
@@ -325,6 +346,13 @@
       margin-bottom: 6px;
       font-weight: 600;
       gap: 6px;
+    }
+
+    #budgetStatusText {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .budget-edit {
@@ -355,10 +383,10 @@
 
     .hero-kpis {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 6px;
-      margin-top: 14px;
-      padding-top: 12px;
+      margin-top: 12px;
+      padding-top: 10px;
       border-top: 1px solid rgba(255, 255, 255, 0.12);
     }
 
@@ -371,7 +399,7 @@
 
     .kpi-box strong {
       display: block;
-      font-size: 13px;
+      font-size: 12.5px;
       color: #FFFFFF;
       margin-top: 2px;
       font-weight: 700;
@@ -385,9 +413,11 @@
       background: var(--ios-card);
       border: 1px solid var(--ios-border);
       border-radius: var(--ios-radius-lg);
-      padding: 14px;
+      padding: 12px;
       box-shadow: var(--shadow-sm);
+      width: 100%;
       min-width: 0;
+      overflow: hidden;
     }
 
     .hub-surface {
@@ -395,6 +425,8 @@
       border: none;
       padding: 0;
       box-shadow: none;
+      width: 100%;
+      min-width: 0;
     }
 
     .section-head-row {
@@ -402,7 +434,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
@@ -413,7 +445,7 @@
       font-size: 11px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       color: var(--ios-label-muted);
       min-width: 0;
     }
@@ -429,10 +461,10 @@
       font-family: inherit;
       font-size: 11px;
       font-weight: 700;
-      padding: 5px 10px;
+      padding: 5px 9px;
       border-radius: 9px;
       cursor: pointer;
-      min-height: 32px;
+      min-height: 31px;
       flex-shrink: 0;
       transition: all 0.15s ease;
     }
@@ -446,7 +478,7 @@
     /* 2x2 Compact Wallet Grid for iPhone 14 */
     .wallet-strip {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 8px;
       width: 100%;
     }
@@ -455,7 +487,7 @@
       background: var(--ios-card-alt);
       border: 1.5px solid var(--ios-border);
       border-radius: var(--ios-radius-sm);
-      padding: 9px 10px;
+      padding: 8px 10px;
       cursor: pointer;
       text-align: left;
       transition: all 0.18s ease;
@@ -502,7 +534,7 @@
     }
 
     .wallet-bal {
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 800;
       color: var(--ios-label);
       white-space: nowrap;
@@ -554,41 +586,6 @@
       flex-shrink: 0;
     }
 
-    /* Tarsi 1-Tap Quick Templates Bar */
-    .tarsi-templates-row {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      margin-bottom: 10px;
-      scrollbar-width: none;
-    }
-
-    .tarsi-templates-row::-webkit-scrollbar {
-      display: none;
-    }
-
-    .tarsi-tpl-chip {
-      white-space: nowrap;
-      border: 1px solid var(--ios-border);
-      background: var(--ios-card-alt);
-      color: var(--ios-label);
-      font-family: inherit;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 5px 10px;
-      border-radius: 999px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .tarsi-tpl-chip:active {
-      border-color: var(--ios-green);
-      background: var(--ios-green-soft);
-    }
-
     /* Quick Entry Form */
     .quick-entry-body.collapsed {
       display: none;
@@ -596,7 +593,7 @@
 
     .type-switch {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       background: var(--ios-card-alt);
       border: 1px solid var(--ios-border);
       border-radius: var(--ios-radius-sm);
@@ -639,6 +636,8 @@
       padding: 8px 12px;
       margin-bottom: 10px;
       transition: all 0.18s ease;
+      width: 100%;
+      min-width: 0;
     }
 
     .amount-wrap:focus-within {
@@ -652,14 +651,16 @@
       font-weight: 800;
       color: var(--ios-label-muted);
       margin-right: 6px;
+      flex-shrink: 0;
     }
 
     .amount-input {
       width: 100%;
+      min-width: 0;
       border: none;
       background: transparent;
       font-family: inherit;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 800;
       color: var(--ios-label);
       outline: none;
@@ -667,14 +668,14 @@
 
     .cat-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 6px;
       margin-bottom: 10px;
     }
 
     @media (max-width: 345px) {
       .cat-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
@@ -682,7 +683,7 @@
       display: flex;
       align-items: center;
       gap: 5px;
-      padding: 8px 8px;
+      padding: 7px 7px;
       background: var(--ios-card-alt);
       border: 1.5px solid var(--ios-border);
       border-radius: var(--ios-radius-sm);
@@ -690,7 +691,7 @@
       font-weight: 600;
       color: var(--ios-label);
       cursor: pointer;
-      min-height: 40px;
+      min-height: 38px;
       min-width: 0;
       transition: all 0.15s ease;
     }
@@ -708,27 +709,42 @@
       font-weight: 700;
     }
 
+    /* iPhone 14 Safe Form Row (Prevents iOS Date Input Overflow) */
     .form-row {
       display: grid;
-      grid-template-columns: 1.3fr 1fr;
-      gap: 8px;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: 6px;
       margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .form-row > * {
+      min-width: 0;
+      max-width: 100%;
     }
 
     .flat-input {
+      display: block;
       width: 100%;
-      padding: 9px 11px;
+      max-width: 100%;
+      min-width: 0;
+      padding: 8px 10px;
       border: 1px solid var(--ios-border);
       border-radius: var(--ios-radius-sm);
       background: var(--ios-card-alt);
       font-family: inherit;
-      font-size: 16px;
+      font-size: 16px; /* 16px prevents iOS Safari auto-zoom on focus */
       font-weight: 500;
       color: var(--ios-label);
       outline: none;
-      min-height: 42px;
+      min-height: 40px;
       -webkit-appearance: none;
       appearance: none;
+    }
+
+    input[type="date"].flat-input {
+      font-size: 13.5px;
+      padding: 8px 6px;
     }
 
     .flat-input:focus {
@@ -739,7 +755,7 @@
 
     .submit-btn {
       width: 100%;
-      padding: 12px;
+      padding: 11px;
       border: none;
       border-radius: var(--ios-radius-sm);
       background: var(--ios-label);
@@ -748,7 +764,7 @@
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
-      min-height: 46px;
+      min-height: 44px;
       transition: opacity 0.15s ease;
     }
 
@@ -756,12 +772,17 @@
       opacity: 0.85;
     }
 
-    /* Tarsi Quick Notes Scratchpad */
+    /* Tarsi Quick Notes Scratchpad (iPhone 14 390px Safe Grid) */
     .scratchpad-input-row {
       display: grid;
-      grid-template-columns: 1fr 90px auto;
+      grid-template-columns: minmax(0, 1fr) 78px auto;
       gap: 6px;
       margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .scratchpad-input-row > * {
+      min-width: 0;
     }
 
     .scratchpad-list {
@@ -780,12 +801,13 @@
       border: 1px dashed var(--ios-border-strong);
       border-radius: 10px;
       font-size: 12px;
+      min-width: 0;
     }
 
     /* Hub Tabs Bar: Shown on Desktop, Hidden on Mobile */
     .hub-tabs-bar {
       display: none;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 6px;
       background: var(--ios-card);
       border: 1px solid var(--ios-border);
@@ -847,8 +869,11 @@
       background: var(--ios-card);
       border: 1px solid var(--ios-border);
       border-radius: var(--ios-radius-lg);
-      padding: 14px;
+      padding: 12px;
       box-shadow: var(--shadow-sm);
+      width: 100%;
+      min-width: 0;
+      overflow: hidden;
     }
 
     .hub-pane.active {
@@ -867,7 +892,7 @@
       background: var(--ios-card-alt);
       border: 1px solid var(--ios-border);
       border-radius: var(--ios-radius-md);
-      padding: 11px 12px;
+      padding: 10px 11px;
       margin-bottom: 12px;
     }
 
@@ -875,11 +900,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       padding-bottom: 8px;
       margin-bottom: 8px;
       border-bottom: 1px dashed var(--ios-border);
+      gap: 6px;
     }
 
     .timeline-step {
@@ -894,7 +920,7 @@
     /* Graphs Styling */
     .period-switch {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 4px;
       background: var(--ios-card-alt);
       border: 1px solid var(--ios-border);
@@ -923,7 +949,7 @@
 
     .graph-kpi-strip {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 6px;
       margin-bottom: 12px;
     }
@@ -932,7 +958,7 @@
       background: var(--ios-card-alt);
       border: 1px solid var(--ios-border);
       border-radius: var(--ios-radius-sm);
-      padding: 8px 10px;
+      padding: 8px 9px;
       min-width: 0;
     }
 
@@ -957,16 +983,17 @@
       background: var(--ios-card-alt);
       border: 1px solid var(--ios-border);
       border-radius: var(--ios-radius-md);
-      padding: 12px 10px;
+      padding: 12px 8px;
       margin-bottom: 14px;
+      overflow: hidden;
     }
 
     .bar-chart-grid {
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      gap: 4px;
-      height: 140px;
+      gap: 3px;
+      height: 135px;
       padding-top: 18px;
       border-bottom: 1px solid var(--ios-border);
     }
@@ -991,7 +1018,7 @@
 
     .bar-fill {
       width: 100%;
-      max-width: 22px;
+      max-width: 20px;
       background: var(--ios-blue);
       border-radius: 5px 5px 0 0;
       min-height: 4px;
@@ -1019,7 +1046,7 @@
     }
 
     .bar-lbl-main {
-      font-size: 9px;
+      font-size: 8.5px;
       font-weight: 700;
       color: var(--ios-label);
       white-space: nowrap;
@@ -1028,7 +1055,7 @@
     }
 
     .bar-lbl-sub {
-      font-size: 8px;
+      font-size: 7.5px;
       color: var(--ios-label-muted);
     }
 
@@ -1056,7 +1083,7 @@
       background: var(--ios-card-alt);
       border: 1px solid var(--ios-border);
       border-radius: var(--ios-radius-sm);
-      padding: 9px 11px;
+      padding: 9px 10px;
     }
 
     .cat-graph-top {
@@ -1064,7 +1091,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 5px;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       gap: 6px;
     }
@@ -1102,20 +1129,20 @@
       transition: width 0.25s ease;
     }
 
-    /* Floating Chat Button & AI Panel */
+    /* Floating Chat Button & AI Panel (iPhone 14 Safe Height & Width) */
     .chat-fab-btn {
       position: fixed;
-      bottom: calc(74px + env(safe-area-inset-bottom, 16px));
+      bottom: calc(70px + env(safe-area-inset-bottom, 12px));
       right: 12px;
       z-index: 85;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       background: #0F172A;
       color: #FFFFFF;
       border: 1.5px solid var(--ios-green);
       border-radius: 999px;
-      padding: 10px 14px;
+      padding: 9px 13px;
       font-family: inherit;
       font-size: 12px;
       font-weight: 700;
@@ -1160,20 +1187,24 @@
       background: var(--ios-card);
       border: 1px solid var(--ios-border);
       border-radius: var(--ios-radius-lg);
-      padding: 14px;
+      padding: 12px;
       display: none;
       flex-direction: column;
       box-shadow: var(--shadow-md);
+      width: 100%;
+      min-width: 0;
+      overflow: hidden;
     }
 
     .ai-panel.floating-mode.floating-open {
       display: flex;
       position: fixed;
-      bottom: calc(122px + env(safe-area-inset-bottom, 16px));
-      left: 12px;
-      right: 12px;
+      bottom: calc(116px + env(safe-area-inset-bottom, 12px));
+      left: 10px;
+      right: 10px;
       width: auto;
-      max-width: 456px;
+      max-width: 460px;
+      max-height: calc(100dvh - 180px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
       margin: 0 auto;
       z-index: 90;
     }
@@ -1215,17 +1246,19 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      height: 250px;
+      flex: 1 1 auto;
+      min-height: 150px;
+      max-height: 230px;
       overflow-y: auto;
       background: var(--ios-card-alt);
       border: 1px solid var(--ios-border);
       border-radius: var(--ios-radius-md);
-      padding: 11px;
-      margin-bottom: 10px;
+      padding: 10px;
+      margin-bottom: 8px;
     }
 
     .ai-panel.solo-tab-mode .ai-chat-feed {
-      height: 320px;
+      max-height: 310px;
     }
 
     .ai-panel.solo-tab-mode .floating-only-btn {
@@ -1237,7 +1270,7 @@
       gap: 8px;
       align-items: flex-start;
       font-size: 12px;
-      line-height: 1.48;
+      line-height: 1.45;
     }
 
     .ai-msg.user {
@@ -1257,7 +1290,7 @@
     }
 
     .ai-bubble {
-      padding: 9px 11px;
+      padding: 8px 10px;
       border-radius: 13px;
       max-width: 88%;
       font-weight: 500;
@@ -1309,20 +1342,26 @@
       font-family: inherit;
       font-size: 11px;
       font-weight: 600;
-      padding: 6px 10px;
+      padding: 5px 10px;
       border-radius: 999px;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .ai-input-row {
       display: grid;
-      grid-template-columns: 1fr auto auto auto;
+      grid-template-columns: minmax(0, 1fr) 38px 38px auto;
       gap: 5px;
+      width: 100%;
+    }
+
+    .ai-input-row > * {
+      min-width: 0;
     }
 
     .ai-icon-btn {
-      width: 40px;
-      height: 42px;
+      width: 38px;
+      height: 40px;
       border: 1px solid var(--ios-border);
       border-radius: var(--ios-radius-sm);
       background: var(--ios-card-alt);
@@ -1331,6 +1370,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     .ai-icon-btn.listening {
@@ -1340,8 +1380,8 @@
     }
 
     .ai-send-btn {
-      padding: 0 12px;
-      height: 42px;
+      padding: 0 11px;
+      height: 40px;
       border: none;
       border-radius: var(--ios-radius-sm);
       background: var(--ios-blue);
@@ -1351,8 +1391,10 @@
       font-weight: 700;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 4px;
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     /* goalsIPON, Tarsi Planned Payments/Utang & Non-Overlapping History */
@@ -1360,12 +1402,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 6px;
       background: var(--ios-green-soft);
       border: 1px solid rgba(46, 204, 113, 0.35);
       color: var(--ios-green-dark);
-      padding: 9px 12px;
+      padding: 8px 11px;
       border-radius: var(--ios-radius-sm);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
       margin-bottom: 10px;
     }
@@ -1381,7 +1424,7 @@
       background: var(--ios-card-alt);
       border: 1px solid var(--ios-border);
       border-radius: var(--ios-radius-md);
-      padding: 11px;
+      padding: 10px;
       width: 100%;
       min-width: 0;
     }
@@ -1397,21 +1440,27 @@
     .goal-title-wrap {
       display: flex;
       align-items: center;
-      gap: 9px;
+      gap: 8px;
       min-width: 0;
       flex: 1;
     }
 
     .history-filter-row {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: 6px;
       margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .history-filter-row > * {
+      min-width: 0;
     }
 
     .history-search-input {
       width: 100%;
-      padding: 7px 11px;
+      min-width: 0;
+      padding: 7px 10px;
       border: 1px solid var(--ios-border);
       border-radius: 10px;
       background: var(--ios-card-alt);
@@ -1426,7 +1475,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 6px 4px 2px;
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.4px;
@@ -1437,15 +1486,15 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 11px;
-      gap: 10px;
+      padding: 9px 10px;
+      gap: 8px;
       overflow: hidden;
     }
 
     .tx-left {
       display: flex;
       align-items: center;
-      gap: 9px;
+      gap: 8px;
       flex: 1 1 auto;
       min-width: 0;
       overflow: hidden;
@@ -1458,8 +1507,8 @@
     }
 
     .goal-icon, .tx-icon {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 9px;
       background: var(--ios-card);
       border: 1px solid var(--ios-border);
@@ -1509,11 +1558,11 @@
 
     .tx-right {
       display: flex;
-      gap: 5px;
+      gap: 4px;
       flex-shrink: 0;
       align-items: center;
       justify-content: flex-end;
-      margin-left: 4px;
+      margin-left: 2px;
     }
 
     .hulog-btn {
@@ -1523,7 +1572,7 @@
       font-family: inherit;
       font-size: 11px;
       font-weight: 700;
-      padding: 5px 9px;
+      padding: 5px 8px;
       border-radius: 7px;
       cursor: pointer;
     }
@@ -1535,8 +1584,8 @@
       border: 1px solid var(--ios-border);
       background: var(--ios-card);
       color: var(--ios-label-muted);
-      width: 28px;
-      height: 28px;
+      width: 27px;
+      height: 27px;
       border-radius: 7px;
       cursor: pointer;
       flex-shrink: 0;
@@ -1565,7 +1614,7 @@
     }
 
     .tx-amount {
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 800;
       white-space: nowrap;
       text-align: right;
@@ -1585,9 +1634,9 @@
       font-size: 9px;
       font-weight: 800;
       text-transform: uppercase;
-      padding: 2px 6px;
+      padding: 2px 5px;
       border-radius: 5px;
-      margin-left: 4px;
+      margin-left: 3px;
     }
     .plan-type-badge.BILL { background: var(--ios-orange-soft); color: var(--ios-orange); border: 1px solid rgba(245, 158, 11, 0.3); }
     .plan-type-badge.DEBT { background: var(--ios-red-soft); color: var(--ios-red); border: 1px solid rgba(239, 68, 68, 0.3); }
@@ -1601,9 +1650,9 @@
       border: none;
       color: #FFFFFF;
       font-family: inherit;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
-      padding: 6px 10px;
+      padding: 5px 8px;
       border-radius: 7px;
       cursor: pointer;
       white-space: nowrap;
@@ -1617,7 +1666,7 @@
       background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
       color: #FFFFFF;
       border-radius: 18px;
-      padding: 18px;
+      padding: 16px;
       border: 1px solid rgba(46, 204, 113, 0.35);
       box-shadow: var(--shadow-md);
     }
@@ -1629,6 +1678,7 @@
       padding: 9px 0;
       border-bottom: 1px dashed rgba(255, 255, 255, 0.14);
       font-size: 12px;
+      gap: 8px;
     }
 
     .pitaka-id-row:last-child {
@@ -1639,7 +1689,7 @@
       background: var(--ios-card-alt);
       border: 1.5px dashed var(--ios-border-strong);
       border-radius: 16px;
-      padding: 18px;
+      padding: 16px;
       text-align: center;
       position: relative;
     }
@@ -1647,7 +1697,7 @@
     /* Icon Picker & Presets */
     .icon-picker-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 6px;
       margin-bottom: 12px;
     }
@@ -1678,7 +1728,7 @@
 
     .preset-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 6px;
       margin-bottom: 12px;
     }
@@ -1716,14 +1766,15 @@
       bottom: 0;
       left: 0;
       right: 0;
+      width: 100%;
       background: var(--nav-bg);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
       border-top: 1px solid var(--ios-border);
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       align-items: center;
-      padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 12px));
+      padding: 5px calc(6px + env(safe-area-inset-right, 0px)) calc(5px + env(safe-area-inset-bottom, 10px)) calc(6px + env(safe-area-inset-left, 0px));
       z-index: 90;
     }
 
@@ -1746,9 +1797,10 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
+      gap: 2px;
       cursor: pointer;
-      min-height: 46px;
+      min-height: 44px;
+      min-width: 0;
     }
 
     .mob-nav-btn.active {
@@ -1762,8 +1814,8 @@
     }
 
     .center-log-circle {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       background: var(--ios-label);
       color: var(--ios-bg);
@@ -1784,7 +1836,7 @@
       color: var(--ios-green-dark);
     }
 
-    /* Modals */
+    /* Modals (iPhone 14 Bottom Sheet Safe Fit) */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -1814,9 +1866,10 @@
       max-width: 440px;
       max-height: 88dvh;
       overflow-y: auto;
+      overflow-x: hidden;
       background: var(--ios-card);
       border-radius: 22px 22px 0 0;
-      padding: 18px 16px calc(18px + env(safe-area-inset-bottom, 14px));
+      padding: 16px 14px calc(16px + env(safe-area-inset-bottom, 14px));
       box-shadow: var(--shadow-md);
     }
 
@@ -1847,6 +1900,7 @@
 
     .field-group {
       margin-bottom: 10px;
+      min-width: 0;
     }
 
     .field-label {
@@ -1868,14 +1922,20 @@
 
     .field-row-2 {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 8px;
       margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .field-row-2 > * {
+      min-width: 0;
+      max-width: 100%;
     }
 
     .modal-actions {
       display: grid;
-      grid-template-columns: 1fr 1.4fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
       gap: 8px;
       margin-top: 14px;
     }
@@ -1906,7 +1966,7 @@
 
     .toast {
       position: fixed;
-      bottom: calc(82px + env(safe-area-inset-bottom, 14px));
+      bottom: calc(80px + env(safe-area-inset-bottom, 12px));
       left: 50%;
       transform: translateX(-50%);
       background: rgba(15, 23, 42, 0.94);
@@ -1957,12 +2017,12 @@
 </head>
 <body>
 
-<!-- Fixed Stacked Top Header with Uploaded PitakaKO Green Wallet Logo -->
+  <!-- Fixed Stacked Top Header with Uploaded PitakaKO Green Wallet Logo -->
   <div class="top-bar-wrap">
     <div class="header">
       <div class="brand">
         <span class="brand-logo" aria-hidden="true">
-          <svg width="34" height="28" viewBox="0 0 100 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="32" height="26" viewBox="0 0 100 84" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 25.5C18.5 21.8 22 20 27 18.8L72.5 5.5C78.5 3.8 83.5 7.5 83.5 13.8V25.5H79.5V16.2L26 25.5H16Z" fill="#2ECC71" stroke="#1E9E52" stroke-width="1.5"/>
             <path d="M22 29.5H78C83.5 29.5 88 34 88 39.5V44.5H68C60.8 44.5 55 50.3 55 57.5C55 64.7 60.8 70.5 68 70.5H88V71.5C88 77 83.5 81.5 78 81.5H22C16.5 81.5 12 77 12 71.5V39.5C12 34 16.5 29.5 22 29.5Z" fill="#2ECC71" stroke="#1E9E52" stroke-width="1.5"/>
             <circle cx="68.5" cy="57.5" r="5.5" fill="#2ECC71" stroke="#1E9E52" stroke-width="1.5"/>
@@ -2068,10 +2128,9 @@
           </div>
 
           <div class="quick-entry-body" id="quickEntryBody">
-            <!-- Tarsi 1-Tap Quick Templates (Flat Line Icons) -->
             <!-- Tarsi Quick Templates Dropdown -->
             <div style="margin-bottom: 10px;">
-              <select id="quickTemplateSelect" class="flat-input" onchange="handleQuickTemplateDropdown(this)" style="min-height: 38px; padding: 7px 11px; font-weight: 600;">
+              <select id="quickTemplateSelect" class="flat-input" onchange="handleQuickTemplateDropdown(this)" style="min-height: 38px; padding: 7px 10px; font-weight: 600;">
                 <option value="">⚡ Select Quick Entry Template...</option>
                 <option value="EXPENSE|Pagkain|180|Jollibee / Meal">Meal — ₱180.00 (Pagkain)</option>
                 <option value="EXPENSE|Tingi / Kape|120|Kape">Kape — ₱120.00 (Tingi / Kape)</option>
@@ -2100,7 +2159,7 @@
             <div class="cat-grid" id="categoryGrid"></div>
 
             <div class="form-row">
-              <input type="text" id="noteInput" class="flat-input" placeholder="Note (e.g., Jollibee #barkada)">
+              <input type="text" id="noteInput" class="flat-input" placeholder="Note (e.g., Jollibee)">
               <input type="date" id="dateInput" class="flat-input num">
             </div>
 
@@ -2119,8 +2178,8 @@
             </div>
           </div>
           <div class="scratchpad-input-row">
-            <input type="text" id="scratchTitleInput" class="flat-input" placeholder="To buy (e.g. Change oil)" style="min-height:38px;padding:7px 10px;">
-            <input type="number" id="scratchAmtInput" class="flat-input num" placeholder="₱450" inputmode="decimal" style="min-height:38px;padding:7px 8px;">
+            <input type="text" id="scratchTitleInput" class="flat-input" placeholder="To buy (e.g. Change oil)" style="min-height:38px;padding:7px 9px;">
+            <input type="number" id="scratchAmtInput" class="flat-input num" placeholder="₱450" inputmode="decimal" style="min-height:38px;padding:7px 6px;">
             <button type="button" class="flat-link-btn" style="min-height:38px;" onclick="addScratchNote()">+ Jot</button>
           </div>
           <div class="scratchpad-list" id="scratchpadList"></div>
@@ -2175,7 +2234,7 @@
             <div class="goals-list" id="goalsList"></div>
 
             <!-- Tarsi Feature: Planned Bills, Installment Counter (X/Y Paid) & Utang -->
-            <div class="section-head-row" style="margin-top:18px;padding-top:14px;border-top:1px dashed var(--ios-border);">
+            <div class="section-head-row" style="margin-top:16px;padding-top:12px;border-top:1px dashed var(--ios-border);">
               <div class="section-caption">
                 <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                 Planned Bills, Installments &amp; Utang
@@ -2254,7 +2313,7 @@
                 type="text"
                 id="historySearchInput"
                 class="history-search-input"
-                placeholder="Search category, #tag, note, or wallet..."
+                placeholder="Search category, #tag, note..."
                 oninput="renderTransactions()"
               >
               <select id="historyTypeFilter" class="flat-input" style="width:auto;min-height:38px;padding:6px 10px;" onchange="renderTransactions()">
@@ -2330,7 +2389,7 @@
           type="text"
           id="aiPromptInput"
           class="flat-input"
-          placeholder="Type command or scan receipt..."
+          placeholder="Command or scan..."
           onkeydown="if(event.key==='Enter') sendAiMessage()"
         >
         <button type="button" id="aiCamBtn" class="ai-icon-btn" title="Scan Receipt or GCash Screenshot" onclick="triggerReceiptCamera()">
@@ -2433,7 +2492,7 @@
         </div>
         <div>
           <label class="field-label" for="modalWalletColor">Badge Color</label>
-          <input type="color" id="modalWalletColor" class="flat-input" style="height:42px;padding:4px;" value="#2563EB">
+          <input type="color" id="modalWalletColor" class="flat-input" style="height:40px;padding:4px;" value="#2563EB">
         </div>
       </div>
       <div class="modal-actions">
@@ -2477,7 +2536,7 @@
         </div>
         <div>
           <label class="field-label" for="modalGoalColor">Color</label>
-          <input type="color" id="modalGoalColor" class="flat-input" style="height:42px;padding:4px;" value="#10B981">
+          <input type="color" id="modalGoalColor" class="flat-input" style="height:40px;padding:4px;" value="#10B981">
         </div>
       </div>
       <button type="button" id="deleteGoalBtn" class="danger-link" onclick="removeCurrentGoal()" style="display:none;">
@@ -2636,6 +2695,75 @@
 
   <div class="toast" id="toast"></div>
 
+  <!-- Vercel / External Host Adapter (Only activates when not inside Apps Script iframe) -->
+  <script>
+    (function () {
+      if (typeof window.google !== 'undefined' && window.google.script && window.google.script.run) {
+        return;
+      }
+      const API_URL = 'https://script.google.com/macros/s/AKfycbxNJ-92Y4ks47cKzEU-G-35jVILqxinDMG8z_bm0JLAVthPEE4nNE_DWW-WjPI2RZE/exec';
+      const PIN_KEY = 'pitakako_api_pin';
+      const getPin = () => { try { return localStorage.getItem(PIN_KEY) || ''; } catch (e) { return ''; } };
+      const setPin = (v) => { try { localStorage.setItem(PIN_KEY, v); } catch (e) {} };
+
+      async function callApi(fn, args, retried) {
+        let res;
+        try {
+          res = await fetch(API_URL, {
+            method: 'POST',
+            redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ fn: fn, args: args, pin: getPin() })
+          });
+        } catch (e) {
+          throw new Error('Cannot reach the server. Check your internet connection.');
+        }
+
+        let json;
+        try {
+          json = await res.json();
+        } catch (e) {
+          throw new Error('Invalid server reply. Check the Apps Script deployment and URL.');
+        }
+
+        if (json.ok) return json.data;
+
+        if (json.code === 'AUTH') {
+          setPin('');
+          if (retried) throw new Error('Wrong PIN.');
+          const pin = prompt('Enter your PitakaKO PIN:');
+          if (pin === null || !pin.trim()) throw new Error('PIN required.');
+          setPin(pin.trim());
+          return callApi(fn, args, true);
+        }
+        throw new Error(json.error || 'Server error.');
+      }
+
+      function makeRunner(onSuccess, onFailure) {
+        return new Proxy({}, {
+          get: function (_, name) {
+            if (name === 'withSuccessHandler') return function (fn) { return makeRunner(fn, onFailure); };
+            if (name === 'withFailureHandler') return function (fn) { return makeRunner(onSuccess, fn); };
+            if (typeof name !== 'string') return undefined;
+            return function () {
+              const args = Array.prototype.slice.call(arguments);
+              callApi(name, args, false)
+                .then(function (data) { if (onSuccess) onSuccess(data); })
+                .catch(function (err) {
+                  if (onFailure) onFailure(err);
+                  else console.error('[PitakaKO API] ' + name + ':', err);
+                });
+            };
+          }
+        });
+      }
+
+      window.google = window.google || {};
+      window.google.script = window.google.script || {};
+      window.google.script.run = makeRunner(null, null);
+    })();
+  </script>
+
   <script>
     const FLAT_LINE_SVGS = {
       utensils: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>',
@@ -2765,6 +2893,7 @@
       document.getElementById('modalWalletColor').value = hexColor;
       document.getElementById('modalStartingBalance').focus();
     }
+
     function handleQuickTemplateDropdown(selectEl) {
       const val = selectEl.value;
       if (!val) return;
@@ -2903,6 +3032,8 @@
         return;
       }
 
+      if (!hasEnoughWalletFunds(APP_STATE.selectedWallet, total)) return;
+
       const eachShare = Math.round((total / pax) * 100) / 100;
       const friendNames = rawNames ? rawNames.split(',').map(s => s.trim()).filter(Boolean) : [];
       const friendsCount = pax - 1;
@@ -3022,7 +3153,8 @@
       if (!item) return;
 
       const isReceivable = item.type === 'COLLECT';
-      if (!hasEnoughWalletFunds(APP_STATE.selectedWallet, total)) return;
+      if (!isReceivable && !hasEnoughWalletFunds(APP_STATE.selectedWallet, item.amount)) return;
+
       const hasInstallments = (Number(item.totalMonths) || 0) > 0;
       const nextPaid = hasInstallments ? (Number(item.paidMonths) || 0) + 1 : 0;
       const instSuffix = hasInstallments ? ` (${nextPaid}/${item.totalMonths} mos)` : '';
@@ -3153,7 +3285,7 @@
       if (fileInput) fileInput.click();
     }
 
-function handleReceiptImageSelected(event) {
+    function handleReceiptImageSelected(event) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
 
@@ -3501,7 +3633,6 @@ function handleReceiptImageSelected(event) {
         stackedBarEl.innerHTML = '<div style="width:100%;background:var(--ios-border);"></div>';
       }
 
-      // Render all Expense Categories with Tarsi Per-Category Monthly Limit Progress Bars
       const expenseCategories = APP_STATE.categories.filter(c => c.type === 'EXPENSE');
       catListEl.innerHTML = expenseCategories.map(catObj => {
         const periodMatch = cats.find(c => c.name === catObj.name);
@@ -3522,9 +3653,9 @@ function handleReceiptImageSelected(event) {
                 <div class="cat-graph-badge" style="color:${catObj.color};">${getFlatSvg(catObj.icon)}</div>
                 <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${catObj.name}</span>
               </div>
-              <div class="num" style="cursor:pointer;" onclick="promptCategoryLimitEdit('${safeCatName}', ${limitVal})" title="Tap to edit category limit">
+              <div class="num" style="cursor:pointer;flex-shrink:0;" onclick="promptCategoryLimitEdit('${safeCatName}', ${limitVal})" title="Tap to edit category limit">
                 ${formatPeso(spentVal)}
-                <span style="color:var(--ios-label-muted);font-size:10.5px;">
+                <span style="color:var(--ios-label-muted);font-size:10px;">
                   / ${limitVal > 0 ? formatPeso(limitVal) + ' (' + limitPct + '%)' : 'Set Limit'}
                 </span>
               </div>
@@ -3683,9 +3814,6 @@ function handleReceiptImageSelected(event) {
       }).join('');
     }
 
-    /**
-     * Renders non-overlapping History items with Tarsi Search, #Tag Filter, Daily Totals & PitakaReceipt button
-     */
     function renderTransactions() {
       const list = document.getElementById('txList');
       const countEl = document.getElementById('logsCountPill');
@@ -4129,7 +4257,7 @@ function handleReceiptImageSelected(event) {
         .contributeToGoal({ goalId, amount, deductFromWallet, wallet: APP_STATE.selectedWallet });
     }
 
-function hydrateUI(data) {
+    function hydrateUI(data) {
       if (!data) return;
       APP_STATE.wallets = data.wallets || [];
       APP_STATE.categories = data.categories || [];
@@ -4187,10 +4315,6 @@ function hydrateUI(data) {
       renderGraphs();
     }
 
-     /**
-     * Checks if the specified wallet has enough balance for an EXPENSE.
-     * Shows a clear warning toast if the wallet has ₱0 or insufficient funds.
-     */
     function hasEnoughWalletFunds(walletName, expenseAmount) {
       const targetWallet = APP_STATE.wallets.find(
         w => w.name.toLowerCase() === String(walletName || '').toLowerCase()
@@ -4211,7 +4335,7 @@ function hydrateUI(data) {
       return true;
     }
 
-function submitTransaction() {
+    function submitTransaction() {
       const amountEl = document.getElementById('amountInput');
       const noteEl = document.getElementById('noteInput');
       const dateEl = document.getElementById('dateInput');
@@ -4224,7 +4348,6 @@ function submitTransaction() {
         return;
       }
 
-      // Block Gastos if selected wallet (Cash, GCash, Maya, Bank) has no money or insufficient balance
       if (APP_STATE.type === 'EXPENSE' && !hasEnoughWalletFunds(APP_STATE.selectedWallet, amount)) {
         return;
       }
@@ -4283,12 +4406,11 @@ function submitTransaction() {
         .updateMonthlyBudget(val);
     }
 
-window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', () => {
       initThemeMode();
       loadPlannedItems();
       loadScratchNotes();
 
-      // Seed instant UI defaults while waiting for Google Sheets
       hydrateUI({
         today: new Date().toISOString().substring(0, 10),
         monthlyBudget: 15000,
