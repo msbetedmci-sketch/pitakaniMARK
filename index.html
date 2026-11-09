@@ -70,6 +70,8 @@
       --shadow-md: 0 10px 24px rgba(15, 23, 42, 0.09);
       --header-bg: rgba(255, 255, 255, 0.94);
       --nav-bg: rgba(255, 255, 255, 0.96);
+      --header-height: 54px;
+      --bottom-nav-height: 64px;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --safe-left: env(safe-area-inset-left, 0px);
@@ -115,6 +117,7 @@
     html {
       scroll-behavior: smooth;
       width: 100%;
+      height: 100%;
       max-width: 100%;
       overflow-x: hidden;
       -webkit-text-size-adjust: 100%;
@@ -130,14 +133,22 @@
       max-width: 100%;
       overflow-x: hidden;
       min-height: 100vh;
+      min-height: 100dvh;
       min-height: -webkit-fill-available;
-      padding-top: calc(52px + var(--safe-top));
-      padding-bottom: calc(92px + var(--safe-bottom));
+      padding-top: calc(var(--header-height) + var(--safe-top) + 6px);
+      padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 28px);
       padding-left: var(--safe-left);
       padding-right: var(--safe-right);
       -webkit-font-smoothing: antialiased;
       overscroll-behavior-y: none;
       transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    /* Prevent sections from hiding behind the fixed header when tapping mobNavLog */
+    #quickLogSection,
+    #workspaceHubSection,
+    #quickEntryCard {
+      scroll-margin-top: calc(var(--header-height) + var(--safe-top) + 12px);
     }
 
     .num {
@@ -163,30 +174,33 @@
       height: 15px;
     }
 
-    /* Fixed Top Header That Stays Stacked on Scroll & Respects iPhone 14 Notch/Island */
+    /* Strictly Fixed Top Header That Stays Stacked on Scroll & Respects iPhone 14 Notch/Island */
     .top-bar-wrap {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
       width: 100%;
-      z-index: 100;
+      z-index: 1000 !important;
       background: var(--header-bg);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
       border-bottom: 1px solid var(--ios-border);
       padding-top: var(--safe-top);
       padding-left: var(--safe-left);
       padding-right: var(--safe-right);
       box-shadow: var(--shadow-sm);
-      transform: translateZ(0);
+      transform: translate3d(0, 0, 0);
+      -webkit-transform: translate3d(0, 0, 0);
+      will-change: transform;
     }
 
     .header {
       width: 100%;
       max-width: 480px;
+      height: var(--header-height);
       margin: 0 auto;
-      padding: 9px 12px;
+      padding: 0 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -845,7 +859,7 @@
       .hub-tabs-bar {
         display: grid;
         position: sticky;
-        top: calc(58px + var(--safe-top));
+        top: calc(var(--header-height) + var(--safe-top) + 8px);
         z-index: 75;
       }
     }
@@ -1155,10 +1169,10 @@
 
     /* Floating Chat Button & AI Panel */
     .chat-fab-btn {
-      position: fixed;
-      bottom: calc(68px + var(--safe-bottom));
-      right: 12px;
-      z-index: 85;
+      position: fixed !important;
+      bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 12px) !important;
+      right: 12px !important;
+      z-index: 990 !important;
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -1172,13 +1186,14 @@
       font-weight: 700;
       cursor: pointer;
       box-shadow: var(--shadow-md);
-      transform: translateZ(0);
+      transform: translate3d(0, 0, 0);
+      -webkit-transform: translate3d(0, 0, 0);
     }
 
     @media (min-width: 860px) {
       .chat-fab-btn {
-        bottom: 24px;
-        right: 24px;
+        bottom: 24px !important;
+        right: 24px !important;
       }
     }
 
@@ -1191,7 +1206,7 @@
     }
 
     .chat-fab-btn.hidden {
-      display: none;
+      display: none !important;
     }
 
     .floating-chat-backdrop {
@@ -1200,7 +1215,7 @@
       background: rgba(15, 23, 42, 0.35);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
-      z-index: 88;
+      z-index: 992;
       display: none;
     }
 
@@ -1224,14 +1239,14 @@
     .ai-panel.floating-mode.floating-open {
       display: flex;
       position: fixed;
-      bottom: calc(114px + var(--safe-bottom));
+      bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 58px);
       left: 10px;
       right: 10px;
       width: auto;
       max-width: 460px;
       max-height: calc(100vh - 180px - var(--safe-top) - var(--safe-bottom));
       margin: 0 auto;
-      z-index: 90;
+      z-index: 995;
     }
 
     @media (min-width: 860px) {
@@ -1785,28 +1800,33 @@
       cursor: pointer;
     }
 
-    /* iPhone 14 Bottom Tab Bar with Centered + Log Action Button */
+    /* Strictly Fixed Bottom Navigation Bar + Raised Center #mobNavLog for iPhone 14 */
     .mobile-bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
       width: 100%;
+      min-height: calc(var(--bottom-nav-height) + var(--safe-bottom));
       background: var(--nav-bg);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
       border-top: 1px solid var(--ios-border);
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
       align-items: center;
-      padding: 5px calc(6px + var(--safe-right)) calc(5px + var(--safe-bottom)) calc(6px + var(--safe-left));
-      z-index: 90;
-      transform: translateZ(0);
+      padding: 6px calc(8px + var(--safe-right)) calc(6px + var(--safe-bottom)) calc(8px + var(--safe-left));
+      z-index: 1000 !important;
+      box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.06);
+      transform: translate3d(0, 0, 0);
+      -webkit-transform: translate3d(0, 0, 0);
+      will-change: transform;
+      transition: transform 0.2s ease;
     }
 
     @media (min-width: 860px) {
       .mobile-bottom-nav {
-        display: none;
+        display: none !important;
       }
     }
 
@@ -1816,17 +1836,19 @@
       color: var(--ios-label-muted);
       font-family: inherit;
       font-size: 10px;
-      font-weight: 600;
+      font-weight: 700;
       padding: 4px 2px;
       border-radius: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2px;
+      gap: 3px;
       cursor: pointer;
-      min-height: 44px;
+      min-height: 48px;
       min-width: 0;
+      position: relative;
+      user-select: none;
     }
 
     .mob-nav-btn.active {
@@ -1834,31 +1856,44 @@
       font-weight: 800;
     }
 
-    .mob-nav-btn.center-log-btn {
+    /* Center Raised Action Button (#mobNavLog) */
+    #mobNavLog.mob-nav-btn.center-log-btn {
       color: var(--ios-label);
       font-weight: 800;
+      transform: translateY(-10px);
     }
 
-    .center-log-circle {
-      width: 32px;
-      height: 32px;
+    #mobNavLog .center-log-circle {
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       background: var(--ios-label);
       color: var(--ios-bg);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.22);
-      transition: transform 0.15s ease, background-color 0.15s ease;
+      border: 3px solid var(--ios-card);
+      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.25);
+      transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    .mob-nav-btn.center-log-btn.active .center-log-circle {
+    #mobNavLog .center-log-circle svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2.5;
+    }
+
+    #mobNavLog.mob-nav-btn.center-log-btn.active .center-log-circle {
       background: var(--ios-green);
       color: #FFFFFF;
-      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.35);
+      box-shadow: 0 6px 16px rgba(46, 204, 113, 0.42);
     }
 
-    .mob-nav-btn.center-log-btn.active {
+    #mobNavLog.mob-nav-btn.center-log-btn:active .center-log-circle {
+      transform: scale(0.93);
+    }
+
+    #mobNavLog.mob-nav-btn.center-log-btn.active {
       color: var(--ios-green-dark);
     }
 
@@ -1873,7 +1908,7 @@
       align-items: flex-end;
       justify-content: center;
       padding: 0;
-      z-index: 105;
+      z-index: 1050;
     }
 
     @media (min-width: 600px) {
@@ -1993,7 +2028,7 @@
 
     .toast {
       position: fixed;
-      bottom: calc(78px + var(--safe-bottom));
+      bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 16px);
       left: 50%;
       transform: translateX(-50%);
       background: rgba(15, 23, 42, 0.94);
@@ -2003,7 +2038,7 @@
       font-size: 12px;
       font-weight: 600;
       display: none;
-      z-index: 120;
+      z-index: 1200;
       box-shadow: var(--shadow-md);
       white-space: nowrap;
       max-width: 92vw;
@@ -2017,7 +2052,7 @@
       }
       .header {
         max-width: 1040px;
-        padding: 12px 24px;
+        padding: 0 24px;
       }
       .toast {
         bottom: 28px;
@@ -2137,7 +2172,7 @@
         </div>
 
         <!-- Quick Entry Logger + Flat Icon Templates + KKB Bill Splitter -->
-        <div class="panel">
+        <div class="panel" id="quickEntryCard">
           <div class="section-head-row">
             <div class="section-caption">
               <svg class="line-icon line-icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -2842,7 +2877,7 @@
       { key: 'wallet', label: 'Cash' },
       { key: 'rocket', label: 'Biz' }
     ];
-// Replace DEFAULT_WALLETS in Index.html with your exact Code.gs IDs:
+
     const DEFAULT_WALLETS = [
       { id: 'W-CASH', name: 'Cash', bankName: 'Physical Pitaka', accountName: '', accountNumber: '', startingBalance: 2000, balance: 2000, color: '#10B981' },
       { id: 'W-GCASH', name: 'GCash', bankName: 'GCash E-Wallet', accountName: '', accountNumber: '09**-***-****', startingBalance: 5000, balance: 5000, color: '#2563EB' },
@@ -2851,15 +2886,15 @@
     ];
 
     const DEFAULT_CATEGORIES = [
-      { name: 'Pagkain', type: 'EXPENSE', icon: 'utensils', color: '#EF4444', monthlyLimit: 5000 },
-      { name: 'Pamasahe', type: 'EXPENSE', icon: 'bus', color: '#F59E0B', monthlyLimit: 2000 },
+      { name: 'Pagkain', type: 'EXPENSE', icon: 'utensils', color: '#EF4444', monthlyLimit: 6000 },
+      { name: 'Pamasahe', type: 'EXPENSE', icon: 'bus', color: '#F59E0B', monthlyLimit: 2500 },
       { name: 'Tingi / Kape', type: 'EXPENSE', icon: 'coffee', color: '#8B5CF6', monthlyLimit: 1500 },
-      { name: 'Bills', type: 'EXPENSE', icon: 'zap', color: '#2563EB', monthlyLimit: 4000 },
-      { name: 'Groceries', type: 'EXPENSE', icon: 'cart', color: '#10B981', monthlyLimit: 3000 },
-      { name: 'Shopping', type: 'EXPENSE', icon: 'bag', color: '#EC4899', monthlyLimit: 2000 },
-      { name: 'Ipon Hulog', type: 'EXPENSE', icon: 'piggy', color: '#10B981', monthlyLimit: 3000 },
+      { name: 'Bills', type: 'EXPENSE', icon: 'zap', color: '#3B82F6', monthlyLimit: 4000 },
+      { name: 'Groceries', type: 'EXPENSE', icon: 'cart', color: '#14B8A6', monthlyLimit: 4000 },
+      { name: 'Luho / Shop', type: 'EXPENSE', icon: 'bag', color: '#EC4899', monthlyLimit: 2000 },
+      { name: 'GoalsIPON', type: 'EXPENSE', icon: 'piggy', color: '#10B981', monthlyLimit: 3000 },
       { name: 'Sweldo', type: 'INCOME', icon: 'wallet', color: '#10B981', monthlyLimit: 0 },
-      { name: 'Sideline / Raket', type: 'INCOME', icon: 'rocket', color: '#2563EB', monthlyLimit: 0 }
+      { name: 'Raket / Sideline', type: 'INCOME', icon: 'rocket', color: '#06B6D4', monthlyLimit: 0 }
     ];
 
     const PLANNED_STORAGE_KEY = 'pitakako_tarsi_planned_v2';
@@ -3028,8 +3063,8 @@
       return net;
     }
 
-    /* Normalize incoming server state and merge any local wallet edits if server didn't persist */
-function applyAppState(rawResponse) {
+    /* Normalize incoming server state and unwrap .state if returned by Code.gs */
+    function applyAppState(rawResponse) {
       if (!rawResponse || typeof rawResponse !== 'object') return;
       const data = (rawResponse.state && typeof rawResponse.state === 'object')
         ? rawResponse.state
@@ -3389,7 +3424,6 @@ function applyAppState(rawResponse) {
         window.google.script.run
           .withSuccessHandler(finishSave)
           .withFailureHandler(function(err) {
-            // Fallback if backend uses updateWalletDetails instead of saveWalletDetails
             window.google.script.run
               .withSuccessHandler(finishSave)
               .withFailureHandler(function() {
@@ -3773,7 +3807,7 @@ function applyAppState(rawResponse) {
       }
 
       const payload = {
-        id: id === 'NEW' ? 'goal_' + Date.now() : id,
+        id: id === 'NEW' ? 'NEW' : id,
         name: name,
         targetAmount: target,
         target: target,
@@ -3784,9 +3818,10 @@ function applyAppState(rawResponse) {
         icon: icon
       };
 
-      const existingIdx = APP_STATE.goals.findIndex(g => String(g.id) === String(payload.id));
-      if (existingIdx >= 0) APP_STATE.goals[existingIdx] = payload;
-      else APP_STATE.goals.push(payload);
+      const localId = payload.id === 'NEW' ? 'G-' + Date.now() : payload.id;
+      const existingIdx = APP_STATE.goals.findIndex(g => String(g.id) === String(localId));
+      if (existingIdx >= 0) APP_STATE.goals[existingIdx] = { ...payload, id: localId };
+      else APP_STATE.goals.push({ ...payload, id: localId });
 
       recalculateTotals();
       renderAll();
@@ -3801,7 +3836,7 @@ function applyAppState(rawResponse) {
           .withFailureHandler(function() {
             showToast('Goal saved locally');
           })
-          .saveGoal(payload);
+          .saveIponGoal(payload);
       }
     }
 
@@ -3820,7 +3855,7 @@ function applyAppState(rawResponse) {
           .withSuccessHandler(function(res) {
             if (res && typeof res === 'object') applyAppState(res);
           })
-          .deleteGoal(id);
+          .deleteIponGoal(id);
       }
     }
 
@@ -3862,7 +3897,7 @@ function applyAppState(rawResponse) {
         APP_STATE.transactions.unshift({
           id: 'tx_' + Date.now(),
           type: 'EXPENSE',
-          category: 'Ipon Hulog',
+          category: 'GoalsIPON',
           wallet: APP_STATE.selectedWallet,
           amount: amt,
           note: 'Hulog: ' + (g ? g.name : 'Goal'),
@@ -3880,7 +3915,7 @@ function applyAppState(rawResponse) {
             if (res && typeof res === 'object') applyAppState(res);
             showToast('Hulog ' + formatPeso(amt) + ' added!');
           })
-          .addGoalContribution({
+          .contributeToGoal({
             goalId: goalId,
             amount: amt,
             deductFromWallet: deduct,
@@ -3944,7 +3979,7 @@ function applyAppState(rawResponse) {
       const txPayload = {
         id: 'tx_' + Date.now(),
         type: isCollect ? 'INCOME' : 'EXPENSE',
-        category: isCollect ? 'Sideline / Raket' : 'Bills',
+        category: isCollect ? 'Raket / Sideline' : 'Bills',
         wallet: APP_STATE.selectedWallet,
         amount: Number(item.amount) || 0,
         note: (isCollect ? 'Collected: ' : 'Paid: ') + item.name,
@@ -4063,7 +4098,6 @@ function applyAppState(rawResponse) {
           buckets.push({ label: mLbl, sub: String(d.getFullYear()).slice(2), value: sum });
         }
       } else {
-        // Monthly (4 weeks breakdown)
         for (let w = 3; w >= 0; w--) {
           const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (w * 7 + 6));
           const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (w * 7));
@@ -4126,7 +4160,7 @@ function applyAppState(rawResponse) {
       if (catListEl) {
         catListEl.innerHTML = expCats.map(c => {
           const spent = catTotals[c.name] || 0;
-          const limit = Number(c.monthlyLimit) || 3000;
+          const limit = Number(c.limit != null ? c.limit : c.monthlyLimit) || 3000;
           const pct = Math.min(100, Math.round((spent / Math.max(1, limit)) * 100));
           return '<div class="cat-graph-item" onclick="promptCategoryLimit(\'' + escapeHtml(c.name) + '\')">' +
             '<div class="cat-graph-top">' +
@@ -4143,7 +4177,8 @@ function applyAppState(rawResponse) {
         }).join('');
       }
     }
-function promptCategoryLimit(catName) {
+
+    function promptCategoryLimit(catName) {
       const cat = APP_STATE.categories.find(c => c.name === catName);
       if (!cat) return;
       const currentLim = cat.limit != null ? cat.limit : (cat.monthlyLimit || 3000);
@@ -4216,7 +4251,6 @@ function promptCategoryLimit(catName) {
       const each = Number((total / pax).toFixed(2));
       const collect = Number((total - each).toFixed(2));
 
-      // Log full bill or personal share
       APP_STATE.transactions.unshift({
         id: 'tx_' + Date.now(),
         type: 'EXPENSE',
@@ -4349,23 +4383,44 @@ function promptCategoryLimit(catName) {
     }
 
     function jumpToMobileSection(target) {
-      ['Goals', 'Graphs', 'Log', 'Logs', 'Chat'].forEach(s => {
-        const btn = document.getElementById('mobNav' + s);
-        if (btn) btn.classList.toggle('active', s.toLowerCase() === target);
+      const navMap = {
+        goals: 'mobNavGoals',
+        graphs: 'mobNavGraphs',
+        log: 'mobNavLog',
+        logs: 'mobNavLogs',
+        chat: 'mobNavChat'
+      };
+
+      Object.keys(navMap).forEach(key => {
+        const btn = document.getElementById(navMap[key]);
+        if (btn) btn.classList.toggle('active', key === target);
       });
 
+      const headerWrap = document.querySelector('.top-bar-wrap');
+      const headerOffset = (headerWrap ? headerWrap.offsetHeight : 64) + 10;
+
       if (target === 'log') {
+        closeFloatingChat();
         APP_STATE.quickEntryCollapsed = false;
         const body = document.getElementById('quickEntryBody');
+        const toggleBtn = document.getElementById('toggleEntryBtn');
         if (body) body.classList.remove('collapsed');
-        const el = document.getElementById('quickLogSection');
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (toggleBtn) toggleBtn.textContent = 'Minimize';
+
+        const logTarget = document.getElementById('quickLogSection');
+        if (logTarget) {
+          const topY = logTarget.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+          window.scrollTo({ top: Math.max(0, topY), behavior: 'smooth' });
+        }
         return;
       }
 
       switchHubTab(target);
       const hub = document.getElementById('workspaceHubSection');
-      if (hub) hub.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (hub) {
+        const topY = hub.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: Math.max(0, topY), behavior: 'smooth' });
+      }
     }
 
     function toggleFloatingChat() {
@@ -4425,7 +4480,7 @@ function promptCategoryLimit(catName) {
           .withFailureHandler(function(err) {
             appendAiBubble('bot', 'Offline NLP: ' + escapeHtml(err.message || 'Check connection.'));
           })
-          .processAiCommand(text);
+          .processAiAssistantMessage({ text: text, activeWallet: APP_STATE.selectedWallet });
       } else {
         appendAiBubble('bot', 'Command noted.');
       }
@@ -4452,7 +4507,11 @@ function promptCategoryLimit(catName) {
             .withFailureHandler(function(err) {
               appendAiBubble('bot', 'Receipt scan error: ' + escapeHtml(err.message || 'Failed'));
             })
-            .processReceiptImage(base64);
+            .processAiReceiptScan({
+              base64Data: base64,
+              mimeType: file.type || 'image/jpeg',
+              activeWallet: APP_STATE.selectedWallet
+            });
         }
       };
       reader.readAsDataURL(file);
@@ -4463,8 +4522,11 @@ function promptCategoryLimit(catName) {
       if (!key) return;
       if (window.google && window.google.script && window.google.script.run) {
         window.google.script.run
-          .withSuccessHandler(function() { showToast('Gemini API Key saved!'); })
-          .saveGeminiApiKey(key.trim());
+          .withSuccessHandler(function(res) {
+            if (res) applyAppState(res);
+            showToast('Gemini API Key saved!');
+          })
+          .saveAiApiKey(key.trim());
       }
     }
 
@@ -4507,6 +4569,29 @@ function promptCategoryLimit(catName) {
       recalculateTotals();
       renderAll();
 
+      // Hide bottom nav while iPhone virtual keyboard is open so it never overlaps inputs
+      document.addEventListener('focusin', function(e) {
+        if (window.innerWidth < 860 && e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+          const bottomNav = document.querySelector('.mobile-bottom-nav');
+          const fab = document.getElementById('chatFabBtn');
+          if (bottomNav) bottomNav.style.transform = 'translate3d(0, 120%, 0)';
+          if (fab) fab.style.display = 'none';
+        }
+      });
+
+      document.addEventListener('focusout', function() {
+        setTimeout(function() {
+          const active = document.activeElement;
+          const stillTyping = active && (active.tagName === 'INPUT' || active.target === 'TEXTAREA');
+          if (!stillTyping) {
+            const bottomNav = document.querySelector('.mobile-bottom-nav');
+            const fab = document.getElementById('chatFabBtn');
+            if (bottomNav) bottomNav.style.transform = 'translate3d(0, 0, 0)';
+            if (fab && APP_STATE.activeTab !== 'chat') fab.style.display = '';
+          }
+        }, 120);
+      });
+
       if (window.google && window.google.script && window.google.script.run) {
         window.google.script.run
           .withSuccessHandler(function(data) {
@@ -4515,7 +4600,7 @@ function promptCategoryLimit(catName) {
           .withFailureHandler(function(err) {
             console.warn('Initial sync warning:', err);
           })
-          .getInitialData();
+          .getAppData();
       }
     });
   </script>
