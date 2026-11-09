@@ -3029,14 +3029,20 @@
     }
 
     /* Normalize incoming server state and merge any local wallet edits if server didn't persist */
-    function applyAppState(data) {
-      if (!data || typeof data !== 'object') return;
+function applyAppState(rawResponse) {
+      if (!rawResponse || typeof rawResponse !== 'object') return;
+      const data = (rawResponse.state && typeof rawResponse.state === 'object')
+        ? rawResponse.state
+        : rawResponse;
 
       if (Array.isArray(data.transactions)) {
         APP_STATE.transactions = data.transactions;
       }
       if (Array.isArray(data.categories) && data.categories.length > 0) {
-        APP_STATE.categories = data.categories;
+        APP_STATE.categories = data.categories.map(c => ({
+          ...c,
+          monthlyLimit: Number(c.limit != null ? c.limit : c.monthlyLimit) || 0
+        }));
       }
       if (Array.isArray(data.goals)) {
         APP_STATE.goals = data.goals;
@@ -3051,40 +3057,18 @@
         APP_STATE.hasGeminiKey = Boolean(data.hasGeminiKey);
       }
 
-      const rawWallets = Array.isArray(data.wallets) && data.wallets.length > 0
-        ? data.wallets
-        : APP_STATE.wallets;
-
-      const localMap = getWalletOverridesMap();
-
-      APP_STATE.wallets = rawWallets.map((w, idx) => {
-        const name = String(w.name || w.label || ('Wallet ' + (idx + 1))).trim();
-        const id = w.id || w.key || ('w_' + name.toLowerCase().replace(/[^a-z0-9]/g, ''));
-        const txNet = getWalletTxNet(name);
-        const hasExplicitBal = typeof w.balance !== 'undefined' && w.balance !== null && w.balance !== '';
-        const hasStartingBal = typeof w.startingBalance !== 'undefined' && w.startingBalance !== null && w.startingBalance !== '';
-
-        let startingBalance = hasStartingBal ? Number(w.startingBalance) : 0;
-        let balance = hasExplicitBal ? Number(w.balance) : (startingBalance + txNet);
-
-        // Check if user recently saved a local override and backend returned stale 0
-        const cached = localMap[id.toLowerCase()] || localMap[name.toLowerCase()];
-        if (cached && Date.now() - (cached.updatedAt || 0) < 60000) {
-          startingBalance = Number(cached.startingBalance);
-          balance = startingBalance + txNet;
-        }
-
-        return {
-          id: id,
-          name: name,
-          bankName: w.bankName || w.provider || ( cached && cached.bankName ) || '',
-          accountName: w.accountName || w.holder || ( cached && cached.accountName ) || '',
-          accountNumber: w.accountNumber || w.number || ( cached && cached.accountNumber ) || '',
-          startingBalance: startingBalance,
-          balance: balance,
-          color: w.color || ( cached && cached.color ) || '#2563EB'
-        };
-      });
+      if (Array.isArray(data.wallets) && data.wallets.length > 0) {
+        APP_STATE.wallets = data.wallets.map(w => ({
+          id: String(w.id),
+          name: String(w.name),
+          startingBalance: Number(w.startingBalance) || 0,
+          balance: Number(w.balance) || 0,
+          color: w.color || '#2563EB',
+          bankName: w.bankName || '',
+          accountName: w.accountName || '',
+          accountNumber: w.accountNumber || ''
+        }));
+      }
 
       if (!APP_STATE.wallets.some(w => w.name === APP_STATE.selectedWallet)) {
         APP_STATE.selectedWallet = APP_STATE.wallets[0] ? APP_STATE.wallets[0].name : 'Cash';
