@@ -4143,16 +4143,22 @@ function applyAppState(rawResponse) {
         }).join('');
       }
     }
-
-    function promptCategoryLimit(catName) {
+function promptCategoryLimit(catName) {
       const cat = APP_STATE.categories.find(c => c.name === catName);
       if (!cat) return;
-      const val = prompt('Set monthly limit (₱) for ' + catName + ':', cat.monthlyLimit || 3000);
+      const currentLim = cat.limit != null ? cat.limit : (cat.monthlyLimit || 3000);
+      const val = prompt('Set monthly limit (₱) for ' + catName + ':', currentLim);
       if (val === null) return;
       const num = parseFloat(val);
       if (!isNaN(num) && num >= 0) {
+        cat.limit = num;
         cat.monthlyLimit = num;
         renderGraphs();
+        if (window.google && window.google.script && window.google.script.run) {
+          window.google.script.run
+            .withSuccessHandler(function(res) { if (res) applyAppState(res); })
+            .updateCategoryLimit({ categoryName: catName, limit: num });
+        }
         showToast(catName + ' limit set to ' + formatPeso(num));
       }
     }
