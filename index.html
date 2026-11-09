@@ -116,7 +116,7 @@
       scroll-behavior: smooth;
       width: 100%;
       max-width: 100%;
-      overflow-x: clip;
+      overflow-x: hidden;
       -webkit-text-size-adjust: 100%;
       background-color: var(--ios-bg);
     }
@@ -128,11 +128,11 @@
       line-height: 1.4;
       width: 100%;
       max-width: 100%;
-      overflow-x: clip;
+      overflow-x: hidden;
       min-height: 100vh;
-      min-height: 100dvh;
+      min-height: -webkit-fill-available;
       padding-top: calc(52px + var(--safe-top));
-      padding-bottom: calc(90px + var(--safe-bottom));
+      padding-bottom: calc(92px + var(--safe-bottom));
       padding-left: var(--safe-left);
       padding-right: var(--safe-right);
       -webkit-font-smoothing: antialiased;
@@ -256,7 +256,7 @@
       width: 100%;
       max-width: 480px;
       margin: 0 auto;
-      padding: 10px 10px;
+      padding: 10px;
     }
 
     .workspace-grid {
@@ -791,6 +791,11 @@
       opacity: 0.85;
     }
 
+    .submit-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
     /* Tarsi Quick Notes Scratchpad */
     .scratchpad-input-row {
       display: grid;
@@ -1224,7 +1229,7 @@
       right: 10px;
       width: auto;
       max-width: 460px;
-      max-height: calc(100dvh - 180px - var(--safe-top) - var(--safe-bottom));
+      max-height: calc(100vh - 180px - var(--safe-top) - var(--safe-bottom));
       margin: 0 auto;
       z-index: 90;
     }
@@ -1885,13 +1890,14 @@
     .modal-card {
       width: 100%;
       max-width: 440px;
-      max-height: calc(90dvh - var(--safe-top));
+      max-height: calc(90vh - var(--safe-top));
       overflow-y: auto;
       overflow-x: hidden;
       background: var(--ios-card);
       border-radius: 22px 22px 0 0;
-      padding: 16px 14px calc(18px + var(--safe-bottom));
+      padding: 16px 14px calc(22px + var(--safe-bottom));
       box-shadow: var(--shadow-md);
+      -webkit-overflow-scrolling: touch;
     }
 
     @media (min-width: 600px) {
@@ -2038,7 +2044,7 @@
 </head>
 <body>
 
-  <!-- Fixed Stacked Top Header with Uploaded PitakaKO Green Wallet Logo -->
+  <!-- Fixed Stacked Top Header with PitakaKO Green Wallet Logo -->
   <div class="top-bar-wrap">
     <div class="header">
       <div class="brand">
@@ -2152,7 +2158,7 @@
             <!-- Tarsi Quick Templates Dropdown -->
             <div style="margin-bottom: 10px;">
               <select id="quickTemplateSelect" class="flat-input" onchange="handleQuickTemplateDropdown(this)" style="min-height: 38px; padding: 7px 10px; font-weight: 600;">
-                <option value="">⚡ Select Quick Entry Template...</option>
+                <option value="">Select Quick Entry Template...</option>
                 <option value="EXPENSE|Pagkain|180|Jollibee / Meal">Meal — ₱180.00 (Pagkain)</option>
                 <option value="EXPENSE|Tingi / Kape|120|Kape">Kape — ₱120.00 (Tingi / Kape)</option>
                 <option value="EXPENSE|Pamasahe|40|Pamasahe">Fare — ₱40.00 (Pamasahe)</option>
@@ -2474,7 +2480,7 @@
       <div class="field-group">
         <label class="field-label">Quick PH Bank / E-Wallet Templates</label>
         <select id="phBankTemplateSelect" class="flat-input" onchange="handlePhBankDropdown(this)" style="min-height: 38px; padding: 7px 11px; font-weight: 600;">
-          <option value="">🏦 Auto-Fill PH Bank / E-Wallet...</option>
+          <option value="">Auto-Fill PH Bank / E-Wallet...</option>
           <option value="GCash|GCash E-Wallet|#2563EB">GCash (E-Wallet)</option>
           <option value="Maya|Maya Bank|#059669">Maya (Maya Bank)</option>
           <option value="BPI|Bank of the Philippine Islands|#DC2626">BPI (Bank of the Philippine Islands)</option>
@@ -2794,6 +2800,7 @@
     })();
   </script>
 
+  <!-- Main PitakaKO Application Script -->
   <script>
     const FLAT_LINE_SVGS = {
       utensils: '<svg class="line-icon" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>',
@@ -2836,9 +2843,30 @@
       { key: 'rocket', label: 'Biz' }
     ];
 
+    const DEFAULT_WALLETS = [
+      { id: 'w_cash', name: 'Cash', bankName: 'Physical Pitaka', accountName: '', accountNumber: '', startingBalance: 0, balance: 0, color: '#10B981' },
+      { id: 'w_gcash', name: 'GCash', bankName: 'GCash E-Wallet', accountName: '', accountNumber: '', startingBalance: 0, balance: 0, color: '#2563EB' },
+      { id: 'w_bank', name: 'Bank', bankName: 'Savings Bank', accountName: '', accountNumber: '', startingBalance: 0, balance: 0, color: '#8B5CF6' },
+      { id: 'w_maya', name: 'Maya', bankName: 'Maya Bank', accountName: '', accountNumber: '', startingBalance: 0, balance: 0, color: '#059669' }
+    ];
+
+    const DEFAULT_CATEGORIES = [
+      { name: 'Pagkain', type: 'EXPENSE', icon: 'utensils', color: '#EF4444', monthlyLimit: 5000 },
+      { name: 'Pamasahe', type: 'EXPENSE', icon: 'bus', color: '#F59E0B', monthlyLimit: 2000 },
+      { name: 'Tingi / Kape', type: 'EXPENSE', icon: 'coffee', color: '#8B5CF6', monthlyLimit: 1500 },
+      { name: 'Bills', type: 'EXPENSE', icon: 'zap', color: '#2563EB', monthlyLimit: 4000 },
+      { name: 'Groceries', type: 'EXPENSE', icon: 'cart', color: '#10B981', monthlyLimit: 3000 },
+      { name: 'Shopping', type: 'EXPENSE', icon: 'bag', color: '#EC4899', monthlyLimit: 2000 },
+      { name: 'Ipon Hulog', type: 'EXPENSE', icon: 'piggy', color: '#10B981', monthlyLimit: 3000 },
+      { name: 'Sweldo', type: 'INCOME', icon: 'wallet', color: '#10B981', monthlyLimit: 0 },
+      { name: 'Sideline / Raket', type: 'INCOME', icon: 'rocket', color: '#2563EB', monthlyLimit: 0 }
+    ];
+
     const PLANNED_STORAGE_KEY = 'pitakako_tarsi_planned_v2';
     const SCRATCH_STORAGE_KEY = 'pitakako_tarsi_scratch_v1';
     const THEME_STORAGE_KEY = 'pitakako_tarsi_theme_v1';
+    const WALLETS_CACHE_KEY = 'pitakako_wallets_cache_v1';
+    const CAT_LIMITS_STORAGE_KEY = 'pitakako_cat_limits_v1';
 
     function getFlatSvg(rawKey) {
       const clean = String(rawKey || '').trim();
@@ -2854,8 +2882,8 @@
       type: 'EXPENSE',
       selectedWallet: 'Cash',
       selectedCategory: 'Pagkain',
-      wallets: [],
-      categories: [],
+      wallets: JSON.parse(JSON.stringify(DEFAULT_WALLETS)),
+      categories: JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)),
       goals: [],
       transactions: [],
       plannedItems: [],
@@ -2877,4 +2905,1629 @@
     }
 
     function formatCompactPeso(num) {
-      const val = Number(
+      const val = Number(num) || 0;
+      if (Math.abs(val) >= 1000000) {
+        return '₱' + (val / 1000000).toFixed(1) + 'M';
+      }
+      if (Math.abs(val) >= 1000) {
+        return '₱' + (val / 1000).toFixed(1) + 'k';
+      }
+      return '₱' + Math.round(val);
+    }
+
+    function escapeHtml(str) {
+      return String(str == null ? '' : str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function getTodayIso() {
+      const now = new Date();
+      const offsetMs = now.getTimezoneOffset() * 60000;
+      return new Date(now.getTime() - offsetMs).toISOString().slice(0, 10);
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      if (!t) return;
+      t.textContent = msg;
+      t.style.display = 'block';
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        t.style.display = 'none';
+      }, 2800);
+    }
+
+    /* Local Storage Helpers */
+    function loadLocalExtras() {
+      try {
+        const theme = localStorage.getItem(THEME_STORAGE_KEY);
+        if (theme === 'dark') {
+          document.body.classList.add('dark-mode');
+          const meta = document.getElementById('themeColorMeta');
+          if (meta) meta.setAttribute('content', '#0B0F19');
+        }
+      } catch (e) {}
+
+      try {
+        const rawPlanned = localStorage.getItem(PLANNED_STORAGE_KEY);
+        if (rawPlanned) APP_STATE.plannedItems = JSON.parse(rawPlanned) || [];
+      } catch (e) {}
+
+      try {
+        const rawScratch = localStorage.getItem(SCRATCH_STORAGE_KEY);
+        if (rawScratch) APP_STATE.scratchNotes = JSON.parse(rawScratch) || [];
+      } catch (e) {}
+    }
+
+    function savePlannedLocal() {
+      try {
+        localStorage.setItem(PLANNED_STORAGE_KEY, JSON.stringify(APP_STATE.plannedItems || []));
+      } catch (e) {}
+    }
+
+    function saveScratchLocal() {
+      try {
+        localStorage.setItem(SCRATCH_STORAGE_KEY, JSON.stringify(APP_STATE.scratchNotes || []));
+      } catch (e) {}
+    }
+
+    function getWalletOverridesMap() {
+      try {
+        const raw = localStorage.getItem(WALLETS_CACHE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function setWalletOverrideLocal(walletKey, walletData) {
+      try {
+        const map = getWalletOverridesMap();
+        map[String(walletKey || '').toLowerCase()] = {
+          name: walletData.name,
+          bankName: walletData.bankName || '',
+          accountName: walletData.accountName || '',
+          accountNumber: walletData.accountNumber || '',
+          startingBalance: Number(walletData.startingBalance) || 0,
+          balance: Number(walletData.balance) || 0,
+          color: walletData.color || '#2563EB',
+          updatedAt: Date.now()
+        };
+        localStorage.setItem(WALLETS_CACHE_KEY, JSON.stringify(map));
+      } catch (e) {}
+    }
+
+    function toggleThemeMode() {
+      const isDark = document.body.classList.toggle('dark-mode');
+      const meta = document.getElementById('themeColorMeta');
+      if (meta) meta.setAttribute('content', isDark ? '#0B0F19' : '#F4F6F8');
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, isDark ? 'dark' : 'light');
+      } catch (e) {}
+    }
+
+    /* Compute net transactions for a specific wallet name */
+    function getWalletTxNet(walletName) {
+      const target = String(walletName || '').trim().toLowerCase();
+      let net = 0;
+      (APP_STATE.transactions || []).forEach(tx => {
+        const w = String(tx.wallet || 'Cash').trim().toLowerCase();
+        if (w === target) {
+          const amt = Number(tx.amount) || 0;
+          if (String(tx.type || '').toUpperCase() === 'INCOME') {
+            net += amt;
+          } else {
+            net -= amt;
+          }
+        }
+      });
+      return net;
+    }
+
+    /* Normalize incoming server state and merge any local wallet edits if server didn't persist */
+    function applyAppState(data) {
+      if (!data || typeof data !== 'object') return;
+
+      if (Array.isArray(data.transactions)) {
+        APP_STATE.transactions = data.transactions;
+      }
+      if (Array.isArray(data.categories) && data.categories.length > 0) {
+        APP_STATE.categories = data.categories;
+      }
+      if (Array.isArray(data.goals)) {
+        APP_STATE.goals = data.goals;
+      }
+      if (data.analytics) {
+        APP_STATE.analytics = data.analytics;
+      }
+      if (typeof data.monthlyBudget !== 'undefined') {
+        APP_STATE.monthlyBudget = Number(data.monthlyBudget) || 15000;
+      }
+      if (typeof data.hasGeminiKey !== 'undefined') {
+        APP_STATE.hasGeminiKey = Boolean(data.hasGeminiKey);
+      }
+
+      const rawWallets = Array.isArray(data.wallets) && data.wallets.length > 0
+        ? data.wallets
+        : APP_STATE.wallets;
+
+      const localMap = getWalletOverridesMap();
+
+      APP_STATE.wallets = rawWallets.map((w, idx) => {
+        const name = String(w.name || w.label || ('Wallet ' + (idx + 1))).trim();
+        const id = w.id || w.key || ('w_' + name.toLowerCase().replace(/[^a-z0-9]/g, ''));
+        const txNet = getWalletTxNet(name);
+        const hasExplicitBal = typeof w.balance !== 'undefined' && w.balance !== null && w.balance !== '';
+        const hasStartingBal = typeof w.startingBalance !== 'undefined' && w.startingBalance !== null && w.startingBalance !== '';
+
+        let startingBalance = hasStartingBal ? Number(w.startingBalance) : 0;
+        let balance = hasExplicitBal ? Number(w.balance) : (startingBalance + txNet);
+
+        // Check if user recently saved a local override and backend returned stale 0
+        const cached = localMap[id.toLowerCase()] || localMap[name.toLowerCase()];
+        if (cached && Date.now() - (cached.updatedAt || 0) < 60000) {
+          startingBalance = Number(cached.startingBalance);
+          balance = startingBalance + txNet;
+        }
+
+        return {
+          id: id,
+          name: name,
+          bankName: w.bankName || w.provider || ( cached && cached.bankName ) || '',
+          accountName: w.accountName || w.holder || ( cached && cached.accountName ) || '',
+          accountNumber: w.accountNumber || w.number || ( cached && cached.accountNumber ) || '',
+          startingBalance: startingBalance,
+          balance: balance,
+          color: w.color || ( cached && cached.color ) || '#2563EB'
+        };
+      });
+
+      if (!APP_STATE.wallets.some(w => w.name === APP_STATE.selectedWallet)) {
+        APP_STATE.selectedWallet = APP_STATE.wallets[0] ? APP_STATE.wallets[0].name : 'Cash';
+      }
+
+      recalculateTotals();
+      renderAll();
+    }
+
+    function recalculateTotals() {
+      const todayIso = getTodayIso();
+      const currentMonthPrefix = todayIso.slice(0, 7);
+
+      // Update each wallet's current balance from startingBalance + net transactions
+      let totalLiquid = 0;
+      APP_STATE.wallets.forEach(w => {
+        const net = getWalletTxNet(w.name);
+        if (typeof w.startingBalance === 'number' && !isNaN(w.startingBalance)) {
+          w.balance = w.startingBalance + net;
+        }
+        totalLiquid += Number(w.balance) || 0;
+      });
+      APP_STATE.totalBalance = totalLiquid;
+
+      // Goals saved
+      let totalIpon = 0;
+      (APP_STATE.goals || []).forEach(g => {
+        totalIpon += Number(g.savedAmount != null ? g.savedAmount : g.saved) || 0;
+      });
+      APP_STATE.totalIponSaved = totalIpon;
+
+      // Monthly Gastos, Income, Spent Today
+      let spentToday = 0;
+      let spentMonth = 0;
+      let incomeMonth = 0;
+
+      (APP_STATE.transactions || []).forEach(tx => {
+        const d = String(tx.date || '').slice(0, 10);
+        const amt = Number(tx.amount) || 0;
+        const t = String(tx.type || 'EXPENSE').toUpperCase();
+        if (t === 'EXPENSE') {
+          if (d === todayIso) spentToday += amt;
+          if (d.slice(0, 7) === currentMonthPrefix) spentMonth += amt;
+        } else if (t === 'INCOME') {
+          if (d.slice(0, 7) === currentMonthPrefix) incomeMonth += amt;
+        }
+      });
+
+      APP_STATE.spentToday = spentToday;
+      APP_STATE.spentMonth = spentMonth;
+      APP_STATE.incomeMonth = incomeMonth;
+    }
+
+    function renderAll() {
+      renderHero();
+      renderWallets();
+      renderCategories();
+      renderScratchpad();
+      renderGoals();
+      renderPlannedAndTimeline();
+      renderGraphs();
+      renderTransactions();
+      renderGoalIconPicker();
+    }
+
+    function renderHero() {
+      const totalBalEl = document.getElementById('totalBalance');
+      if (totalBalEl) totalBalEl.textContent = formatPeso(APP_STATE.totalBalance);
+
+      // Net worth = Liquid + Ipon + Collectibles - Debt
+      let debtTotal = 0;
+      let collectTotal = 0;
+      (APP_STATE.plannedItems || []).forEach(item => {
+        const amt = Number(item.amount) || 0;
+        const remMos = item.totalMonths > 0 ? Math.max(0, item.totalMonths - (item.paidMonths || 0)) : 1;
+        if (item.type === 'DEBT') debtTotal += amt * remMos;
+        if (item.type === 'COLLECT') collectTotal += amt * remMos;
+      });
+      const netWorth = APP_STATE.totalBalance + APP_STATE.totalIponSaved + collectTotal - debtTotal;
+      const nwEl = document.getElementById('netWorthPill');
+      if (nwEl) nwEl.textContent = 'Net Worth (w/ Ipon & Utang): ' + formatPeso(netWorth);
+
+      const now = new Date();
+      const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      const remainingDays = Math.max(1, daysInMonth - now.getDate() + 1);
+      const budgetRemaining = Math.max(0, (APP_STATE.monthlyBudget || 15000) - (APP_STATE.spentMonth || 0));
+      const safeToday = budgetRemaining / remainingDays;
+
+      const safeEl = document.getElementById('safeToday');
+      if (safeEl) safeEl.textContent = formatPeso(safeToday);
+
+      const spentTodayEl = document.getElementById('spentToday');
+      if (spentTodayEl) spentTodayEl.textContent = formatPeso(APP_STATE.spentToday || 0);
+
+      const incomeMonthEl = document.getElementById('incomeMonth');
+      if (incomeMonthEl) incomeMonthEl.textContent = formatPeso(APP_STATE.incomeMonth || 0);
+
+      const heroIponEl = document.getElementById('heroTotalIpon');
+      if (heroIponEl) heroIponEl.textContent = formatPeso(APP_STATE.totalIponSaved || 0);
+
+      const budgetStatusEl = document.getElementById('budgetStatusText');
+      if (budgetStatusEl) {
+        budgetStatusEl.textContent = 'Monthly Gastos: ' + formatCompactPeso(APP_STATE.spentMonth || 0) + ' / ' + formatCompactPeso(APP_STATE.monthlyBudget || 15000);
+      }
+
+      const pct = Math.min(100, Math.round(((APP_STATE.spentMonth || 0) / Math.max(1, APP_STATE.monthlyBudget || 15000)) * 100));
+      const barEl = document.getElementById('budgetBar');
+      if (barEl) {
+        barEl.style.width = pct + '%';
+        barEl.style.background = pct >= 90 ? 'var(--ios-red)' : (pct >= 75 ? 'var(--ios-orange)' : 'var(--ios-green)');
+      }
+
+      // Solo chat status
+      const soloW = document.getElementById('soloChatWallet');
+      const soloS = document.getElementById('soloChatSafe');
+      const soloSp = document.getElementById('soloChatSpent');
+      if (soloW) soloW.textContent = APP_STATE.selectedWallet;
+      if (soloS) soloS.textContent = formatPeso(safeToday);
+      if (soloSp) soloSp.textContent = formatPeso(APP_STATE.spentToday || 0);
+    }
+
+    function renderWallets() {
+      const strip = document.getElementById('walletStrip');
+      if (!strip) return;
+
+      strip.innerHTML = APP_STATE.wallets.map(w => {
+        const isActive = w.name === APP_STATE.selectedWallet;
+        const sub = w.bankName || 'Tap to select';
+        return '<button type="button" class="wallet-card ' + (isActive ? 'active' : '') + '" onclick="selectWallet(\'' + escapeHtml(w.name) + '\')">' +
+          '<div class="wallet-name">' +
+            '<span class="wallet-dot" style="background:' + escapeHtml(w.color || '#2563EB') + ';"></span>' +
+            '<span class="wallet-name-text">' + escapeHtml(w.name) + '</span>' +
+          '</div>' +
+          '<div class="wallet-bal num">' + formatPeso(w.balance) + '</div>' +
+          '<div class="wallet-sub">' + escapeHtml(sub) + '</div>' +
+        '</button>';
+      }).join('');
+
+      const activeW = APP_STATE.wallets.find(w => w.name === APP_STATE.selectedWallet) || APP_STATE.wallets[0];
+      const infoText = document.getElementById('bankInfoText');
+      if (infoText && activeW) {
+        const details = [activeW.bankName, activeW.accountNumber].filter(Boolean).join(' • ');
+        infoText.innerHTML = 'Active: <strong>' + escapeHtml(activeW.name) + '</strong> (' + formatPeso(activeW.balance) + ')' + (details ? ' — ' + escapeHtml(details) : '');
+      }
+    }
+
+    function selectWallet(name) {
+      APP_STATE.selectedWallet = name;
+      renderWallets();
+      renderHero();
+    }
+
+    /* BANK / WALLET MODAL & SAVING FIX */
+    function openBankModal(walletNameOverride) {
+      const modal = document.getElementById('bankModal');
+      const select = document.getElementById('modalWalletSelect');
+      if (!modal || !select) return;
+
+      const targetName = walletNameOverride || APP_STATE.selectedWallet || (APP_STATE.wallets[0] && APP_STATE.wallets[0].name);
+      select.innerHTML = APP_STATE.wallets.map(w => {
+        const sel = w.name === targetName ? ' selected' : '';
+        return '<option value="' + escapeHtml(w.id || w.name) + '"' + sel + '>' + escapeHtml(w.name) + ' (' + formatPeso(w.balance) + ')</option>';
+      }).join('');
+
+      populateBankModalFields();
+      modal.classList.add('open');
+    }
+
+    function closeBankModal() {
+      const modal = document.getElementById('bankModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function populateBankModalFields() {
+      const select = document.getElementById('modalWalletSelect');
+      if (!select) return;
+      const val = select.value;
+      const w = APP_STATE.wallets.find(item => item.id === val || item.name === val) || APP_STATE.wallets[0];
+      if (!w) return;
+
+      document.getElementById('modalWalletName').value = w.name || '';
+      document.getElementById('modalBankName').value = w.bankName || '';
+      document.getElementById('modalAccountName').value = w.accountName || '';
+      document.getElementById('modalAccountNumber').value = w.accountNumber || '';
+      // Show current actual balance in the input so editing "Current Money / Balance (₱)" sets the exact desired wallet balance
+      const currentBal = Number(w.balance != null ? w.balance : w.startingBalance) || 0;
+      document.getElementById('modalStartingBalance').value = currentBal.toFixed(2);
+      document.getElementById('modalWalletColor').value = w.color || '#2563EB';
+
+      const hint = document.getElementById('modalBalanceDeltaHint');
+      if (hint) {
+        const net = getWalletTxNet(w.name);
+        hint.textContent = 'Sets ' + w.name + ' balance directly (Net logged tx: ' + (net >= 0 ? '+' : '') + formatPeso(net) + ')';
+      }
+    }
+
+    function handlePhBankDropdown(sel) {
+      if (!sel || !sel.value) return;
+      const parts = sel.value.split('|');
+      if (parts.length >= 3) {
+        document.getElementById('modalWalletName').value = parts[0];
+        document.getElementById('modalBankName').value = parts[1];
+        document.getElementById('modalWalletColor').value = parts[2];
+      }
+      sel.value = '';
+    }
+
+    function submitBankDetails() {
+      const select = document.getElementById('modalWalletSelect');
+      const selectedKey = select ? select.value : '';
+      const existingIdx = APP_STATE.wallets.findIndex(w => w.id === selectedKey || w.name === selectedKey);
+      const existingWallet = existingIdx >= 0 ? APP_STATE.wallets[existingIdx] : APP_STATE.wallets[0];
+
+      if (!existingWallet) {
+        showToast('No wallet selected');
+        return;
+      }
+
+      const oldName = existingWallet.name;
+      const newName = (document.getElementById('modalWalletName').value || oldName).trim();
+      const bankName = (document.getElementById('modalBankName').value || '').trim();
+      const accountName = (document.getElementById('modalAccountName').value || '').trim();
+      const accountNumber = (document.getElementById('modalAccountNumber').value || '').trim();
+      const rawAmountStr = String(document.getElementById('modalStartingBalance').value || '0').replace(/,/g, '').trim();
+      const desiredCurrentBalance = parseFloat(rawAmountStr);
+      const color = document.getElementById('modalWalletColor').value || '#2563EB';
+
+      if (isNaN(desiredCurrentBalance)) {
+        showToast('Please enter a valid amount');
+        return;
+      }
+
+      // If wallet label was renamed, update local transactions referencing old wallet name
+      if (oldName !== newName) {
+        (APP_STATE.transactions || []).forEach(tx => {
+          if (tx.wallet === oldName) tx.wallet = newName;
+        });
+      }
+
+      // Compute startingBalance so that (startingBalance + netTransactions) === desiredCurrentBalance
+      const txNet = getWalletTxNet(newName);
+      const computedStartingBalance = Number((desiredCurrentBalance - txNet).toFixed(2));
+
+      // Update local state immediately (optimistic UI)
+      existingWallet.name = newName;
+      existingWallet.bankName = bankName;
+      existingWallet.accountName = accountName;
+      existingWallet.accountNumber = accountNumber;
+      existingWallet.startingBalance = computedStartingBalance;
+      existingWallet.balance = desiredCurrentBalance;
+      existingWallet.color = color;
+      APP_STATE.selectedWallet = newName;
+
+      // Save local cache override so balance never reverts
+      setWalletOverrideLocal(existingWallet.id || newName, existingWallet);
+      setWalletOverrideLocal(newName, existingWallet);
+
+      recalculateTotals();
+      renderAll();
+
+      const btn = document.getElementById('saveBankBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+      }
+
+      // Comprehensive payload supporting all Code.gs parameter conventions
+      const payload = {
+        id: existingWallet.id,
+        walletId: existingWallet.id,
+        key: existingWallet.id,
+        oldName: oldName,
+        originalName: oldName,
+        walletKey: oldName,
+        name: newName,
+        walletName: newName,
+        label: newName,
+        bankName: bankName,
+        provider: bankName,
+        accountName: accountName,
+        AccountHolder: accountName,
+        accountNumber: accountNumber,
+        startingBalance: computedStartingBalance,
+        initialBalance: computedStartingBalance,
+        currentBalance: desiredCurrentBalance,
+        balance: desiredCurrentBalance,
+        amount: desiredCurrentBalance,
+        color: color
+      };
+
+      const finishSave = function(res) {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Save Balance';
+        }
+        if (res && typeof res === 'object') {
+          applyAppState(res);
+        }
+        // Ensure edited wallet stays at the exact user-entered balance
+        const targetW = APP_STATE.wallets.find(w => w.id === existingWallet.id || w.name === newName);
+        if (targetW) {
+          const currentNet = getWalletTxNet(targetW.name);
+          targetW.startingBalance = Number((desiredCurrentBalance - currentNet).toFixed(2));
+          targetW.balance = desiredCurrentBalance;
+          targetW.bankName = bankName;
+          targetW.accountName = accountName;
+          targetW.accountNumber = accountNumber;
+          targetW.color = color;
+          setWalletOverrideLocal(targetW.id || targetW.name, targetW);
+          recalculateTotals();
+          renderAll();
+        }
+        closeBankModal();
+        showToast('Saved ' + newName + ': ' + formatPeso(desiredCurrentBalance));
+      };
+
+      if (window.google && window.google.script && window.google.script.run) {
+        window.google.script.run
+          .withSuccessHandler(finishSave)
+          .withFailureHandler(function(err) {
+            // Fallback if backend uses updateWalletDetails instead of saveWalletDetails
+            window.google.script.run
+              .withSuccessHandler(finishSave)
+              .withFailureHandler(function() {
+                finishSave(null);
+              })
+              .updateWalletDetails(payload);
+          })
+          .saveWalletDetails(payload);
+      } else {
+        finishSave(null);
+      }
+    }
+
+    /* QUICK ENTRY & TRANSACTIONS */
+    function setTxType(type) {
+      APP_STATE.type = type;
+      const btnExp = document.getElementById('btnExpense');
+      const btnInc = document.getElementById('btnIncome');
+      if (btnExp) btnExp.className = 'type-btn ' + (type === 'EXPENSE' ? 'active-expense' : '');
+      if (btnInc) btnInc.className = 'type-btn ' + (type === 'INCOME' ? 'active-income' : '');
+
+      const matchingCats = APP_STATE.categories.filter(c => (c.type || 'EXPENSE') === type);
+      if (matchingCats.length > 0 && !matchingCats.some(c => c.name === APP_STATE.selectedCategory)) {
+        APP_STATE.selectedCategory = matchingCats[0].name;
+      }
+      renderCategories();
+    }
+
+    function renderCategories() {
+      const grid = document.getElementById('categoryGrid');
+      if (!grid) return;
+      const filtered = APP_STATE.categories.filter(c => (c.type || 'EXPENSE') === APP_STATE.type);
+      const list = filtered.length > 0 ? filtered : APP_STATE.categories;
+
+      grid.innerHTML = list.map(c => {
+        const isSel = c.name === APP_STATE.selectedCategory;
+        return '<button type="button" class="cat-chip ' + (isSel ? 'selected' : '') + '" onclick="selectCategory(\'' + escapeHtml(c.name) + '\')">' +
+          getFlatSvg(c.icon) +
+          '<span>' + escapeHtml(c.name) + '</span>' +
+        '</button>';
+      }).join('');
+    }
+
+    function selectCategory(name) {
+      APP_STATE.selectedCategory = name;
+      renderCategories();
+    }
+
+    function toggleQuickEntryCard() {
+      APP_STATE.quickEntryCollapsed = !APP_STATE.quickEntryCollapsed;
+      const body = document.getElementById('quickEntryBody');
+      const btn = document.getElementById('toggleEntryBtn');
+      if (body) body.classList.toggle('collapsed', APP_STATE.quickEntryCollapsed);
+      if (btn) btn.textContent = APP_STATE.quickEntryCollapsed ? 'Expand' : 'Minimize';
+    }
+
+    function handleQuickTemplateDropdown(sel) {
+      if (!sel || !sel.value) return;
+      const parts = sel.value.split('|');
+      if (parts.length >= 4) {
+        setTxType(parts[0]);
+        selectCategory(parts[1]);
+        document.getElementById('amountInput').value = parts[2];
+        document.getElementById('noteInput').value = parts[3];
+      }
+      sel.value = '';
+    }
+
+    function submitTransaction() {
+      const amtEl = document.getElementById('amountInput');
+      const noteEl = document.getElementById('noteInput');
+      const dateEl = document.getElementById('dateInput');
+      const btn = document.getElementById('submitBtn');
+
+      const amount = parseFloat(amtEl.value);
+      if (!amount || amount <= 0) {
+        showToast('Enter an amount greater than ₱0');
+        return;
+      }
+
+      const payload = {
+        id: 'tx_' + Date.now(),
+        type: APP_STATE.type,
+        category: APP_STATE.selectedCategory,
+        wallet: APP_STATE.selectedWallet,
+        amount: amount,
+        note: (noteEl.value || '').trim() || APP_STATE.selectedCategory,
+        date: dateEl.value || getTodayIso()
+      };
+
+      // Optimistic update
+      APP_STATE.transactions.unshift(payload);
+      const activeW = APP_STATE.wallets.find(w => w.name === APP_STATE.selectedWallet);
+      if (activeW) {
+        setWalletOverrideLocal(activeW.id || activeW.name, activeW);
+      }
+      recalculateTotals();
+      renderAll();
+
+      amtEl.value = '';
+      noteEl.value = '';
+
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+      }
+
+      if (window.google && window.google.script && window.google.script.run) {
+        window.google.script.run
+          .withSuccessHandler(function(res) {
+            if (btn) {
+              btn.disabled = false;
+              btn.textContent = 'Save Entry';
+            }
+            if (res && typeof res === 'object') applyAppState(res);
+            showToast('Logged ' + formatPeso(amount) + ' (' + payload.category + ')');
+          })
+          .withFailureHandler(function(err) {
+            if (btn) {
+              btn.disabled = false;
+              btn.textContent = 'Save Entry';
+            }
+            showToast('Saved locally (' + (err && err.message ? err.message : 'offline') + ')');
+          })
+          .addTransaction(payload);
+      } else {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Save Entry';
+        }
+        showToast('Logged ' + formatPeso(amount));
+      }
+    }
+
+    function deleteTransactionItem(txId) {
+      if (!confirm('Delete this transaction?')) return;
+      APP_STATE.transactions = APP_STATE.transactions.filter(t => String(t.id) !== String(txId));
+      recalculateTotals();
+      renderAll();
+
+      if (window.google && window.google.script && window.google.script.run) {
+        window.google.script.run
+          .withSuccessHandler(function(res) {
+            if (res && typeof res === 'object') applyAppState(res);
+            showToast('Transaction deleted');
+          })
+          .withFailureHandler(function() {
+            showToast('Deleted locally');
+          })
+          .deleteTransaction(txId);
+      }
+    }
+
+    function renderTransactions() {
+      const listEl = document.getElementById('txList');
+      const countPill = document.getElementById('logsCountPill');
+      if (countPill) countPill.textContent = (APP_STATE.transactions || []).length;
+      if (!listEl) return;
+
+      const q = (document.getElementById('historySearchInput')?.value || '').trim().toLowerCase();
+      const typeFilter = document.getElementById('historyTypeFilter')?.value || 'ALL';
+
+      const filtered = (APP_STATE.transactions || []).filter(tx => {
+        if (typeFilter !== 'ALL' && String(tx.type || '').toUpperCase() !== typeFilter) return false;
+        if (!q) return true;
+        const hay = [tx.category, tx.note, tx.wallet, tx.date].join(' ').toLowerCase();
+        return hay.includes(q);
+      });
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = '<div style="text-align:center;padding:18px;font-size:12px;color:var(--ios-label-muted);">No matching transactions yet.</div>';
+        return;
+      }
+
+      let html = '';
+      let lastDate = '';
+
+      filtered.slice(0, 80).forEach(tx => {
+        const d = String(tx.date || '').slice(0, 10) || getTodayIso();
+        if (d !== lastDate) {
+          lastDate = d;
+          const dayTotal = filtered
+            .filter(item => String(item.date || '').slice(0, 10) === d)
+            .reduce((acc, item) => acc + (String(item.type).toUpperCase() === 'INCOME' ? Number(item.amount) : -Number(item.amount)), 0);
+          html += '<div class="tx-date-header num"><span>' + escapeHtml(d) + '</span><span>Net: ' + (dayTotal >= 0 ? '+' : '') + formatPeso(dayTotal) + '</span></div>';
+        }
+
+        const catObj = APP_STATE.categories.find(c => c.name === tx.category) || {};
+        const iconSvg = getFlatSvg(catObj.icon || 'wallet');
+        const isInc = String(tx.type || '').toUpperCase() === 'INCOME';
+        const sign = isInc ? '+' : '−';
+
+        html += '<div class="tx-item">' +
+          '<div class="tx-left">' +
+            '<div class="tx-icon">' + iconSvg + '</div>' +
+            '<div class="tx-info">' +
+              '<div class="tx-title">' + escapeHtml(tx.note || tx.category) + '</div>' +
+              '<div class="tx-meta">' + escapeHtml(tx.category) + ' • ' + escapeHtml(tx.wallet || 'Cash') + '</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="tx-right">' +
+            '<div class="tx-amount num ' + (isInc ? 'INCOME' : 'EXPENSE') + '">' + sign + formatPeso(tx.amount) + '</div>' +
+            '<button type="button" class="del-btn" title="View Receipt" onclick="openTarceiptModal(\'' + escapeHtml(tx.id) + '\')">' + FLAT_LINE_SVGS.receipt + '</button>' +
+            '<button type="button" class="del-btn" title="Delete" onclick="deleteTransactionItem(\'' + escapeHtml(tx.id) + '\')">×</button>' +
+          '</div>' +
+        '</div>';
+      });
+
+      listEl.innerHTML = html;
+    }
+
+    /* SCRATCHPAD */
+    function addScratchNote() {
+      const titleEl = document.getElementById('scratchTitleInput');
+      const amtEl = document.getElementById('scratchAmtInput');
+      const title = (titleEl.value || '').trim();
+      const amt = parseFloat(amtEl.value) || 0;
+      if (!title) {
+        showToast('Enter a note item first');
+        return;
+      }
+      APP_STATE.scratchNotes.unshift({ id: 'sc_' + Date.now(), title: title, amount: amt });
+      saveScratchLocal();
+      titleEl.value = '';
+      amtEl.value = '';
+      renderScratchpad();
+    }
+
+    function useScratchNote(id) {
+      const idx = APP_STATE.scratchNotes.findIndex(n => n.id === id);
+      if (idx < 0) return;
+      const item = APP_STATE.scratchNotes[idx];
+      document.getElementById('noteInput').value = item.title;
+      if (item.amount > 0) document.getElementById('amountInput').value = item.amount;
+      APP_STATE.scratchNotes.splice(idx, 1);
+      saveScratchLocal();
+      renderScratchpad();
+      showToast('Moved to Quick Entry');
+    }
+
+    function removeScratchNote(id) {
+      APP_STATE.scratchNotes = APP_STATE.scratchNotes.filter(n => n.id !== id);
+      saveScratchLocal();
+      renderScratchpad();
+    }
+
+    function renderScratchpad() {
+      const list = document.getElementById('scratchpadList');
+      if (!list) return;
+      if (!APP_STATE.scratchNotes || APP_STATE.scratchNotes.length === 0) {
+        list.innerHTML = '<div style="font-size:11px;color:var(--ios-label-muted);text-align:center;padding:4px 0;">Jot planned expenses here before logging.</div>';
+        return;
+      }
+      list.innerHTML = APP_STATE.scratchNotes.map(n => {
+        return '<div class="scratch-item">' +
+          '<div style="min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><strong>' + escapeHtml(n.title) + '</strong> ' + (n.amount > 0 ? '<span class="num" style="color:var(--ios-label-muted);">(' + formatPeso(n.amount) + ')</span>' : '') + '</div>' +
+          '<div style="display:flex;gap:4px;">' +
+            '<button type="button" class="hulog-btn" onclick="useScratchNote(\'' + escapeHtml(n.id) + '\')">Log</button>' +
+            '<button type="button" class="del-btn" onclick="removeScratchNote(\'' + escapeHtml(n.id) + '\')">×</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    /* GOALS (goalsIPON) */
+    function renderGoalIconPicker() {
+      const grid = document.getElementById('goalIconPickerGrid');
+      if (!grid) return;
+      const current = document.getElementById('modalGoalIcon')?.value || 'shield';
+      grid.innerHTML = GOAL_PICKER_OPTIONS.map(opt => {
+        const sel = opt.key === current ? 'selected' : '';
+        return '<button type="button" class="icon-pick-btn ' + sel + '" onclick="selectGoalIcon(\'' + opt.key + '\')">' +
+          getFlatSvg(opt.key) +
+          '<span>' + opt.label + '</span>' +
+        '</button>';
+      }).join('');
+    }
+
+    function selectGoalIcon(key) {
+      document.getElementById('modalGoalIcon').value = key;
+      renderGoalIconPicker();
+    }
+
+    function renderGoals() {
+      const listEl = document.getElementById('goalsList');
+      const countPill = document.getElementById('goalsCountPill');
+      const sumText = document.getElementById('iponSummaryText');
+      if (countPill) countPill.textContent = (APP_STATE.goals || []).length + (APP_STATE.plannedItems || []).length;
+
+      let totalSaved = 0;
+      let totalTarget = 0;
+      (APP_STATE.goals || []).forEach(g => {
+        totalSaved += Number(g.savedAmount != null ? g.savedAmount : g.saved) || 0;
+        totalTarget += Number(g.targetAmount != null ? g.targetAmount : g.target) || 0;
+      });
+      if (sumText) sumText.textContent = formatPeso(totalSaved) + ' / ' + formatPeso(totalTarget);
+
+      if (!listEl) return;
+      if (!APP_STATE.goals || APP_STATE.goals.length === 0) {
+        listEl.innerHTML = '<div style="text-align:center;padding:14px;font-size:12px;color:var(--ios-label-muted);">No goalsIPON yet. Tap "+ New Goal" to start saving.</div>';
+        return;
+      }
+
+      listEl.innerHTML = APP_STATE.goals.map(g => {
+        const saved = Number(g.savedAmount != null ? g.savedAmount : g.saved) || 0;
+        const target = Math.max(1, Number(g.targetAmount != null ? g.targetAmount : g.target) || 1);
+        const pct = Math.min(100, Math.round((saved / target) * 100));
+        const color = g.color || '#10B981';
+
+        return '<div class="goal-card">' +
+          '<div class="goal-top">' +
+            '<div class="goal-title-wrap">' +
+              '<div class="goal-icon" style="color:' + escapeHtml(color) + ';">' + getFlatSvg(g.icon || 'shield') + '</div>' +
+              '<div style="min-width:0;">' +
+                '<div class="goal-name">' + escapeHtml(g.name) + '</div>' +
+                '<div class="goal-meta">' + (g.targetDate ? 'Target: ' + escapeHtml(g.targetDate) : 'Ongoing Ipon') + '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="goal-actions">' +
+              '<button type="button" class="hulog-btn" onclick="openHulogModal(\'' + escapeHtml(g.id) + '\')">+ Hulog</button>' +
+              '<button type="button" class="goal-edit-btn" onclick="openGoalModal(\'' + escapeHtml(g.id) + '\')">' + FLAT_LINE_SVGS.edit + '</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="goal-numbers num">' +
+            '<span>' + formatPeso(saved) + ' / ' + formatPeso(target) + '</span>' +
+            '<span>' + pct + '%</span>' +
+          '</div>' +
+          '<div class="goal-bar-track">' +
+            '<div class="goal-bar-fill" style="width:' + pct + '%;background:' + escapeHtml(color) + ';"></div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function openGoalModal(goalId) {
+      const modal = document.getElementById('goalModal');
+      const delBtn = document.getElementById('deleteGoalBtn');
+      document.getElementById('modalGoalId').value = goalId || 'NEW';
+
+      if (goalId && goalId !== 'NEW') {
+        const g = APP_STATE.goals.find(item => String(item.id) === String(goalId));
+        if (g) {
+          document.getElementById('modalGoalName').value = g.name || '';
+          document.getElementById('modalGoalTarget').value = Number(g.targetAmount != null ? g.targetAmount : g.target) || '';
+          document.getElementById('modalGoalSaved').value = Number(g.savedAmount != null ? g.savedAmount : g.saved) || 0;
+          document.getElementById('modalGoalDate').value = g.targetDate || '';
+          document.getElementById('modalGoalColor').value = g.color || '#10B981';
+          document.getElementById('modalGoalIcon').value = g.icon || 'shield';
+          if (delBtn) delBtn.style.display = 'inline-block';
+        }
+      } else {
+        document.getElementById('modalGoalName').value = '';
+        document.getElementById('modalGoalTarget').value = '';
+        document.getElementById('modalGoalSaved').value = '0';
+        document.getElementById('modalGoalDate').value = '';
+        document.getElementById('modalGoalColor').value = '#10B981';
+        document.getElementById('modalGoalIcon').value = 'shield';
+        if (delBtn) delBtn.style.display = 'none';
+      }
+      renderGoalIconPicker();
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeGoalModal() {
+      const modal = document.getElementById('goalModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function submitGoalForm() {
+      const id = document.getElementById('modalGoalId').value;
+      const name = (document.getElementById('modalGoalName').value || '').trim();
+      const target = parseFloat(document.getElementById('modalGoalTarget').value) || 0;
+      const saved = parseFloat(document.getElementById('modalGoalSaved').value) || 0;
+      const targetDate = document.getElementById('modalGoalDate').value || '';
+      const color = document.getElementById('modalGoalColor').value || '#10B981';
+      const icon = document.getElementById('modalGoalIcon').value || 'shield';
+
+      if (!name || target <= 0) {
+        showToast('Enter goal name and target amount');
+        return;
+      }
+
+      const payload = {
+        id: id === 'NEW' ? 'goal_' + Date.now() : id,
+        name: name,
+        targetAmount: target,
+        target: target,
+        savedAmount: saved,
+        saved: saved,
+        targetDate: targetDate,
+        color: color,
+        icon: icon
+      };
+
+      const existingIdx = APP_STATE.goals.findIndex(g => String(g.id) === String(payload.id));
+      if (existingIdx >= 0) APP_STATE.goals[existingIdx] = payload;
+      else APP_STATE.goals.push(payload);
+
+      recalculateTotals();
+      renderAll();
+      closeGoalModal();
+
+      if (window.google && window.google.script && window.google.script.run) {
+        window.google.script.run
+          .withSuccessHandler(function(res) {
+            if (res && typeof res === 'object') applyAppState(res);
+            showToast('Goal saved');
+          })
+          .withFailureHandler(function() {
+            showToast('Goal saved locally');
+          })
+          .saveGoal(payload);
+      }
+    }
+
+    function removeCurrentGoal() {
+      const id = document.getElementById('modalGoalId').value;
+      if (!id || id === 'NEW') return;
+      if (!confirm('Delete this goal?')) return;
+
+      APP_STATE.goals = APP_STATE.goals.filter(g => String(g.id) !== String(id));
+      recalculateTotals();
+      renderAll();
+      closeGoalModal();
+
+      if (window.google && window.google.script && window.google.script.run) {
+        window.google.script.run
+          .withSuccessHandler(function(res) {
+            if (res && typeof res === 'object') applyAppState(res);
+          })
+          .deleteGoal(id);
+      }
+    }
+
+    function openHulogModal(goalId) {
+      const g = APP_STATE.goals.find(item => String(item.id) === String(goalId));
+      if (!g) return;
+      document.getElementById('hulogGoalId').value = g.id;
+      document.getElementById('hulogModalTitle').textContent = '+ Hulog: ' + g.name;
+      document.getElementById('hulogAmountInput').value = '';
+      document.getElementById('hulogDeductLabel').textContent = 'Deduct from active Pitaka (' + APP_STATE.selectedWallet + ')';
+      document.getElementById('hulogModal').classList.add('open');
+    }
+
+    function closeHulogModal() {
+      document.getElementById('hulogModal').classList.remove('open');
+    }
+
+    function setHulogPreset(amt) {
+      document.getElementById('hulogAmountInput').value = amt;
+    }
+
+    function submitHulog() {
+      const goalId = document.getElementById('hulogGoalId').value;
+      const amt = parseFloat(document.getElementById('hulogAmountInput').value) || 0;
+      const deduct = document.getElementById('hulogDeductCheckbox').checked;
+
+      if (amt <= 0) {
+        showToast('Enter a valid Hulog amount');
+        return;
+      }
+
+      const g = APP_STATE.goals.find(item => String(item.id) === String(goalId));
+      if (g) {
+        g.savedAmount = (Number(g.savedAmount != null ? g.savedAmount : g.saved) || 0) + amt;
+        g.saved = g.savedAmount;
+      }
+
+      if (deduct) {
+        APP_STATE.transactions.unshift({
+          id: 'tx_' + Date.now(),
+          type: 'EXPENSE',
+          category: 'Ipon Hulog',
+          wallet: APP_STATE.selectedWallet,
+          amount: amt,
+          note: 'Hulog: ' + (g ? g.name : 'Goal'),
+          date: getTodayIso()
+        });
+      }
+
+      recalculateTotals();
+      renderAll();
+      closeHulogModal();
+
+      if (window.google && window.google.script && window.google.script.run) {
+        window.google.script.run
+          .withSuccessHandler(function(res) {
+            if (res && typeof res === 'object') applyAppState(res);
+            showToast('Hulog ' + formatPeso(amt) + ' added!');
+          })
+          .addGoalContribution({
+            goalId: goalId,
+            amount: amt,
+            deductFromWallet: deduct,
+            wallet: APP_STATE.selectedWallet
+          });
+      } else {
+        showToast('Hulog ' + formatPeso(amt) + ' added!');
+      }
+    }
+
+    /* PLANNED BILLS, INSTALLMENTS & CASHFLOW TIMELINE */
+    function openPlannedModal() {
+      document.getElementById('planNameInput').value = '';
+      document.getElementById('planAmountInput').value = '';
+      document.getElementById('planDueInput').value = getTodayIso();
+      document.getElementById('planTotalMonthsInput').value = '0';
+      document.getElementById('planPaidMonthsInput').value = '0';
+      document.getElementById('plannedModal').classList.add('open');
+    }
+
+    function closePlannedModal() {
+      document.getElementById('plannedModal').classList.remove('open');
+    }
+
+    function savePlannedItem() {
+      const type = document.getElementById('planTypeSelect').value;
+      const name = (document.getElementById('planNameInput').value || '').trim();
+      const amount = parseFloat(document.getElementById('planAmountInput').value) || 0;
+      const dueDate = document.getElementById('planDueInput').value || getTodayIso();
+      const totalMonths = parseInt(document.getElementById('planTotalMonthsInput').value, 10) || 0;
+      const paidMonths = parseInt(document.getElementById('planPaidMonthsInput').value, 10) || 0;
+
+      if (!name || amount <= 0) {
+        showToast('Enter title and amount');
+        return;
+      }
+
+      APP_STATE.plannedItems.push({
+        id: 'plan_' + Date.now(),
+        type: type,
+        name: name,
+        amount: amount,
+        dueDate: dueDate,
+        totalMonths: totalMonths,
+        paidMonths: paidMonths
+      });
+
+      savePlannedLocal();
+      recalculateTotals();
+      renderAll();
+      closePlannedModal();
+      showToast('Added ' + name);
+    }
+
+    function settlePlannedItem(id) {
+      const idx = APP_STATE.plannedItems.findIndex(p => p.id === id);
+      if (idx < 0) return;
+      const item = APP_STATE.plannedItems[idx];
+
+      const isCollect = item.type === 'COLLECT';
+      const txPayload = {
+        id: 'tx_' + Date.now(),
+        type: isCollect ? 'INCOME' : 'EXPENSE',
+        category: isCollect ? 'Sideline / Raket' : 'Bills',
+        wallet: APP_STATE.selectedWallet,
+        amount: Number(item.amount) || 0,
+        note: (isCollect ? 'Collected: ' : 'Paid: ') + item.name,
+        date: getTodayIso()
+      };
+
+      APP_STATE.transactions.unshift(txPayload);
+
+      if (item.totalMonths > 0) {
+        item.paidMonths = (item.paidMonths || 0) + 1;
+        if (item.paidMonths >= item.totalMonths) {
+          APP_STATE.plannedItems.splice(idx, 1);
+        }
+      } else {
+        APP_STATE.plannedItems.splice(idx, 1);
+      }
+
+      savePlannedLocal();
+      recalculateTotals();
+      renderAll();
+
+      if (window.google && window.google.script && window.google.script.run) {
+        window.google.script.run.addTransaction(txPayload);
+      }
+      showToast((isCollect ? 'Collected ' : 'Paid ') + formatPeso(item.amount));
+    }
+
+    function deletePlannedItem(id) {
+      APP_STATE.plannedItems = APP_STATE.plannedItems.filter(p => p.id !== id);
+      savePlannedLocal();
+      recalculateTotals();
+      renderAll();
+    }
+
+    function renderPlannedAndTimeline() {
+      const box = document.getElementById('cashflowTimelineBox');
+      const list = document.getElementById('plannedList');
+
+      let upcomingOut = 0;
+      let upcomingIn = 0;
+      (APP_STATE.plannedItems || []).forEach(p => {
+        if (p.type === 'COLLECT') upcomingIn += Number(p.amount) || 0;
+        else upcomingOut += Number(p.amount) || 0;
+      });
+
+      const projectedFree = APP_STATE.totalBalance + upcomingIn - upcomingOut;
+      if (box) {
+        box.innerHTML =
+          '<div class="cashflow-proj-row">' +
+            '<span>Projected Free Cash (After Bills/Pautang)</span>' +
+            '<span style="color:' + (projectedFree >= 0 ? 'var(--ios-green-dark)' : 'var(--ios-red)') + ';">' + formatPeso(projectedFree) + '</span>' +
+          '</div>' +
+          '<div class="timeline-step"><span>Upcoming Bills / Utang Due</span><strong style="color:var(--ios-red);">−' + formatPeso(upcomingOut) + '</strong></div>' +
+          '<div class="timeline-step"><span>Receivables (Pautang to Collect)</span><strong style="color:var(--ios-blue);">+' + formatPeso(upcomingIn) + '</strong></div>';
+      }
+
+      if (!list) return;
+      if (!APP_STATE.plannedItems || APP_STATE.plannedItems.length === 0) {
+        list.innerHTML = '<div style="text-align:center;padding:12px;font-size:12px;color:var(--ios-label-muted);">No scheduled bills or utang tracked.</div>';
+        return;
+      }
+
+      list.innerHTML = APP_STATE.plannedItems.map(p => {
+        const badgeLabel = p.type === 'COLLECT' ? 'PAUTANG' : (p.type === 'DEBT' ? 'UTANG' : 'BILL');
+        const btnLabel = p.type === 'COLLECT' ? 'Collect' : 'Pay Now';
+        const instInfo = p.totalMonths > 0 ? ' • ' + (p.paidMonths || 0) + '/' + p.totalMonths + ' mos paid' : '';
+
+        return '<div class="goal-card">' +
+          '<div class="goal-top" style="margin-bottom:0;">' +
+            '<div style="min-width:0;flex:1;">' +
+              '<div class="goal-name">' + escapeHtml(p.name) + ' <span class="plan-type-badge ' + escapeHtml(p.type) + '">' + badgeLabel + '</span></div>' +
+              '<div class="goal-meta num">Due: ' + escapeHtml(p.dueDate || 'Anytime') + ' • <strong>' + formatPeso(p.amount) + '</strong>' + escapeHtml(instInfo) + '</div>' +
+            '</div>' +
+            '<div class="goal-actions">' +
+              '<button type="button" class="plan-action-btn ' + escapeHtml(p.type) + '" onclick="settlePlannedItem(\'' + escapeHtml(p.id) + '\')">' + btnLabel + '</button>' +
+              '<button type="button" class="del-btn" onclick="deletePlannedItem(\'' + escapeHtml(p.id) + '\')">×</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    /* GRAPHS & ANALYTICS */
+    function setGraphPeriod(period) {
+      APP_STATE.graphPeriod = period;
+      ['Weekly', 'Monthly', 'Yearly'].forEach(lbl => {
+        const btn = document.getElementById('btnPeriod' + lbl);
+        if (btn) btn.classList.toggle('active', lbl.toLowerCase() === period);
+      });
+      renderGraphs();
+    }
+
+    function renderGraphs() {
+      const chartEl = document.getElementById('gastosBarChart');
+      const labelsEl = document.getElementById('gastosBarLabels');
+      if (!chartEl || !labelsEl) return;
+
+      const expenses = (APP_STATE.transactions || []).filter(t => String(t.type || 'EXPENSE').toUpperCase() === 'EXPENSE');
+      const buckets = [];
+      const now = new Date();
+
+      if (APP_STATE.graphPeriod === 'weekly') {
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+          const iso = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+          const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
+          const sum = expenses.filter(t => String(t.date || '').slice(0, 10) === iso).reduce((a, b) => a + (Number(b.amount) || 0), 0);
+          buckets.push({ label: dayName, sub: iso.slice(5), value: sum });
+        }
+      } else if (APP_STATE.graphPeriod === 'yearly') {
+        for (let m = 5; m >= 0; m--) {
+          const d = new Date(now.getFullYear(), now.getMonth() - m, 1);
+          const ym = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+          const mLbl = d.toLocaleDateString('en-US', { month: 'short' });
+          const sum = expenses.filter(t => String(t.date || '').slice(0, 7) === ym).reduce((a, b) => a + (Number(b.amount) || 0), 0);
+          buckets.push({ label: mLbl, sub: String(d.getFullYear()).slice(2), value: sum });
+        }
+      } else {
+        // Monthly (4 weeks breakdown)
+        for (let w = 3; w >= 0; w--) {
+          const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (w * 7 + 6));
+          const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (w * 7));
+          const sIso = new Date(start.getTime() - start.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+          const eIso = new Date(end.getTime() - end.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+          const sum = expenses.filter(t => {
+            const d = String(t.date || '').slice(0, 10);
+            return d >= sIso && d <= eIso;
+          }).reduce((a, b) => a + (Number(b.amount) || 0), 0);
+          buckets.push({ label: 'Wk ' + (4 - w), sub: eIso.slice(5), value: sum });
+        }
+      }
+
+      const total = buckets.reduce((a, b) => a + b.value, 0);
+      const avg = buckets.length > 0 ? total / buckets.length : 0;
+      const peak = buckets.reduce((m, b) => Math.max(m, b.value), 0);
+
+      document.getElementById('graphTotalVal').textContent = formatPeso(total);
+      document.getElementById('graphAvgVal').textContent = formatPeso(avg);
+      document.getElementById('graphPeakVal').textContent = formatPeso(peak);
+
+      chartEl.innerHTML = buckets.map(b => {
+        const pct = peak > 0 ? Math.max(5, Math.round((b.value / peak) * 100)) : 5;
+        const cls = b.value === 0 ? 'zero' : (b.value === peak && peak > 0 ? 'peak' : '');
+        return '<div class="bar-col">' +
+          '<div class="bar-val">' + (b.value > 0 ? formatCompactPeso(b.value) : '') + '</div>' +
+          '<div class="bar-fill ' + cls + '" style="height:' + pct + '%;"></div>' +
+        '</div>';
+      }).join('');
+
+      labelsEl.innerHTML = buckets.map(b => {
+        return '<div class="bar-label-cell">' +
+          '<div class="bar-lbl-main">' + escapeHtml(b.label) + '</div>' +
+          '<div class="bar-lbl-sub">' + escapeHtml(b.sub) + '</div>' +
+        '</div>';
+      }).join('');
+
+      // Category breakdown
+      const currentMonth = getTodayIso().slice(0, 7);
+      const monthExp = expenses.filter(t => String(t.date || '').slice(0, 7) === currentMonth);
+      const catTotals = {};
+      monthExp.forEach(t => {
+        catTotals[t.category] = (catTotals[t.category] || 0) + (Number(t.amount) || 0);
+      });
+
+      const expCats = APP_STATE.categories.filter(c => (c.type || 'EXPENSE') === 'EXPENSE');
+      const totalMonthExp = Math.max(1, Object.values(catTotals).reduce((a, b) => a + b, 0));
+
+      const stackedEl = document.getElementById('categoryStackedBar');
+      if (stackedEl) {
+        stackedEl.innerHTML = expCats.map(c => {
+          const val = catTotals[c.name] || 0;
+          const wPct = Math.round((val / totalMonthExp) * 100);
+          if (wPct <= 0) return '';
+          return '<div class="cat-stack-seg" style="width:' + wPct + '%;background:' + escapeHtml(c.color || '#2563EB') + ';"></div>';
+        }).join('');
+      }
+
+      const catListEl = document.getElementById('categoryGraphList');
+      if (catListEl) {
+        catListEl.innerHTML = expCats.map(c => {
+          const spent = catTotals[c.name] || 0;
+          const limit = Number(c.monthlyLimit) || 3000;
+          const pct = Math.min(100, Math.round((spent / Math.max(1, limit)) * 100));
+          return '<div class="cat-graph-item" onclick="promptCategoryLimit(\'' + escapeHtml(c.name) + '\')">' +
+            '<div class="cat-graph-top">' +
+              '<div class="cat-graph-left">' +
+                '<div class="cat-graph-badge">' + getFlatSvg(c.icon) + '</div>' +
+                '<span>' + escapeHtml(c.name) + '</span>' +
+              '</div>' +
+              '<span class="num">' + formatCompactPeso(spent) + ' / ' + formatCompactPeso(limit) + '</span>' +
+            '</div>' +
+            '<div class="cat-graph-track">' +
+              '<div class="cat-graph-fill" style="width:' + pct + '%;background:' + (pct >= 90 ? 'var(--ios-red)' : escapeHtml(c.color || '#2563EB')) + ';"></div>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+    }
+
+    function promptCategoryLimit(catName) {
+      const cat = APP_STATE.categories.find(c => c.name === catName);
+      if (!cat) return;
+      const val = prompt('Set monthly limit (₱) for ' + catName + ':', cat.monthlyLimit || 3000);
+      if (val === null) return;
+      const num = parseFloat(val);
+      if (!isNaN(num) && num >= 0) {
+        cat.monthlyLimit = num;
+        renderGraphs();
+        showToast(catName + ' limit set to ' + formatPeso(num));
+      }
+    }
+
+    function promptNewBudget() {
+      const val = prompt('Enter Monthly Gastos Budget (₱):', APP_STATE.monthlyBudget || 15000);
+      if (val === null) return;
+      const num = parseFloat(val);
+      if (!isNaN(num) && num > 0) {
+        APP_STATE.monthlyBudget = num;
+        renderHero();
+        if (window.google && window.google.script && window.google.script.run) {
+          window.google.script.run.updateMonthlyBudget(num);
+        }
+        showToast('Monthly budget updated to ' + formatPeso(num));
+      }
+    }
+
+    /* KKB BILL SPLITTER */
+    function openKkbModal() {
+      document.getElementById('kkbTitleInput').value = '';
+      document.getElementById('kkbTotalInput').value = '';
+      document.getElementById('kkbPaxInput').value = '4';
+      document.getElementById('kkbNamesInput').value = '';
+      updateKkbPreview();
+      document.getElementById('kkbModal').classList.add('open');
+    }
+
+    function closeKkbModal() {
+      document.getElementById('kkbModal').classList.remove('open');
+    }
+
+    function updateKkbPreview() {
+      const total = parseFloat(document.getElementById('kkbTotalInput').value) || 0;
+      const pax = Math.max(2, parseInt(document.getElementById('kkbPaxInput').value, 10) || 2);
+      const each = total / pax;
+      const collect = total - each;
+      const pill = document.getElementById('kkbPreviewPill');
+      if (pill) {
+        pill.innerHTML = '<span>Each Share: ' + formatPeso(each) + '</span><span>Collect: ' + formatPeso(collect) + '</span>';
+      }
+    }
+
+    function submitKkbSplit() {
+      const title = (document.getElementById('kkbTitleInput').value || 'KKB Split Bill').trim();
+      const total = parseFloat(document.getElementById('kkbTotalInput').value) || 0;
+      const pax = Math.max(2, parseInt(document.getElementById('kkbPaxInput').value, 10) || 2);
+      const names = (document.getElementById('kkbNamesInput').value || '').trim();
+
+      if (total <= 0) {
+        showToast('Enter total bill amount');
+        return;
+      }
+
+      const each = Number((total / pax).toFixed(2));
+      const collect = Number((total - each).toFixed(2));
+
+      // Log full bill or personal share
+      APP_STATE.transactions.unshift({
+        id: 'tx_' + Date.now(),
+        type: 'EXPENSE',
+        category: 'Pagkain',
+        wallet: APP_STATE.selectedWallet,
+        amount: total,
+        note: title + ' (KKB ' + pax + ' pax)',
+        date: getTodayIso()
+      });
+
+      APP_STATE.plannedItems.push({
+        id: 'plan_' + Date.now(),
+        type: 'COLLECT',
+        name: 'KKB: ' + title + (names ? ' (' + names + ')' : ''),
+        amount: collect,
+        dueDate: getTodayIso(),
+        totalMonths: 0,
+        paidMonths: 0
+      });
+
+      savePlannedLocal();
+      recalculateTotals();
+      renderAll();
+      closeKkbModal();
+      showToast('Logged KKB Bill & Pautang (' + formatPeso(collect) + ')');
+    }
+
+    /* PITAKA ID & TARCEIPT MODALS */
+    function openPitakaIdModal() {
+      const body = document.getElementById('pitakaIdCardBody');
+      if (body) {
+        body.innerHTML = APP_STATE.wallets.map(w => {
+          return '<div class="pitaka-id-row">' +
+            '<div><strong>' + escapeHtml(w.name) + '</strong><div style="font-size:10px;color:#94A3B8;">' + escapeHtml(w.bankName || 'Wallet') + '</div></div>' +
+            '<div style="text-align:right;"><div>' + escapeHtml(w.accountNumber || 'No Account #') + '</div><div style="font-size:10px;color:#CBD5E1;">' + escapeHtml(w.accountName || '') + '</div></div>' +
+          '</div>';
+        }).join('');
+      }
+      document.getElementById('pitakaIdModal').classList.add('open');
+    }
+
+    function closePitakaIdModal() {
+      document.getElementById('pitakaIdModal').classList.remove('open');
+    }
+
+    function copyPitakaIdText() {
+      const lines = APP_STATE.wallets
+        .filter(w => w.accountNumber)
+        .map(w => w.name + ' (' + (w.bankName || '') + '): ' + w.accountNumber + (w.accountName ? ' - ' + w.accountName : ''));
+      const text = lines.length > 0 ? lines.join('\n') : 'PitakaKO Payment Card';
+      if (navigator.clipboard) navigator.clipboard.writeText(text);
+      showToast('Copied PitakaID details!');
+    }
+
+    function openTarceiptModal(txId) {
+      const tx = APP_STATE.transactions.find(t => String(t.id) === String(txId));
+      if (!tx) return;
+      APP_STATE.activeTarceipt = tx;
+      const body = document.getElementById('tarceiptBody');
+      if (body) {
+        body.innerHTML =
+          '<div style="font-weight:800;font-size:14px;margin-bottom:4px;">PITAKAKO OFFICIAL RECEIPT</div>' +
+          '<div style="font-size:11px;color:var(--ios-label-muted);margin-bottom:12px;">' + escapeHtml(tx.date) + ' • ' + escapeHtml(tx.wallet) + '</div>' +
+          '<div style="font-size:24px;font-weight:800;margin-bottom:8px;">' + formatPeso(tx.amount) + '</div>' +
+          '<div style="font-size:12px;font-weight:700;">' + escapeHtml(tx.note || tx.category) + '</div>' +
+          '<div style="font-size:11px;color:var(--ios-label-muted);margin-top:4px;">Category: ' + escapeHtml(tx.category) + '</div>';
+      }
+      document.getElementById('tarceiptModal').classList.add('open');
+    }
+
+    function closeTarceiptModal() {
+      document.getElementById('tarceiptModal').classList.remove('open');
+    }
+
+    function copyTarceiptText() {
+      const tx = APP_STATE.activeTarceipt;
+      if (!tx) return;
+      const text = 'PitakaReceipt: ' + formatPeso(tx.amount) + ' — ' + (tx.note || tx.category) + ' (' + tx.date + ' via ' + tx.wallet + ')';
+      if (navigator.clipboard) navigator.clipboard.writeText(text);
+      showToast('Receipt copied!');
+    }
+
+    function exportTransactionsCsv() {
+      const rows = [['Date', 'Type', 'Category', 'Wallet', 'Amount', 'Note']];
+      (APP_STATE.transactions || []).forEach(t => {
+        rows.push([t.date || '', t.type || '', t.category || '', t.wallet || '', t.amount || 0, (t.note || '').replace(/"/g, '""')]);
+      });
+      const csv = rows.map(r => r.map(c => '"' + c + '"').join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'PitakaKO_Backup_' + getTodayIso() + '.csv';
+      a.click();
+    }
+
+    /* NAVIGATION & AI CHAT */
+    function switchHubTab(tab) {
+      APP_STATE.activeTab = tab;
+      const map = {
+        goals: { pane: 'tabPaneGoals', btn: 'tabBtnDashboard' },
+        graphs: { pane: 'tabPaneGraphs', btn: 'tabBtnGraphs' },
+        logs: { pane: 'tabPaneLogs', btn: 'tabBtnLogs' },
+        chat: { pane: 'tabPaneChat', btn: 'tabBtnChat' }
+      };
+
+      Object.keys(map).forEach(k => {
+        const p = document.getElementById(map[k].pane);
+        const b = document.getElementById(map[k].btn);
+        if (p) p.classList.toggle('active', k === tab);
+        if (b) b.classList.toggle('active', k === tab);
+      });
+
+      const aiPanel = document.getElementById('aiPanel');
+      const chatPane = document.getElementById('tabPaneChat');
+      const fab = document.getElementById('chatFabBtn');
+
+      if (tab === 'chat' && aiPanel && chatPane) {
+        closeFloatingChat();
+        chatPane.appendChild(aiPanel);
+        aiPanel.classList.remove('floating-mode', 'floating-open');
+        aiPanel.classList.add('solo-tab-mode');
+        if (fab) fab.classList.add('hidden');
+      } else if (aiPanel) {
+        document.querySelector('.app-shell').appendChild(aiPanel);
+        aiPanel.classList.remove('solo-tab-mode');
+        aiPanel.classList.add('floating-mode');
+        if (fab) fab.classList.remove('hidden');
+      }
+    }
+
+    function jumpToMobileSection(target) {
+      ['Goals', 'Graphs', 'Log', 'Logs', 'Chat'].forEach(s => {
+        const btn = document.getElementById('mobNav' + s);
+        if (btn) btn.classList.toggle('active', s.toLowerCase() === target);
+      });
+
+      if (target === 'log') {
+        APP_STATE.quickEntryCollapsed = false;
+        const body = document.getElementById('quickEntryBody');
+        if (body) body.classList.remove('collapsed');
+        const el = document.getElementById('quickLogSection');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
+      switchHubTab(target);
+      const hub = document.getElementById('workspaceHubSection');
+      if (hub) hub.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function toggleFloatingChat() {
+      const panel = document.getElementById('aiPanel');
+      const backdrop = document.getElementById('floatingChatBackdrop');
+      if (!panel) return;
+      APP_STATE.floatingChatOpen = !APP_STATE.floatingChatOpen;
+      panel.classList.toggle('floating-open', APP_STATE.floatingChatOpen);
+      if (backdrop) backdrop.classList.toggle('open', APP_STATE.floatingChatOpen);
+    }
+
+    function closeFloatingChat() {
+      APP_STATE.floatingChatOpen = false;
+      const panel = document.getElementById('aiPanel');
+      const backdrop = document.getElementById('floatingChatBackdrop');
+      if (panel) panel.classList.remove('floating-open');
+      if (backdrop) backdrop.classList.remove('open');
+    }
+
+    function fillAiInput(text) {
+      const inp = document.getElementById('aiPromptInput');
+      if (inp) {
+        inp.value = text;
+        inp.focus();
+      }
+    }
+
+    function runQuickAiPrompt(text) {
+      fillAiInput(text);
+      sendAiMessage();
+    }
+
+    function appendAiBubble(role, html) {
+      const feed = document.getElementById('aiChatFeed');
+      if (!feed) return;
+      const div = document.createElement('div');
+      div.className = 'ai-msg ' + (role === 'user' ? 'user' : 'bot');
+      div.innerHTML = (role === 'bot' ? '<div class="ai-avatar">' + FLAT_LINE_SVGS.sparkle + '</div>' : '') +
+        '<div class="ai-bubble">' + html + '</div>';
+      feed.appendChild(div);
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    function sendAiMessage() {
+      const inp = document.getElementById('aiPromptInput');
+      const text = (inp.value || '').trim();
+      if (!text) return;
+      inp.value = '';
+      appendAiBubble('user', escapeHtml(text));
+
+      if (window.google && window.google.script && window.google.script.run) {
+        window.google.script.run
+          .withSuccessHandler(function(res) {
+            if (res && res.state) applyAppState(res.state);
+            appendAiBubble('bot', escapeHtml((res && res.reply) || 'Processed command.'));
+          })
+          .withFailureHandler(function(err) {
+            appendAiBubble('bot', 'Offline NLP: ' + escapeHtml(err.message || 'Check connection.'));
+          })
+          .processAiCommand(text);
+      } else {
+        appendAiBubble('bot', 'Command noted.');
+      }
+    }
+
+    function triggerReceiptCamera() {
+      const fileInp = document.getElementById('receiptFileInput');
+      if (fileInp) fileInp.click();
+    }
+
+    function handleReceiptImageSelected(ev) {
+      const file = ev.target.files && ev.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64 = e.target.result;
+        appendAiBubble('user', 'Scanned Receipt: ' + escapeHtml(file.name));
+        if (window.google && window.google.script && window.google.script.run) {
+          window.google.script.run
+            .withSuccessHandler(function(res) {
+              if (res && res.state) applyAppState(res.state);
+              appendAiBubble('bot', escapeHtml((res && res.reply) || 'Receipt processed!'));
+            })
+            .withFailureHandler(function(err) {
+              appendAiBubble('bot', 'Receipt scan error: ' + escapeHtml(err.message || 'Failed'));
+            })
+            .processReceiptImage(base64);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function promptAiApiKey() {
+      const key = prompt('Enter your Gemini API Key:');
+      if (!key) return;
+      if (window.google && window.google.script && window.google.script.run) {
+        window.google.script.run
+          .withSuccessHandler(function() { showToast('Gemini API Key saved!'); })
+          .saveGeminiApiKey(key.trim());
+      }
+    }
+
+    function toggleVoiceInput() {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRec) {
+        showToast('Voice input not supported on this browser');
+        return;
+      }
+      const btn = document.getElementById('aiMicBtn');
+      if (isListeningVoice && speechRecognition) {
+        speechRecognition.stop();
+        isListeningVoice = false;
+        if (btn) btn.classList.remove('listening');
+        return;
+      }
+      speechRecognition = new SpeechRec();
+      speechRecognition.lang = 'fil-PH';
+      speechRecognition.onstart = function() {
+        isListeningVoice = true;
+        if (btn) btn.classList.add('listening');
+      };
+      speechRecognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('aiPromptInput').value = transcript;
+      };
+      speechRecognition.onend = function() {
+        isListeningVoice = false;
+        if (btn) btn.classList.remove('listening');
+      };
+      speechRecognition.start();
+    }
+
+    /* INITIALIZATION */
+    document.addEventListener('DOMContentLoaded', function() {
+      const dateEl = document.getElementById('dateInput');
+      if (dateEl) dateEl.value = getTodayIso();
+
+      loadLocalExtras();
+      recalculateTotals();
+      renderAll();
+
+      if (window.google && window.google.script && window.google.script.run) {
+        window.google.script.run
+          .withSuccessHandler(function(data) {
+            if (data) applyAppState(data);
+          })
+          .withFailureHandler(function(err) {
+            console.warn('Initial sync warning:', err);
+          })
+          .getInitialData();
+      }
+    });
+  </script>
+</body>
+</html>
